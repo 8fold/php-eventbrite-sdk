@@ -1,35 +1,42 @@
 <?php
 
-namespace Eightfold\Eventbrite\Classes;
+namespace Eightfold\Eventbrite;
 
 use JamieHollern\Eventbrite\Eventbrite as EventbriteBase;
 
+use Eightfold\Eventbrite\Traits\Gettable;
+
 use Eightfold\Eventbrite\Classes\Organization;
+use Eightfold\Eventbrite\Classes\Individual;
 use Eightfold\Eventbrite\Classes\Organizer;
 use Eightfold\Eventbrite\Classes\Events;
 
+/**
+ * Main Eventrbrite entry point.
+ *
+ * Create an instance of this class to connect to the Eventbrite API. Each instance
+ * will be associated to an one account using the provided token.
+ *
+ * From a plain language perspective, there are two types of people who can have
+ * accounts with Eventbrite: Organizations and Individuals. The Eventrbrite API
+ * view both of these accounts types as the same thing. This library, however, doea
+ * not. Therefore, you can tell the instance whether it should be treated as an
+ * individual (human) or an organization (legal entity).
+ * 
+ */
 class Eventbrite extends EventbriteBase
 {
+    use Gettable;
+
     private $organization = null;
 
-    private $user = null;
-
-    private $methodToClass = [
-        'upcomingEvents' => [
-            'Event',
-        ]
-    ];
-
-    // private $organizers = [];
-
-    // private $events = [];
-
-    // private $upcomingEvents = [];
+    private $individual = null;
 
     /**
      * Creates an Eventbrite instance for a specific user.
      * 
      * @param string $token  Oauth token for application or individual
+     * @param bool   $isOrg  Whether to treat the user associated as a human or not.
      * @param array  $config Configuration parameters for parent class.
      *
      * @return Eventbrite
@@ -37,33 +44,7 @@ class Eventbrite extends EventbriteBase
     static public function setAuthToken(string $token, $isOrg = false, $config = [])
     {
         return new Eventbrite($token, $isOrg, $config);
-    }
-
-    public function __get(string $name)
-    {
-        if (isset($this->raw) && array_key_exists($name, $this->raw)) {
-            return $this->raw[$name];
-
-        }
-
-        if (isset($this->{$name}) && !is_null($this->{$name})) {
-            return $this->{$name};
-
-        }
-
-        if (method_exists($this, $name)) {
-            // Call user defined getter
-            return $this->$name();
-
-        }
-        $trace = debug_backtrace();
-        trigger_error(
-            'Undefined property via __get(): ' . $name .
-            ' in ' . __CLASS__ .
-            ' on line ' . __LINE__,
-            E_USER_NOTICE);
-        return null; 
-    }    
+    }  
 
     /**
      * Intantiate Eventbrite instance.
@@ -87,7 +68,7 @@ class Eventbrite extends EventbriteBase
             $this->organization = new Organization($orgOrUser, $this);    
 
         } else {
-            $this->user = new User($orgOrUser, $this);
+            $this->individual = new Individual($orgOrUser, $this);
 
         }
         // $this->orgBase = 'users/'. $this->organization->id .'/';
@@ -96,15 +77,15 @@ class Eventbrite extends EventbriteBase
     private function entity()
     {
         if (is_null($this->organization)) {
-            return $this->user;
+            return $this->individual;
         }
         return $this->organization;
     }
 
-    public function upcomingEvents()
-    {
-        return $this->authorizedEntity()->upcomingEvents();
-    }
+    // public function upcomingEvents()
+    // {
+    //     return $this->entity->upcomingEvents();
+    // }
 
     // public function getOrganizers()
     // {

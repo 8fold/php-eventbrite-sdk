@@ -4,13 +4,19 @@ namespace Eightfold\Eventbrite\Classes;
 
 use Eightfold\Eventbrite\Classes\ApiResource;
 
-class User extends ApiResource
+class Individual extends ApiResource
 {
+    /**
+     * REQUIRED: Defines the base endpoint for the resource.
+     */
+    const endpointEntry = 'users/';
+    const classPath = __CLASS__;
+
     protected $userBase = null;
 
-    private $upcomingEvents;
+    private $upcomingEvents = null;
 
-    private $events = [];
+    private $events = null;
 
     public function __construct($token, $eventbrite = null)
     {
@@ -29,9 +35,9 @@ class User extends ApiResource
             $events = $this->eventbrite->get($endpoint, $options);
             $eventsReturn = $events['body']['events'];
             foreach ($eventsReturn as $event) {
-                $this->events[] = new Event($event, $this->eventbrite);
+                $this->upcomingEvents[] = new Event($event, $this->eventbrite);
             }                     
         }
-        return $this->events;
+        return $this->upcomingEvents;
     }
 }
