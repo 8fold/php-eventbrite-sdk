@@ -4,7 +4,7 @@ namespace Eightfold\Eventbrite\Classes;
 
 use Eightfold\Eventbrite\Classes\ApiResource;
 
-class User extends ApiResource
+class Individual extends ApiResource
 {
     protected $userBase = null;
 

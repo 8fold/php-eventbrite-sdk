@@ -2,14 +2,22 @@
 
 namespace Eightfold\Eventbrite\Classes;
 
+use Eightfold\Eventbrite\Traits\Gettable;
+
 class ApiResource
 {
+    use Gettable;
+
     /**
      * Used for querying the Eventbrite api related to events.
      * @var null
      */
     protected $eventbrite = null;
 
+    /**
+     * The raw payload provided at instantiation. 
+     * @var null
+     */
     private $raw = null;
 
     public function __construct($payload, $eventbrite = null)
@@ -19,17 +27,5 @@ class ApiResource
             ? $payload['body']
             : $payload;
         $this->raw = $setup;
-        // foreach ($setup as $key => $value) {
-        //     $this->data[$key] = $value;
-        // }
-        
-    }
-
-    public function __get(string $name)
-    {
-        if (array_key_exists($name, $this->raw)) {
-            return $this->raw[$name];
-        }
-        dd($this->raw);
     }
 }
