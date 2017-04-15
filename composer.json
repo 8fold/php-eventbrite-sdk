@@ -1,7 +1,7 @@
 {
     "name": "8fold/eventbrite-sdk-php",
     "description": "An extension of Jamie Hollern's library for interacting with the Eventrbrite API.",
-    "license": "MIT - https://github.com/8fold/eventbrite-sdk-php/blob/master/LICENSE",
+    "license": "MIT",
     "authors": [
         {
             "name": "Josh Bruce",
