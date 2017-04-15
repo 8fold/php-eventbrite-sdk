@@ -82,10 +82,10 @@ class Eventbrite extends EventbriteBase
         return $this->organization;
     }
 
-    public function upcomingEvents()
-    {
-        return $this->entity->upcomingEvents();
-    }
+    // public function upcomingEvents()
+    // {
+    //     return $this->entity->upcomingEvents();
+    // }
 
     // public function getOrganizers()
     // {

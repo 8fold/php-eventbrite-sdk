@@ -6,7 +6,13 @@ use Eightfold\Eventbrite\Classes\ApiResource;
 
 class Category extends ApiResource
 {
-    public function getName()
+    /**
+     * REQUIRED: Defines the base endpoint for the resource.
+     */
+    const endpointEntry = 'categories/';
+    const classPath = __CLASS__;    
+
+    public function name()
     {
         if (isset($this->name_localized)) {
             return $this->name_localized;
@@ -18,7 +24,7 @@ class Category extends ApiResource
         return null;
     }
 
-    public function getShortName()
+    public function shortName()
     {
         if (isset($this->short_name_localized)) {
             return $this->short_name_localized;
@@ -27,7 +33,7 @@ class Category extends ApiResource
             return $this->short_name;
 
         } else {
-            return $this->getName();
+            return $this->name;
 
         }
     }
