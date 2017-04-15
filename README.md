@@ -1,2 +1,12 @@
-# eventbrite-php
-An extension (wrapper??) of the PHP Eventbrite library from JamieH ollern
+# Eventbrite SDK for PHP from 8fold
+
+## Composer install
+
+```
+"require": {
+ "8fold/eventbrite-sdk-php": "*"
+}
+```
+
+## Description
+
