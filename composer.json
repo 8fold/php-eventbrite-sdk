@@ -1,6 +1,6 @@
 {
     "name": "8fold/eventbrite-sdk-php",
-    "description": "A questionably sane alternative to the official Eventbrite SDK.",
+    "description": "Something that seems easier and more complete than the official Eventbrite SDK for PHP.",
     "license": "MIT",
     "authors": [
         {
