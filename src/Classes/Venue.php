@@ -8,13 +8,19 @@ use Eightfold\Eventbrite\Classes\Eventbrite;
 
 class Venue extends ApiResource
 {
-    public function getName()
+    /**
+     * REQUIRED: Defines the base endpoint for the resource.
+     */
+    const endpointEntry = 'venues/';
+    const classPath = __CLASS__;
+
+    public function name()
     {
-        return $this->name;
+        return $this->raw['name'];
     }
 
-    public function getLocalizedAddress()
+    public function localizedAddress()
     {
-        return $this->address['localized_address_display'];
+        return $this->raw['address']['localized_address_display'];
     }
 }
