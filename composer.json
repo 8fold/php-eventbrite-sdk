@@ -1,0 +1,30 @@
+{
+    "name": "eightfold/eventdbrite-sdk-php",
+    "description": "An extension of Jamie Hollern's library for interacting with the Eventrbrite API.",
+    "license": "MIT - https://github.com/8fold/eventbrite-sdk-php/blob/master/LICENSE",
+    "authors": [
+        {
+            "name": "Josh Bruce",
+            "email": "josh@joshuabruce.com"
+        }
+    ],
+    "require": {
+        "jamiehollern/eventbrite": "1.0.1"
+    },
+    "autoload": {
+        "classmap": [
+            "database"
+        ],
+        "psr-4": {
+            "JamieHollern\\Eventbrite\\": "vendor/jamiehollern/eventbrite/src/"
+        }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/TestCase.php"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist"
+    }
+}
