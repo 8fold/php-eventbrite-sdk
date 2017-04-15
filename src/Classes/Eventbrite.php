@@ -14,6 +14,12 @@ class Eventbrite extends EventbriteBase
 
     private $user = null;
 
+    private $methodToClass = [
+        'upcomingEvents' => [
+            'Event',
+        ]
+    ];
+
     // private $organizers = [];
 
     // private $events = [];
@@ -28,10 +34,36 @@ class Eventbrite extends EventbriteBase
      *
      * @return Eventbrite
      */
-    static public function setAuthToken(string $token, $config = [])
+    static public function setAuthToken(string $token, $isOrg = false, $config = [])
     {
-        return new Eventbrite($token, $config);
+        return new Eventbrite($token, $isOrg, $config);
     }
+
+    public function __get(string $name)
+    {
+        if (isset($this->raw) && array_key_exists($name, $this->raw)) {
+            return $this->raw[$name];
+
+        }
+
+        if (isset($this->{$name}) && !is_null($this->{$name})) {
+            return $this->{$name};
+
+        }
+
+        if (method_exists($this, $name)) {
+            // Call user defined getter
+            return $this->$name();
+
+        }
+        $trace = debug_backtrace();
+        trigger_error(
+            'Undefined property via __get(): ' . $name .
+            ' in ' . __CLASS__ .
+            ' on line ' . __LINE__,
+            E_USER_NOTICE);
+        return null; 
+    }    
 
     /**
      * Intantiate Eventbrite instance.
@@ -46,7 +78,7 @@ class Eventbrite extends EventbriteBase
      * @param bool   $isOrg  Whether the user to be associated with instance is an
      *                       an organization or a human
      */
-    public function __construct(string $token, $config = [], $isOrg = false)
+    public function __construct(string $token, $isOrg = false, $config = [])
     {
         parent::__construct($token, $config);
 
@@ -61,7 +93,7 @@ class Eventbrite extends EventbriteBase
         // $this->orgBase = 'users/'. $this->organization->id .'/';
     }
 
-    private function authorizedEntity()
+    private function entity()
     {
         if (is_null($this->organization)) {
             return $this->user;

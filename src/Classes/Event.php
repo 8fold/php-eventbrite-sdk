@@ -88,58 +88,63 @@ class Event extends ApiResource
     public function __construct(array $payload, Eventbrite $eventbrite)
     {
         parent::__construct($payload, $eventbrite);
-        if ($getOrganizer) {
-            $organizer = $eventbrite->get('organizers/'. $payload['organizer_id']);
-            $this->organizer = new Organizer($organizer, $eventbrite);
+        // if ($getOrganizer) {
+        //     $organizer = $eventbrite->get('organizers/'. $payload['organizer_id']);
+        //     $this->organizer = new Organizer($organizer, $eventbrite);
 
-        }
+        // }
 
-        if ($getVenue) {
-            $venue = $eventbrite->get('venues/'. $payload['venue_id']);
-            $this->venue = new Venue($venue);
+        // if ($getVenue) {
+        //     $venue = $eventbrite->get('venues/'. $payload['venue_id']);
+        //     $this->venue = new Venue($venue);
 
-        }
+        // }
 
-        if ($getCategories) {
-            $category = $eventbrite->get('categories/'. $payload['category_id']);
-            $this->category = new Category($category);
+        // if ($getCategories) {
+        //     $category = $eventbrite->get('categories/'. $payload['category_id']);
+        //     $this->category = new Category($category);
 
-            $subcategory = $eventbrite->get('subcategories/'. $payload['subcategory_id']);
-            $this->subcategory = new Category($subcategory);
+        //     $subcategory = $eventbrite->get('subcategories/'. $payload['subcategory_id']);
+        //     $this->subcategory = new Category($subcategory);
 
-        }
+        // }
 
-        if ($getTicketClasses) {
-            $ticketClasses = $eventbrite->get('events/'. $payload['id'] .'/ticket_classes');
-            $ticketClasses = $ticketClasses['body']['ticket_classes'];
-            $this->highCost = 0;
-            $this->lowCost = $this->highCost;
-            foreach ($ticketClasses as $ticketClass) {
-                $tc = new TicketClass($ticketClass);
+        // if ($getTicketClasses) {
+        //     $ticketClasses = $eventbrite->get('events/'. $payload['id'] .'/ticket_classes');
+        //     $ticketClasses = $ticketClasses['body']['ticket_classes'];
+        //     $this->highCost = 0;
+        //     $this->lowCost = $this->highCost;
+        //     foreach ($ticketClasses as $ticketClass) {
+        //         $tc = new TicketClass($ticketClass);
                 
-                if ($tc->cost > $this->highCost) {
-                    $this->highCost = $tc->cost;
-                    $this->highestType = $tc;
-                }
+        //         if ($tc->cost > $this->highCost) {
+        //             $this->highCost = $tc->cost;
+        //             $this->highestType = $tc;
+        //         }
 
-                if ($tc->cost < $this->lowCost) {
-                    $this->lowCost = $tc->cost;
-                    $this->lowestType = $tc;
-                }
+        //         if ($tc->cost < $this->lowCost) {
+        //             $this->lowCost = $tc->cost;
+        //             $this->lowestType = $tc;
+        //         }
 
-                $this->ticketClasses[] = $tc;
+        //         $this->ticketClasses[] = $tc;
 
-            }
-        }
+        //     }
+        // }
 
-        if ($getQuestions) {
-            $questions = $eventbrite->get('events/'. $payload['id'] .'/questions');
-            dd($questions);
-        }
+        // if ($getQuestions) {
+        //     $questions = $eventbrite->get('events/'. $payload['id'] .'/questions');
+        //     dd($questions);
+        // }
     }
 
     public function organizer()
     {
+        if (!isset($this->organizer) || is_null($this->organizer)) {
+            $organizer = $eventbrite->get('organizers/'. $this->organizer_id);
+            $this->organizer = new Organizer($organizer, $eventbrite);      
+        }
+        
         return $this->organizer;
     }
 

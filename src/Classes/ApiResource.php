@@ -10,14 +10,26 @@ class ApiResource
      */
     protected $eventbrite = null;
 
+    private $raw = null;
+
     public function __construct($payload, $eventbrite = null)
     {
+        $this->eventbrite = $eventbrite;
         $setup = (isset($payload['body']))
             ? $payload['body']
             : $payload;
-        foreach ($setup as $key => $value) {
-            $this->{$key} = $value;
+        $this->raw = $setup;
+        // foreach ($setup as $key => $value) {
+        //     $this->data[$key] = $value;
+        // }
+        
+    }
+
+    public function __get(string $name)
+    {
+        if (array_key_exists($name, $this->raw)) {
+            return $this->raw[$name];
         }
-        $this->eventbrite = $eventbrite;
+        dd($this->raw);
     }
 }
