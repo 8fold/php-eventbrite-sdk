@@ -1,6 +1,6 @@
 <?php
 
-namespace Eightfold\Eventbrite\Classes;
+namespace Eightfold\Eventbrite;
 
 use JamieHollern\Eventbrite\Eventbrite as EventbriteBase;
 
