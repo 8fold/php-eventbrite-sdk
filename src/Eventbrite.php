@@ -1,8 +1,9 @@
 <?php
 
+// inspired by jamiehollern/eventbrite
 namespace Eightfold\Eventbrite;
 
-use JamieHollern\Eventbrite\Eventbrite as EventbriteBase;
+use Eightfold\Eventbrite\Classes\ApiClient as EventbriteBase;
 
 use Eightfold\Eventbrite\Traits\Gettable;
 
@@ -28,8 +29,20 @@ class Eventbrite extends EventbriteBase
 {
     use Gettable;
 
+    /**
+     * Each Eventbrite client is associated with a user. The default is a human;
+     * however, it is possible you want it to be an organization (the main account),
+     * this distinguishes between those two things.
+     * 
+     * @var Eightfold\Classes\Organization
+     */
     private $organization = null;
 
+    /**
+     * See `$organization`. This is a human instance of the Eventbrite API client.
+     * 
+     * @var Eightfold\Classes\Individual
+     */
     private $individual = null;
 
     /**
@@ -62,18 +75,21 @@ class Eventbrite extends EventbriteBase
     public function __construct(string $token, $isOrg = false, $config = [])
     {
         parent::__construct($token, $config);
-
-        $orgOrUser = parent::get(parent::CURRENT_USER_ENDPOINT);
         if ($isOrg) {
-            $this->organization = new Organization($orgOrUser, $this);    
+            $this->organization = parent::get(parent::user_endpoint, Organization::class);    
 
         } else {
-            $this->individual = new Individual($orgOrUser, $this);
+            $this->individual = parent::get(parent::user_endpoint, Individual::class);
 
         }
-        // $this->orgBase = 'users/'. $this->organization->id .'/';
     }
 
+    /**
+     * The account associated with this Eventbrite API connection.
+     * 
+     * @return Organization|Individual The object associated with the token used to
+     *                                 to instantiate the Eventbrite connection.
+     */
     private function entity()
     {
         if (is_null($this->organization)) {
@@ -81,57 +97,4 @@ class Eventbrite extends EventbriteBase
         }
         return $this->organization;
     }
-
-    // public function upcomingEvents()
-    // {
-    //     return $this->entity->upcomingEvents();
-    // }
-
-    // public function getOrganizers()
-    // {
-    //     // TODO: This is a paginated retrun, account for that.
-    //     if (count($this->organizers) == 0) {
-    //         $organizers = parent::get($this->orgBase .'organizers/');
-    //         $organizersReturn = $organizers['body']['organizers'];
-    //         foreach ($organizersReturn as $organizer) {
-    //             $this->organizers[] = new Organizer($organizer, $this);
-    //         }
-    //     }
-    //     return $this->organizers;
-    // }
-
-    // public function getOrganizerForEvent(Event $event)
-    // {
-
-    // }
-
-    // public function getEvents()
-    // {
-    //     if (count($this->events) == 0) {
-    //         $events = parent::get($this->orgBase .'owned_events/', ['order_by' => 'start_desc']);
-    //         $eventsReturn = $events['body']['events'];
-    //         foreach ($eventsReturn as $event) {
-    //             $this->events[] = new Event($event, $this);
-    //         }            
-    //     }
-    //     return $this->events;
-    // }
-
-    // public function getUpcomingEventsForOrganizer($organizerId)
-    // {
-    //     // organizer_id: 10957647339
-    //     // $organizerId = "10957647339";
-    //     $events = parent::get('events/search/', ['organizer.id' => $organizerId]);
-    //     $eventsReturn = $events['body']['events'];
-    //     $organizerEvents = [];
-    //     foreach ($eventsReturn as $event) {
-    //         $organizerEvents[] = new Event($event, $this);
-    //     }
-    //     return $organizerEvents;
-    // }
-
-    // public function getPastEvents()
-    // {
-    //     // TODO: Implement
-    // }
 }

@@ -6,10 +6,6 @@ use Carbon\Carbon;
 
 trait DateTransformations
 {
-   private $startDate = null;
-
-    private $endDate = null;
-
     public function getStartDateString()
     {
         $startDate = $this->getStartDate();

@@ -9,14 +9,10 @@
         }
     ],
     "require": {
-        "jamiehollern/eventbrite": "1.0.1"
     },
     "autoload": {
-        "classmap": [
-            "database"
-        ],
         "psr-4": {
-            "JamieHollern\\Eventbrite\\": "vendor/jamiehollern/eventbrite/src/"
+            "Eightfold\\Eventbrite\\": "src/"
         }
     },
     "autoload-dev": {
