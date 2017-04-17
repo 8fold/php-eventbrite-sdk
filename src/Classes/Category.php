@@ -6,9 +6,6 @@ use Eightfold\Eventbrite\Classes\ApiResource;
 
 class Category extends ApiResource
 {
-    /**
-     * REQUIRED: Defines the base endpoint for the resource.
-     */
     const endpointEntry = 'categories/';
     const classPath = __CLASS__;    
 
