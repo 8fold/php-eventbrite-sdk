@@ -3,11 +3,14 @@
 namespace Eightfold\Eventbrite\Classes;
 
 use Eightfold\Eventbrite\Eventbrite;
+
 use Eightfold\Eventbrite\Traits\Gettable;
+use Eightfold\Eventbrite\Traits\Settable;
 
 abstract class ApiResource
 {
-    use Gettable;
+    use Gettable,
+        Settable;
 
     /**
      * Used for querying the Eventbrite api related to events.
@@ -17,31 +20,47 @@ abstract class ApiResource
 
     /**
      * The raw payload provided at instantiation. 
+     * 
      * @var null
      */
-    private $raw = null;
+    protected $raw = null;
+
+    /**
+     * The updates made to the instance.
+     *
+     * If there is an update to that field stored here, this is the value that will
+     * return. You can still explicitly request the raw value.
+     * 
+     * @var null
+     */
+    protected $changed = null;
 
     /**
      * GET the resource from the API using the passed Eventbrite instance
      * 
      * @param  string      $id         The Eventbrite ID for the resource 
-     * @param  Eventbrite  $eventbrite The ApiClient and creds to use
+     * @param  unknown     $eventbrite Usually an Eventbrite object to use when
+     *                                 connecting; however, not type-hinted to allow
+     *                                 overriding.
      * 
      * @return ApiResource             A new instance of the class
      */
-    static public function find(string $id, Eventbrite $eventbrite)
+    static public function find($eventbrite, string $id)
     {
-        $class = static::classPath;
-        $endpoint = static::endpointEntry .'/'. $id;
+        $class = static::classPath();
+        $endpoint = static::baseEndpoint() .'/'. $id;
 
         // @todo: ClassLoader failing when not including class path explicitly
         return $eventbrite->get($endpoint, [], $class);
     }
 
-    static public function getMany(Eventbrite $eventbrite)
+    static public function getMany(Eventbrite $eventbrite, string $endpoint = null)
     {
-        $class = static::classPath;
-        $endpoint = static::endpointEntry;
+        $class = static::classPath();
+        if (is_null($endpoint)) {
+            $endpoint = static::baseEndpoint();
+
+        }
 
         // @todo: ClassLoader failing when not including class path explicitly
         return $eventbrite->get($endpoint, [], $class);
@@ -88,21 +107,38 @@ abstract class ApiResource
     public function save()
     {
         if (isset($this->raw['id'])) {
+            $fieldPrefix = static::parameterPrefix();
+            $postableFields = static::parametersToPost();
+            $convertToDots = static::parametersToConvertToDotNotation();
             $updates = [];
-            foreach ($this as $prop => $value) {
-                $isSettable = in_array($prop, static::settableFields);
-                if ($isSettable) {
-                    $prop = (in_array($prop, static::convertToDots))
-                        ? str_replace('_', '.', $prop)
-                        : $prop;
-                    $updates[static::postKey .'.'. $prop] = $value;
 
+            if (!is_null($this->changed) && count($this->changed) > 0) {
+                foreach ($this->changed as $prop => $value) {
+                    $isSettable = in_array($prop, $postableFields);
+                    if ($isSettable) {
+                        $prop = (in_array($prop, $convertToDots))
+                            ? str_replace('_', '.', $prop)
+                            : $prop;
+                        $updates[$fieldPrefix .'.'. $prop] = $value;
+                    }
                 }
+            } else {
+                foreach ($this as $prop => $value) {
+                    $isSettable = in_array($prop, $postableFields);
+                    if ($isSettable) {
+                        $prop = (in_array($prop, $convertToDots))
+                            ? str_replace('_', '.', $prop)
+                            : $prop;
+                        $updates[$fieldPrefix .'.'. $prop] = $value;
+
+                    }
+                }                
             }
-            $ep = static::endpointEntry . $this->raw['id'];
-            $class = Event::class;
-            $updated = $this->eventbrite->post($ep, $class, $updates);
+            $endpoint = $this->endpoint();
+            $class = static::classPath();
+            $updated = $this->eventbrite->post($endpoint, $updates, $class);
             $this->raw = $updated->raw;
+            $this->changed = null;
             unset($updated);
             
         } else {

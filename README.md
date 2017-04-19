@@ -65,6 +65,43 @@ $event->name_html = 'Oh, hi Mark.';
 $event->save();
 ```
 
+## Details Ticket Classes
+
+GET /events/:id/ticket_classes/
+
+```php
+$event = Event::find(:id);
+$ticketClasses = $event->ticketClasses;
+```
+
+POST /events/:id/ticket_classes/
+
+```php
+$event = Event:find(:id);
+$ticket_classes = $event->ticketClasses;
+```
+
+GET /events/:id/ticket_classes/:ticket_class_id/
+
+```php
+$event = Event::find(:id);
+$ticketClass = $event->ticketClassWithId(:id);
+
+// OR
+
+$ticketClass = TicketClass::find($event, :id);
+```
+
+POST /events/:id/ticket_classes/:ticket_class_id/
+
+```php
+$event = Event:find(:id);
+$ticket_classes = $event->ticket_classes;
+$ticketClass = $ticket_classes[0];
+$ticketClass->cost = 2000; // USD only right now
+$ticketClass->save();
+```
+
 ## Event todo
 
 GET /events/search/
@@ -80,14 +117,6 @@ DELETE /events/:id/
 GET /events/:id/display_settings/
 
 POST /events/:id/display_settings/
-
-GET /events/:id/ticket_classes/
-
-POST /events/:id/ticket_classes/
-
-GET /events/:id/ticket_classes/:ticket_class_id/
-
-POST /events/:id/ticket_classes/:ticket_class_id/
 
 DELETE /events/:id/ticket_classes/:ticket_class_id/
 

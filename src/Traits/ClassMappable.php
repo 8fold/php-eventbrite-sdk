@@ -5,13 +5,16 @@ namespace Eightfold\Eventbrite\Traits;
 trait ClassMappable
 {
     /**
-     * Maps endpoint start with package class to return instance
+     * Maps API endpoints with classes
+     *
+     * 
      * @var dictionary
      */
     private $classMap = [
         'users'  => 'Eightfold\Eventbrite\Classes\Individual',
         'events' => 'Eightfold\Eventbrite\Classes\Event',
         'categories' => 'Eightfold\Eventbrite\Classes\Category',
-        'subcategories' => 'Eightfold\Eventbrite\Classes\Subcategory'
+        'subcategories' => 'Eightfold\Eventbrite\Classes\Subcategory',
+        'ticket_classes' => 'Eightfold\Eventbrite\Classes\TicketClass'
     ];
 }

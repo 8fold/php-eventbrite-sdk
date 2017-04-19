@@ -4,8 +4,18 @@ namespace Eightfold\Eventbrite\Classes;
 
 use Eightfold\Eventbrite\Classes\ApiResource;
 
-class Format extends ApiResource
+use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
+use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
+
+class Format extends ApiResource implements ApiResourceInterface, ApiResourceIsBase
 {
-    const endpointEntry = 'formats';
-    const classPath = __CLASS__;
+    static public function baseEndpoint()
+    {
+        return 'formats';
+    }
+
+    static public function classPath()
+    {
+        return __CLASS__;
+    }    
 }

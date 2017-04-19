@@ -37,8 +37,8 @@ trait Gettable
         // Some of the properties are the result of an API call. We don't want to
         // be too chatty with the API lest we hit the throttle limit; therefore
         // we will check to see if we've already set an instance property.
-        if (isset($this->{$name}) && !is_null($this->{$name})) {
-            return $this->{$name};
+        if (isset($this->changed[$name]) && !is_null($this->changed[$name])) {
+            return $this->changed[$name];
 
         }
 
@@ -46,15 +46,15 @@ trait Gettable
         // exists with the same name as the one being evaluated. If it does, call
         // the method, set the instance variable, and then return the results.
         if (method_exists($this, $name)) {
-            $this->{$name} = $this->$name();
-            return $this->{$name};
+            $this->changed[$name] = $this->$name();
+            return $this->changed[$name];
 
         }
 
         // Shouldn't be necessary, but it might be the case that someone has
         // set a property to null without having a method of that name;
         // therefore, we don't want to error out, we just return null.
-        if (isset($this->{$name}) && is_null($this->{$name})) {
+        if (isset($this->changed->{$name}) && is_null($this->changed->{$name})) {
             return null;
 
         }        

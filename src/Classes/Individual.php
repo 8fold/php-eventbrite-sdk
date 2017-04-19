@@ -6,14 +6,13 @@ use Eightfold\Eventbrite\Classes\ApiResource;
 
 use Eightfold\Eventbrite\Classes\Event;
 
-class Individual extends ApiResource
-{
-    /**
-     * REQUIRED: Defines the base endpoint for the resource.
-     */
-    const endpointEntry = 'users/me';
-    const classPath = __CLASS__;
+use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
+use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
+use Eightfold\Eventbrite\Interfaces\ApiResourcePostable;
 
+class Individual extends ApiResource implements ApiResourceInterface
+{
+    
     private $events = null;
 
     private $upcomingEvents = null;
@@ -21,7 +20,7 @@ class Individual extends ApiResource
     public function events()
     {
         if (is_null($this->events)) {
-            $endpoint = static::endpointEntry .'/owned_events';
+            $endpoint = $this->ownedEventsEndpoint;
             $options = [
                 'order_by' => 'start_desc'
             ];
@@ -33,7 +32,7 @@ class Individual extends ApiResource
     public function upcomingEvents()
     {
         if (is_null($this->upcomingEvents)) {
-            $endpoint = static::endpointEntry .'/owned_events';
+            $endpoint = $this->ownedEventsEndpoint;
             $options = [
                 'order_by' => 'start_desc', 
                 'status' => 'live'
@@ -43,4 +42,23 @@ class Individual extends ApiResource
         }
         return $this->upcomingEvents;
     }
+
+    private function ownedEventsEndpoint()
+    {
+        return $this->endpoint .'/owned_events';
+    }
+
+    /**************/
+    /* Interfaces */
+    /**************/
+
+    static public function classPath()
+    {
+        return __CLASS__;
+    }
+
+    public function endpoint()
+    {
+        return 'users/me';
+    }    
 }

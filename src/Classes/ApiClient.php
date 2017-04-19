@@ -91,7 +91,7 @@ abstract class ApiClient
         $default_config = [
             'base_uri' => self::base_uri,
             'exceptions' => self::exceptions,
-            'timeout' => self::timeout,
+            'timeout' => self::timeout
         ];
         $this->config = array_merge($default_config, $config);
 
@@ -103,7 +103,7 @@ abstract class ApiClient
             $this->token = $token;
             // Set the authorisation header.
             $this->config['headers']['Authorization'] = 'Bearer ' . $this->token;
-            $this->client = new Client($config);
+            $this->client = new Client($this->config);
 
         } else {
             throw new \Exception('An OAuth token is required to connect to the Eventbrite API.');
@@ -125,7 +125,7 @@ abstract class ApiClient
     public function get(string $endpoint, array $options = [], string $class = null)
     {
         // build the endpoint
-        $target = $this->getEndpoint($endpoint, $options);
+        $target = $this->buildFullEndpoint($endpoint, $options);
 
         // get the class to return
         $class = $this->getClassPath($target, $class);
@@ -138,7 +138,6 @@ abstract class ApiClient
         if ($response instanceof ResponseInterface) {
             $body = $response->getBody()->getContents();
             $parsed = json_decode($body, true);
-// if ($endpoint == 'categories') { dd($parsed); }
             if (array_key_exists('pagination', $parsed)) {
                 return $this->getCollection($parsed);
             }
@@ -167,14 +166,15 @@ abstract class ApiClient
      * 
      * @return ApiResource           An instance of the class path received
      */
-    public function post(string $endpoint, $updates = [], string $class = null)
+    public function post(string $endpoint, array $updates = [], string $class = null)
     {
-        $endpoint = $this->getEndpoint($endpoint);
-        $class = $this->getClassPath($endpoint, $class, $updates);
-
+        $endpoint = $this->buildFullEndpoint($endpoint, null);      
+        $body = json_encode($updates);
+        $class = $this->getClassPath($endpoint, $class);
         $response = $this->client->post($endpoint, [
-                'body' => json_encode($updates)
+                'body' => $body
             ]);
+
         if ($response instanceof ResponseInterface) {
             $body = $response->getBody()->getContents();
             $parsed = json_decode($body, true);
@@ -187,10 +187,11 @@ abstract class ApiClient
         }  
     }
 
-    private function getEndpoint($endpoint, $options)
+    private function buildFullEndpoint($endpoint, $options)
     {
         // base endpoint
         $endpoint = static::base_uri .'/'. $endpoint .'/?token='. $this->token;
+        
         if (count($options) > 0) {
             $params = $this->getParameters($options);
             $endpoint .= '&'. $params;
@@ -234,11 +235,16 @@ abstract class ApiClient
             // we were not told which class to instantiate,
             // use the endpoint to decide.
             $endpointParts = explode('/', $endpoint);    
-            $object = $endpointParts[0];
-            $class = (isset($this->classMap[$object]))
-                ? $this->classMap[$object]
-                : null;
+            $first = array_shift($endpointParts);
+            $last = array_pop($endpointParts);
+            $class = null;
+            if (isset($this->classMap[$first])) {
+                $class = $this->classMap[$object];
 
+            } elseif (isset($this->classMap[$last])) {
+                $class = $this->classMap[$last];
+
+            }
         }
         return $class;
     }

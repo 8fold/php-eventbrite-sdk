@@ -4,7 +4,22 @@ namespace Eightfold\Eventbrite\Classes;
 
 use Eightfold\Eventbrite\Classes\Individual;
 
-class Organization extends Individual
+use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
+
+class Organization extends Individual implements ApiResourceInterface
 {
-    const classPath = __CLASS__;
+    
+    /**************/
+    /* Interfaces */
+    /**************/
+
+    static public function baseEndpoint()
+    {
+        return 'users';
+    }
+
+    static public function classPath()
+    {
+        return __CLASS__;
+    }
 }

@@ -4,11 +4,11 @@ namespace Eightfold\Eventbrite\Classes;
 
 use Eightfold\Eventbrite\Classes\ApiResource;
 
-class Category extends ApiResource
-{
-    const endpointEntry = 'categories';
-    const classPath = __CLASS__;    
+use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
+use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
 
+class Category extends ApiResource implements ApiResourceInterface, ApiResourceIsBase
+{
     public function name()
     {
         if (isset($this->name_localized)) {
@@ -33,5 +33,19 @@ class Category extends ApiResource
             return $this->name;
 
         }
+    }
+
+    /**************/
+    /* Interfaces */
+    /**************/
+
+    static public function baseEndpoint()
+    {
+        return 'categories';
+    }
+
+    static public function classPath()
+    {
+        return __CLASS__;
     }
 }
