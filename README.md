@@ -85,11 +85,11 @@ GET /events/:id/ticket_classes/:ticket_class_id/
 
 ```php
 $event = Event::find(:id);
-$ticketClass = $event->ticketClassWithId(:id);
+$ticketClass = $event->ticketClassWithId(:ticket_class_id);
 
 // OR
 
-$ticketClass = TicketClass::find($event, :id);
+$ticketClass = TicketClass::find($event, :ticket_class_id);
 ```
 
 POST /events/:id/ticket_classes/:ticket_class_id/
