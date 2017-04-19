@@ -27,6 +27,9 @@ trait Gettable
         // in a property called "raw", strangely enough. Check to see if what
         // we are looking for is hiding in there and return early, if so.
         if (isset($this->raw) && array_key_exists($name, $this->raw)) {
+            if (is_array($this->raw[$name])) {
+                return (object) $this->raw[$name];
+            }
             return $this->raw[$name];
 
         }

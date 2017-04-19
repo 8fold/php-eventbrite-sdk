@@ -24,7 +24,7 @@ class Event extends ApiResource
     /**
      * REQUIRED: Defines the base endpoint for the resource.
      */
-    const endpointEntry = 'events/';
+    const endpointEntry = 'events';
     const classPath = __CLASS__;
     const postKey = 'event';
     const settableFields = [
@@ -50,7 +50,8 @@ class Event extends ApiResource
         'password',
         'capacity',
         'show_remaining',
-        'source'
+        'source',
+        'status'
     ];
 
     const convertToDots = [
@@ -91,6 +92,11 @@ class Event extends ApiResource
     public function subcategory()
     {
         return $this->subcategory;
+    }
+
+    public function ticketClasses()
+    {
+        dd('implement');
     }
 
     public function lowCostDisplay()

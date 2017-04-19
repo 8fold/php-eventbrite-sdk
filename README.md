@@ -8,7 +8,7 @@
 }
 ```
 
-## Description
+## Overview
 
 This library is designed to mirror the Eventbrite API documentation when it comes to defining what is in each class definition. For example:
 
@@ -32,3 +32,107 @@ $eb->entity->organizers
 // to get all the events owned by the entity related to the auth token
 $eb->entity->events;
 ```
+
+## Details Events
+
+POST /events/
+
+```php
+// TODO: Verify
+$event = new Event();
+$event->name_html      = 'Hello world!';
+$event->start_utc      = '2017-01-01T01:00:00Z';
+$event->start_timezone = 'America/New York';
+$event->end_utc        = '2017-01-02T01:00:00Z';
+$event->end_timezone   = 'America/New York';
+$event->currencty      = 'USD';
+$event->save();
+```
+
+GET /events/:id/
+
+```php
+$event = Event::find(:id);
+```
+
+POST /events/:id/
+
+NOTE: Eventbrite does not currently suppot PATCH or PUT; however, the SDK only transmits the properties that were changed since the last save. If you never save, you are not affecting the Event stored with Eventbrite.
+
+```php
+$event = Event::find(:id);
+$event->name_html = 'Oh, hi Mark.';
+$event->save();
+```
+
+## Event todo
+
+GET /events/search/
+
+POST /events/:id/publish/
+
+POST /events/:id/unpublish/
+
+POST /events/:id/cancel/
+
+DELETE /events/:id/
+
+GET /events/:id/display_settings/
+
+POST /events/:id/display_settings/
+
+GET /events/:id/ticket_classes/
+
+POST /events/:id/ticket_classes/
+
+GET /events/:id/ticket_classes/:ticket_class_id/
+
+POST /events/:id/ticket_classes/:ticket_class_id/
+
+DELETE /events/:id/ticket_classes/:ticket_class_id/
+
+GET /events/:id/canned_questions/
+
+GET /events/:id/questions/
+
+GET /events/:id/questions/:id/
+
+GET /events/:id/attendees/
+
+GET /events/:id/attendees/:attendee_id/
+
+GET /events/:id/orders/
+
+GET /events/:id/discounts/
+
+POST /events/:id/discounts/
+
+GET /events/:id/discounts/:discount_id/
+
+POST /events/:id/discounts/:discount_id/
+
+GET /events/:id/public_discounts/
+
+POST /events/:id/public_discounts/
+
+GET /events/:id/public_discounts/:discount_id/
+
+POST /events/:id/public_discounts/:discount_id/
+
+DELETE /events/:id/public_discounts/:discount_id/
+
+GET /events/:id/access_codes/
+
+POST /events/:id/access_codes/
+
+GET /events/:id/access_codes/:access_code_id/
+
+POST /events/:id/access_codes/:access_code_id/
+
+GET /events/:id/transfers/
+
+GET /events/:id/teams/
+
+GET /events/:id/teams/:id/
+
+GET /events/:id/teams/:id/attendees/

@@ -8,6 +8,10 @@ use GuzzleHttp\Exception\BadResponseException;
 use Psr\Http\Message\ResponseInterface;
 use Exception;
 
+use Eightfold\Eventbrite\Traits\ClassMappable;
+
+use Eightfold\Eventbrite\Classes\Collection;
+
 /**
  * The main connection to the Eventbrite APIs
  *
@@ -16,6 +20,8 @@ use Exception;
  */
 abstract class ApiClient
 {
+    use ClassMappable;
+
     /**
      * Version number for this package
      * @todo Consider deprecating
@@ -25,12 +31,12 @@ abstract class ApiClient
     /**
      * Which version of the API to use
      */
-    const base_uri = 'https://www.eventbriteapi.com/v3/';
+    const base_uri = 'https://www.eventbriteapi.com/v3';
 
     /**
      * @todo Consider deprecating
      */
-    const user_endpoint = 'users/me/';
+    const user_endpoint = 'users/me';
     
     /**
      * False by default allows us to handle errors
@@ -49,18 +55,15 @@ abstract class ApiClient
     private $token;
 
     /**
+     * The configuration for each Guzzle client
+     * @var array
+     */
+    private $config;
+
+    /**
      * @var GuzzleHttp\Client
      */
     private $client;
-
-    /**
-     * Maps endpoint start with package class to return instance
-     * @var dictionary
-     */
-    private $classMap = [
-        'users'  => 'Eightfold\Eventbrite\Classes\Individual',
-        'events' => 'Eightfold\Eventbrite\Classes\Event'
-    ];
 
     /**
      * Create a new ApiCclient
@@ -90,16 +93,16 @@ abstract class ApiClient
             'exceptions' => self::exceptions,
             'timeout' => self::timeout,
         ];
-        $config = array_merge($default_config, $config);
+        $this->config = array_merge($default_config, $config);
 
         // Add this last so it's always there and isn't overwritten.
-        $config['headers']['User-Agent'] = '8fold\eventbrite-sdk-php v' . self::version . ' ' . \GuzzleHttp\default_user_agent();
-        $config['headers']['Content-Type'] = 'application/json';
+        $this->config['headers']['User-Agent'] = '8fold\eventbrite-sdk-php v' . self::version . ' ' . \GuzzleHttp\default_user_agent();
+        $this->config['headers']['Content-Type'] = 'application/json';
 
         if (!empty($token)) {
             $this->token = $token;
             // Set the authorisation header.
-            $config['headers']['Authorization'] = 'Bearer ' . $this->token;
+            $this->config['headers']['Authorization'] = 'Bearer ' . $this->token;
             $this->client = new Client($config);
 
         } else {
@@ -114,18 +117,31 @@ abstract class ApiClient
      * GET calls do not require the token to be part of the endpoint.
      * 
      * @param  string      $endpoint The endpoint to hit on the API
-     * @param  string|null $class    The desired class instance to be returned
      * @param  array       $options  Options to append to call
+     * @param  string|null $class    The desired class instance to be returned
      * 
      * @return ApiResource           An instance of the class path received
      */
-    public function get(string $endpoint, string $class = null, $options = [])
+    public function get(string $endpoint, array $options = [], string $class = null)
     {
-        $class = $this->getClassPath($endpoint, $class);
-        $response = $this->client->get($endpoint);
+        // build the endpoint
+        $target = $this->getEndpoint($endpoint, $options);
+
+        // get the class to return
+        $class = $this->getClassPath($target, $class);
+
+        // @todo: Convert to try-catch
+        // make the call
+        $response = $this->client->get($target);
+
+        // return the appropriate response
         if ($response instanceof ResponseInterface) {
             $body = $response->getBody()->getContents();
             $parsed = json_decode($body, true);
+// if ($endpoint == 'categories') { dd($parsed); }
+            if (array_key_exists('pagination', $parsed)) {
+                return $this->getCollection($parsed);
+            }
             $class = '\\'. $class;
             return new $class($parsed, $this);
 
@@ -135,20 +151,25 @@ abstract class ApiClient
         }
     }
 
+    private function getCollection($payload)
+    {
+        return new Collection($payload, $this);
+    }
+
     /**
-     * Update a resource with the API.
+     * Post a resource with the API.
      *
      * POST calls require the token to be part of the endpoint.
      * 
      * @param  string      $endpoint The endpoint to hit on the API
-     * @param  string|null $class    The desired class instance to be returned
      * @param  array       $options  The updates being made
+     * @param  string|null $class    The desired class instance to be returned
      * 
      * @return ApiResource           An instance of the class path received
      */
-    public function post(string $endpoint, string $class = null, $updates = [])
+    public function post(string $endpoint, $updates = [], string $class = null)
     {
-        $endpoint = $endpoint .'/?token='. $this->token;
+        $endpoint = $this->getEndpoint($endpoint);
         $class = $this->getClassPath($endpoint, $class, $updates);
 
         $response = $this->client->post($endpoint, [
@@ -161,9 +182,42 @@ abstract class ApiClient
             return new $class($parsed, $this);
 
         } else {
-            throw new \Exception('Could not patch resource.');
+            throw new \Exception('Could not post resource.');
 
         }  
+    }
+
+    private function getEndpoint($endpoint, $options)
+    {
+        // base endpoint
+        $endpoint = static::base_uri .'/'. $endpoint .'/?token='. $this->token;
+        if (count($options) > 0) {
+            $params = $this->getParameters($options);
+            $endpoint .= '&'. $params;
+        }
+        return $endpoint;
+    }
+
+    /**
+     * @todo Test to make sure this works.
+     * 
+     * @param  array  $options [description]
+     * @return [type]          [description]
+     */
+    private function getParameters(array $options = [])
+    {
+        $params = [];
+        foreach ($options as $key => $value)
+        {
+            $params[] = $key .'='. $value;
+        }
+
+        if (count($params) > 0) {
+            $combined = implode('&', $params);
+            return $combined;
+        }
+        return '';
+
     }
 
     /**
@@ -174,7 +228,7 @@ abstract class ApiClient
      * 
      * @return string                The resulting class path
      */
-    public function getClassPath(string $endpoint, string $class = null)
+    private function getClassPath(string $endpoint, string $class = null)
     {
         if (is_null($class)) {
             // we were not told which class to instantiate,

@@ -13,7 +13,7 @@ abstract class ApiResource
      * Used for querying the Eventbrite api related to events.
      * @var null
      */
-    protected $eventbrite = null;
+    public $eventbrite = null;
 
     /**
      * The raw payload provided at instantiation. 
@@ -32,8 +32,19 @@ abstract class ApiResource
     static public function find(string $id, Eventbrite $eventbrite)
     {
         $class = static::classPath;
-        $resourse = $eventbrite->get(static::endpointEntry . $id);
-        return new $class($eventbrite->get(static::endpointEntry . $categoryId), $eventbrite);
+        $endpoint = static::endpointEntry .'/'. $id;
+
+        // @todo: ClassLoader failing when not including class path explicitly
+        return $eventbrite->get($endpoint, [], $class);
+    }
+
+    static public function getMany(Eventbrite $eventbrite)
+    {
+        $class = static::classPath;
+        $endpoint = static::endpointEntry;
+
+        // @todo: ClassLoader failing when not including class path explicitly
+        return $eventbrite->get($endpoint, [], $class);
     }
 
     /**
