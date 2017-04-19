@@ -65,7 +65,7 @@ $event->name_html = 'Oh, hi Mark.';
 $event->save();
 ```
 
-## Details Ticket Classes
+### Ticket Classes
 
 GET /events/:id/ticket_classes/
 
