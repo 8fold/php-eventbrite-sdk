@@ -23,6 +23,12 @@ trait Gettable
      */
     public function __get(string $name)
     {
+        // $upperCased = ucfirst($name);
+        // if (method_exists($this, 'get'. $upperCased)) {
+        //     $toCall = 'get'. $upperCased;
+        //     return $this->$toCall();
+        // }
+
         // For all of our ApiResources, we capture the raw return of the API call
         // in a property called "raw", strangely enough. Check to see if what
         // we are looking for is hiding in there and return early, if so.
@@ -42,15 +48,22 @@ trait Gettable
 
         }
 
-        // This is the last ditch effort to find something. Check to see if a method
-        // exists with the same name as the one being evaluated. If it does, call
+        // Exists with the same name as the one being evaluated. If it does, call
         // the method, set the instance variable, and then return the results.
         if (method_exists($this, $name)) {
-            if (property_exists($this, 'changed')) {
+            $changedExists = property_exists($this, 'changed');
+            $changedNotNull = !is_null($this->changed);
+            $changedProp = !isset($this->changed[$name]);
+            $changedPropNotNull = !is_null($this->changed[$name]);
+            if ($changedExists && $changedNotNull && $changedProp && $changedPropNotNull) {
+            
                 $this->changed[$name] = $this->$name();
                 return $this->changed[$name];
 
             }
+// dd(get_class($this) .'::'. $name);
+            // $call = get_class($this) .'::'. $name;
+            // return call_user_func([$call]);
             return $this->$name();
         }
 

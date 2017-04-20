@@ -1,6 +1,6 @@
 <?php
 
-namespace Eightfold\Eventbrite\Classes;
+namespace Eightfold\Eventbrite\Classes\Abstracts;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
@@ -10,7 +10,7 @@ use Exception;
 
 use Eightfold\Eventbrite\Traits\ClassMappable;
 
-use Eightfold\Eventbrite\Classes\Collection;
+use Eightfold\Eventbrite\Classes\Helpers\Collection;
 
 /**
  * The main connection to the Eventbrite APIs

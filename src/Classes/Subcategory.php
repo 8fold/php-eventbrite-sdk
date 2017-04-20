@@ -6,6 +6,22 @@ use Eightfold\Eventbrite\Classes\Category;
 
 class Subcategory extends Category
 {
-    const endpointEntry = 'subcategories';
-    const classPath = __CLASS__;
+    /**************/
+    /* Interfaces */
+    /**************/
+
+    static public function baseEndpoint()
+    {
+        return 'subcategories';
+    }
+
+    static public function classPath()
+    {
+        return __CLASS__;
+    }
+
+    public function endpoint()
+    {
+        return static::baseEndpoint() .'/'. $this->id;
+    }        
 }

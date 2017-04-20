@@ -28,18 +28,23 @@ class Event extends ApiResource implements ApiResourceInterface, ApiResourceIsBa
 
     public function organizer()
     {
-        return Organizer::find($this->organizer_id, $this->eventbrite);
+        return Organizer::find($this->eventbrite, $this->organizer_id);
     }
 
     public function venue()
     {
-        return Venue::find($this->venue_id, $this->eventbrite);
+        return Venue::find($this->eventbrite, $this->venue_id);
     }
 
     public function category()
     {
-        return Category::find($this->category_id, $this->eventbrite);
+        return Category::find($this->eventbrite, $this->category_id);
     }
+
+    public function subcategory()
+    {
+        return Subcategory::find($this->eventbrite, $this->subcategory_id);
+    }    
 
     public function htmlDescriptionClean()
     {
@@ -63,10 +68,7 @@ class Event extends ApiResource implements ApiResourceInterface, ApiResourceIsBa
         return $markdownStripped;        
     }    
 
-    public function subcategory()
-    {
-        return $this->subcategory;
-    }
+
 
     public function ticketClasses($refresh = false)
     {

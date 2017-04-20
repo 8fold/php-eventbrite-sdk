@@ -1,6 +1,6 @@
 <?php
 
-namespace Eightfold\Eventbrite\Classes;
+namespace Eightfold\Eventbrite\Classes\Abstracts;
 
 use Eightfold\Eventbrite\Eventbrite;
 

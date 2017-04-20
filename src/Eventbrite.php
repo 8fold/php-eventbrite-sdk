@@ -3,14 +3,14 @@
 // inspired by jamiehollern/eventbrite
 namespace Eightfold\Eventbrite;
 
-use Eightfold\Eventbrite\Classes\ApiClient as EventbriteBase;
+use Eightfold\Eventbrite\Classes\Abstracts\ApiClient as EventbriteBase;
 
 use Eightfold\Eventbrite\Traits\Gettable;
 
 use Eightfold\Eventbrite\Classes\Organization;
 use Eightfold\Eventbrite\Classes\Individual;
 use Eightfold\Eventbrite\Classes\Organizer;
-use Eightfold\Eventbrite\Classes\Events;
+use Eightfold\Eventbrite\Classes\Event;
 
 /**
  * Main Eventrbrite entry point.
@@ -92,7 +92,7 @@ class Eventbrite extends EventbriteBase
      */
     public function myEvents()
     {
-        return $this->entity->events;
+        return $this->user->events;
     }
 
     /**
@@ -103,7 +103,7 @@ class Eventbrite extends EventbriteBase
      */
     public function myUpcomingEvents()
     {
-        return $this->entity->upcomingEvents;
+        return $this->user->upcomingEvents;
     }    
 
     /**
@@ -112,7 +112,7 @@ class Eventbrite extends EventbriteBase
      * @return Organization|Individual The object associated with the token used to
      *                                 to instantiate the Eventbrite connection.
      */
-    private function entity()
+    public function user()
     {
         if (is_null($this->organization)) {
             return $this->individual;
