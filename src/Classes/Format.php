@@ -9,6 +9,10 @@ use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
 
 class Format extends ApiResource implements ApiResourceInterface, ApiResourceIsBase
 {
+    /**************/
+    /* Interfaces */
+    /**************/
+
     static public function baseEndpoint()
     {
         return 'formats';
@@ -17,5 +21,10 @@ class Format extends ApiResource implements ApiResourceInterface, ApiResourceIsB
     static public function classPath()
     {
         return __CLASS__;
-    }    
+    }
+
+    public function endpoint()
+    {
+        return static::baseEndpoint() .'/'. $this->id;
+    }
 }

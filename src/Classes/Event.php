@@ -14,6 +14,7 @@ use Eightfold\Eventbrite\Eventbrite;
 use Eightfold\Eventbrite\Classes\Venue;
 use Eightfold\Eventbrite\Classes\Category;
 use Eightfold\Eventbrite\Classes\TicketClass;
+use Eightfold\Eventbrite\Classes\Discount;
 
 use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
 use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
@@ -76,6 +77,17 @@ class Event extends ApiResource implements ApiResourceInterface, ApiResourceIsBa
     public function ticketClassWithId(string $id)
     {
         return TicketClass::find($this, $id);
+    }
+
+    public function discounts($refresh = false)
+    {
+        $discounts = Discount::all($this);
+        return $discounts;
+    }
+
+    public function discountWithId(string $id)
+    {
+        return Discount::find($this, $id);
     }
 
     public function lowCostDisplay()

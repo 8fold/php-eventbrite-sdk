@@ -10,7 +10,7 @@ use Eightfold\Eventbrite\Classes\Event;
 
 use Eightfold\Eventbrite\Traits\Gettable;
 
-class TicketClass extends ApiResource implements ApiResourceInterface, ApiResourcePostable
+class Discount extends ApiResource implements ApiResourceInterface, ApiResourcePostable
 {
     use Gettable;
 
@@ -19,14 +19,14 @@ class TicketClass extends ApiResource implements ApiResourceInterface, ApiResour
     static public function all(Event $event)
     {
         $eventbrite = $event->eventbrite;
-        $baseEndpoint = $event->endpoint() .'/ticket_classes';
+        $baseEndpoint = $event->endpoint() .'/discounts';
         $ticketClasses = parent::getMany($event->eventbrite, $baseEndpoint);
         return $ticketClasses;
     }
 
     static public function find($event, string $id)
     {
-        $endpoint = $event->endpoint .'/ticket_classes/'. $id;
+        $endpoint = $event->endpoint .'/discounts/'. $id;
         return $event->eventbrite->get($endpoint, [], __CLASS__);
     }
 
@@ -38,19 +38,9 @@ class TicketClass extends ApiResource implements ApiResourceInterface, ApiResour
         return $this->myEvent;
     }
 
-    public function setCost(int $value, string $currency = null, string $display = null)
+    public function ticketClasses()
     {
-        $this->changed['cost'] = 'USD,'. $value;
-    }
-
-    public function getCost()
-    {
-        return $this->cost['value'];
-    }
-
-    public function getCostDisplay()
-    {
-        return $this->cost['display'];
+        return $this->ticket_ids;
     }
 
     /**************/
@@ -64,37 +54,24 @@ class TicketClass extends ApiResource implements ApiResourceInterface, ApiResour
 
     public function endpoint()
     {
-        return $this->event()->endpoint .'/ticket_classes/'. $this->id;
+        return $this->event()->endpoint .'/discounts/'. $this->id;
     }
 
     static public function parameterPrefix()
     {
-        return 'ticket_class';
+        return 'discount';
     }
 
     static public function parametersToPost()
     {
         return [
-            'name',
-            'description',
-            'quantity_total',
-            'cost',
-            'donation',
-            'free',
-            'include_fee',
-            'split_fee',
-            'hide_description',
-            'sales_channels',
-            'sales_start',
-            'sales_end',
-            'sales_start_after',
-            'minimum_quantity',
-            'maximum_quantity',
-            'auto_hide',
-            'auto_hide_before',
-            'auto_hide_after',
-            'hidden',
-            'order_confirmation_message'
+            'code',
+            'amount_off',
+            'percent_off',
+            'ticket_ids',
+            'quantity_available',
+            'start_date',
+            'end_date'
         ];
     }
 

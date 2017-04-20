@@ -15,6 +15,7 @@ trait ClassMappable
         'events' => 'Eightfold\Eventbrite\Classes\Event',
         'categories' => 'Eightfold\Eventbrite\Classes\Category',
         'subcategories' => 'Eightfold\Eventbrite\Classes\Subcategory',
-        'ticket_classes' => 'Eightfold\Eventbrite\Classes\TicketClass'
+        'ticket_classes' => 'Eightfold\Eventbrite\Classes\TicketClass',
+        'discounts' => 'Eightfold\Eventbrite\Classes\Discount'
     ];
 }

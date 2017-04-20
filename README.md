@@ -52,7 +52,7 @@ $event->save();
 GET /events/:id/
 
 ```php
-$event = Event::find(:id);
+$event = Event::find(:id, Eventbrite);
 ```
 
 POST /events/:id/
@@ -60,7 +60,7 @@ POST /events/:id/
 NOTE: Eventbrite does not currently suppot PATCH or PUT; however, the SDK only transmits the properties that were changed since the last save. If you never save, you are not affecting the Event stored with Eventbrite.
 
 ```php
-$event = Event::find(:id);
+$event = Event::find(:id, Eventbrite);
 $event->name_html = 'Oh, hi Mark.';
 $event->save();
 ```
@@ -70,21 +70,21 @@ $event->save();
 GET /events/:id/ticket_classes/
 
 ```php
-$event = Event::find(:id);
+$event = Event::find(:id, Eventbrite);
 $ticketClasses = $event->ticketClasses;
 ```
 
 POST /events/:id/ticket_classes/
 
 ```php
-$event = Event:find(:id);
+$event = Event::find(:id, Eventbrite);
 $ticket_classes = $event->ticketClasses;
 ```
 
 GET /events/:id/ticket_classes/:ticket_class_id/
 
 ```php
-$event = Event::find(:id);
+$event = Event::find(:id, Eventbrite);
 $ticketClass = $event->ticketClassWithId(:ticket_class_id);
 
 // OR
@@ -95,11 +95,31 @@ $ticketClass = TicketClass::find($event, :ticket_class_id);
 POST /events/:id/ticket_classes/:ticket_class_id/
 
 ```php
-$event = Event:find(:id);
+$event = Event::find(:id, Eventbrite);
 $ticket_classes = $event->ticket_classes;
 $ticketClass = $ticket_classes[0];
 $ticketClass->cost = 2000; // USD only right now
 $ticketClass->save();
+```
+
+### Discounts
+
+GET /events/:id/discounts/
+
+```php
+$event = Event::find(:id, Eventbrite);
+$discounts = $event->discounts;
+```
+
+GET /events/:id/discounts/:discount_id/
+
+```php
+$event = Event::find(:id, Eventbrite);
+$discount = $event->ticketClassWithId(:discount_id);
+
+// OR
+
+$discount = TicketClass::find($event, :discount_id);
 ```
 
 ## Event todo
@@ -132,11 +152,7 @@ GET /events/:id/attendees/:attendee_id/
 
 GET /events/:id/orders/
 
-GET /events/:id/discounts/
-
 POST /events/:id/discounts/
-
-GET /events/:id/discounts/:discount_id/
 
 POST /events/:id/discounts/:discount_id/
 

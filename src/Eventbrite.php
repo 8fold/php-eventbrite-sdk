@@ -76,10 +76,10 @@ class Eventbrite extends EventbriteBase
     {
         parent::__construct($token, $config);
         if ($isOrg) {
-            $this->organization = parent::get(parent::user_endpoint, [], Organization::class);    
+            $this->organization = parent::get('users/me', [], Organization::class);    
 
         } else {
-            $this->individual = parent::get(parent::user_endpoint, [], Individual::class);
+            $this->individual = parent::get('users/me', [], Individual::class);
 
         }
     }

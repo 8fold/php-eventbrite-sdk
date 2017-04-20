@@ -43,7 +43,7 @@ class Individual extends ApiResource implements ApiResourceInterface
         return $this->upcomingEvents;
     }
 
-    private function ownedEventsEndpoint()
+    protected function ownedEventsEndpoint()
     {
         return $this->endpoint .'/owned_events';
     }

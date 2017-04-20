@@ -133,7 +133,6 @@ abstract class ApiClient
         // @todo: Convert to try-catch
         // make the call
         $response = $this->client->get($target);
-
         // return the appropriate response
         if ($response instanceof ResponseInterface) {
             $body = $response->getBody()->getContents();

@@ -48,4 +48,9 @@ class Category extends ApiResource implements ApiResourceInterface, ApiResourceI
     {
         return __CLASS__;
     }
+
+    public function endpoint()
+    {
+        return static::baseEndpoint() .'/'. $this->id;
+    }    
 }
