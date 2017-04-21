@@ -3,43 +3,18 @@
 namespace Eightfold\Eventbrite\Classes\EventSubs;
 
 use Eightfold\Eventbrite\Classes\Abstracts\EventSub;
-
-use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
-use Eightfold\Eventbrite\Interfaces\ApiResourcePostable;
 use Eightfold\Eventbrite\Interfaces\EventSubInterface;
 
-
-use Eightfold\Eventbrite\Classes\Event;
-
-use Eightfold\Eventbrite\Traits\Gettable;
-
-class TicketClass extends EventSub implements ApiResourceInterface, ApiResourcePostable, EventSubInterface
+class DisplaySetting extends EventSub implements EventSubInterface
 {
-    use Gettable;
-
-    public function setCost(int $value, string $currency = null, string $display = null)
-    {
-        $this->changed['cost'] = 'USD,'. $value;
-    }
-
-    public function getCost()
-    {
-        return $this->cost['value'];
-    }
-
-    public function getCostDisplay()
-    {
-        return $this->cost['display'];
-    }
-
     /**************/
     /* Interfaces */
     /**************/
     static public function routeName()
     {
-        return 'ticket_classes';
+        return 'display_settings';
     }
-
+    
     static public function classPath()
     {
         return __CLASS__;
@@ -84,5 +59,5 @@ class TicketClass extends EventSub implements ApiResourceInterface, ApiResourceP
     static public function parametersToConvertToDotNotation()
     {
         return [];
-    }
+    }    
 }

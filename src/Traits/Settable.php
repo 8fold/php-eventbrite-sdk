@@ -13,10 +13,8 @@ trait Settable
 {
     public function __set($name, $value)
     {
-        $interfaces = class_implements($this);
-        $propExists = (property_exists($this, $name) && isset($this->$name));
-
         // we are not setting raw value itself.
+        $propExists = (property_exists($this, $name) && isset($this->$name));
         if ($propExists) {
             $this->{$name} = $value;
 

@@ -14,8 +14,10 @@ use Eightfold\Eventbrite\Eventbrite;
 use Eightfold\Eventbrite\Classes\Venue;
 use Eightfold\Eventbrite\Classes\Category;
 use Eightfold\Eventbrite\Classes\CategorySub\Subcategory;
-use Eightfold\Eventbrite\Classes\TicketClass;
-use Eightfold\Eventbrite\Classes\Discount;
+
+use Eightfold\Eventbrite\Classes\EventSubs\TicketClass;
+use Eightfold\Eventbrite\Classes\EventSubs\Discount;
+use Eightfold\Eventbrite\Classes\EventSubs\DisplaySetting;
 
 use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
 use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
@@ -80,10 +82,14 @@ class Event extends ApiResource implements ApiResourceInterface, ApiResourceIsBa
         return TicketClass::find($this, $id);
     }
 
-    public function discounts($refresh = false)
+    public function discounts()
     {
-        $discounts = Discount::all($this);
-        return $discounts;
+        return Discount::all($this);
+    }
+
+    public function display_settings()
+    {
+        return DisplaySetting::all($this);
     }
 
     public function discountWithId(string $id)

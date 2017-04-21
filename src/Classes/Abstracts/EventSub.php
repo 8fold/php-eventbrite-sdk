@@ -2,15 +2,11 @@
 
 namespace Eightfold\Eventbrite\Classes\Abstracts;
 
-use Eightfold\Eventbrite\Classes\ApiResource;
-use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
-use Eightfold\Eventbrite\Interfaces\ApiResourcePostable;
-
 use Eightfold\Eventbrite\Classes\Event;
 
 use Eightfold\Eventbrite\Traits\Gettable;
 
-class EventSub extends ApiResource implements ApiResourceInterface, ApiResourcePostable
+class EventSub extends ApiResource
 {
     use Gettable;
 
@@ -19,14 +15,14 @@ class EventSub extends ApiResource implements ApiResourceInterface, ApiResourceP
     static public function all(Event $event)
     {
         $eventbrite = $event->eventbrite;
-        $baseEndpoint = $event->endpoint() .'/discounts';
+        $baseEndpoint = $event->endpoint() .'/'. static::routeName();
         $ticketClasses = parent::getMany($event->eventbrite, $baseEndpoint);
         return $ticketClasses;
     }
 
     static public function find($event, string $id)
     {
-        $endpoint = $event->endpoint .'/discounts/'. $id;
+        $endpoint = $event->endpoint .'/'. static::routeName() .'/'. $id;
         return $event->eventbrite->get($endpoint, [], __CLASS__);
     }
 
@@ -37,9 +33,4 @@ class EventSub extends ApiResource implements ApiResourceInterface, ApiResourceP
         }
         return $this->myEvent;
     }
-
-    // public function ticketClasses()
-    // {
-    //     return $this->ticket_ids;
-    // }
 }

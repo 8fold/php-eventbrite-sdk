@@ -17,6 +17,7 @@ trait ClassMappable
         'subcategories' => 'Eightfold\Eventbrite\Classes\Subcategory',
         'ticket_classes' => 'Eightfold\Eventbrite\Classes\TicketClass',
         'discounts' => 'Eightfold\Eventbrite\Classes\Discount',
+        'display_settings' => 'Eightfold\Eventbrite\Classes\DisplaySetting',
         'timezones' => 'Eightfold\Eventbrite\Classes\System\Timezone',
         'regions' => 'Eightfold\Eventbrite\Classes\System\Region',
         'countries' => 'Eightfold\Eventbrite\Classes\System\Country',

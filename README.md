@@ -122,6 +122,15 @@ $discount = $event->ticketClassWithId(:discount_id);
 $discount = TicketClass::find($event, :discount_id);
 ```
 
+### Display Settings
+
+GET /events/:id/display_settings/
+
+```php
+$event = Event::find(:id, Eventbrite);
+$displaySettings = $event->display_settings;
+```
+
 ## Event todo
 
 GET /events/search/
@@ -133,8 +142,6 @@ POST /events/:id/unpublish/
 POST /events/:id/cancel/
 
 DELETE /events/:id/
-
-GET /events/:id/display_settings/
 
 POST /events/:id/display_settings/
 

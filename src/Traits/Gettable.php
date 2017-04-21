@@ -23,15 +23,15 @@ trait Gettable
      */
     public function __get(string $name)
     {
-        // $upperCased = ucfirst($name);
-        // if (method_exists($this, 'get'. $upperCased)) {
-        //     $toCall = 'get'. $upperCased;
-        //     return $this->$toCall();
-        // }
+        // This is not an ApiResource, but we are checking for changed, which is
+        // reserved for that class type. Bail early and save ourselves the processes.
+        $noChangedProperty = !property_exists($this, 'changed');
+        if ($name == 'changed' && $noChangedProperty) {
+            return null;
+        }
 
         // Default returning changes being performed, not raw.
-        $changedExists = (property_exists($this, 'changed') && isset($this->changed[$name]));
-        if ($changedExists && !is_null($this->changed[$name])) {
+        if ($noChangedProperty && isset($this->changed[$name]) && !is_null($this->changed[$name])) {
             return $this->changed[$name];
 
         }
@@ -69,7 +69,7 @@ trait Gettable
         // Shouldn't be necessary, but it might be the case that someone has
         // set a property to null without having a method of that name;
         // therefore, we don't want to error out, we just return null.
-        if (property_exists($this, 'changed') && isset($this->changed->{$name}) && is_null($this->changed->{$name})) {
+        if (property_exists($this, 'changed') && isset($this->changed[$name]) && is_null($this->changed[$name])) {
             return null;
 
         }

@@ -90,7 +90,7 @@ abstract class ApiClient
         $this->config = array_merge($default_config, $config);
 
         // Add this last so it's always there and isn't overwritten.
-        $this->config['headers']['User-Agent'] = '8fold\eventbrite-sdk-php v' . self::version . ' ' . \GuzzleHttp\default_user_agent();
+        $this->config['headers']['User-Agent'] = '8fold\eventbrite-sdk-php ' . \GuzzleHttp\default_user_agent();
         $this->config['headers']['Content-Type'] = 'application/json';
 
         if (!empty($token)) {
@@ -199,7 +199,7 @@ abstract class ApiClient
     private function buildFullEndpoint($endpoint, $options = [])
     {
         // base endpoint
-        $endpoint = static::base_uri .'/'. $endpoint .'/?token='. $this->token;
+        $endpoint = static::BASE_URI .'/'. $endpoint .'/?token='. $this->token;
         
         if (count($options) > 0) {
             $params = $this->getParameters($options);
