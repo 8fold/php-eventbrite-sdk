@@ -27,10 +27,10 @@ Translates to:
 $eb = Eventbrite::setAuthToken(YOUR_AUTH_TOKEN, true);
 
 // to get all the organizers
-$eb->entity->organizers
+$eb->user->organizers
 
 // to get all the events owned by the entity related to the auth token
-$eb->entity->events;
+$eb->user->events;
 ```
 
 ## Details Events
