@@ -23,30 +23,24 @@ abstract class ApiClient
     use ClassMappable;
 
     /**
-     * Version number for this package
-     * @todo Consider deprecating
-     */
-    const version = '0.0.2';
-
-    /**
      * Which version of the API to use
      */
-    const base_uri = 'https://www.eventbriteapi.com/v3';
+    const BASE_URI = 'https://www.eventbriteapi.com/v3';
 
     /**
      * @todo Consider deprecating
      */
-    const user_endpoint = 'users/me';
+    const USER_ENDPOINT = 'users/me';
     
     /**
      * False by default allows us to handle errors
      */
-    const exceptions = false;
+    const EXCEPTIONS = false;
 
     /**
      * How long to wait before timing out
      */
-    const timeout = 30;
+    const TIMEOUT = 30;
 
     /**
      * The OAuth token to use with the instance
@@ -89,9 +83,9 @@ abstract class ApiClient
     public function __construct($token, $config = [])
     {
         $default_config = [
-            'base_uri' => self::base_uri,
-            'exceptions' => self::exceptions,
-            'timeout' => self::timeout
+            'base_uri' => self::BASE_URI,
+            'exceptions' => self::EXCEPTIONS,
+            'timeout' => self::TIMEOUT
         ];
         $this->config = array_merge($default_config, $config);
 
@@ -112,6 +106,20 @@ abstract class ApiClient
     }
 
     /**
+     * [canConnect description]
+     * @return [type] [description]
+     */
+    public function canConnect()
+    {
+        $endpoint = $this->buildFullEndpoint(self::USER_ENDPOINT);
+        $response = $this->client->get($endpoint);
+        if ($response->getStatusCode() === 200) {
+            return true;
+        }
+        return false;
+    }    
+
+    /**
      * Get a resource from the API.
      *
      * GET calls do not require the token to be part of the endpoint.
@@ -126,10 +134,12 @@ abstract class ApiClient
     {
         // build the endpoint
         $target = $this->buildFullEndpoint($endpoint, $options);
+        // var_dump($target);
 
         // get the class to return
         $class = $this->getClassPath($target, $class);
-
+        // var_dump($class);
+        
         // @todo: Convert to try-catch
         // make the call
         $response = $this->client->get($target);
@@ -186,7 +196,7 @@ abstract class ApiClient
         }  
     }
 
-    private function buildFullEndpoint($endpoint, $options)
+    private function buildFullEndpoint($endpoint, $options = [])
     {
         // base endpoint
         $endpoint = static::base_uri .'/'. $endpoint .'/?token='. $this->token;

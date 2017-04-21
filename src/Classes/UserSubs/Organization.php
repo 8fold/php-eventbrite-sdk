@@ -1,12 +1,12 @@
 <?php
 
-namespace Eightfold\Eventbrite\Classes;
+namespace Eightfold\Eventbrite\Classes\UserSubs;
 
-use Eightfold\Eventbrite\Classes\Individual;
+use Eightfold\Eventbrite\Classes\User;
 
 use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
 
-class Organization extends Individual implements ApiResourceInterface
+class Organization extends User implements ApiResourceInterface
 {
     
     /**************/

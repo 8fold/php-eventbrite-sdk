@@ -29,25 +29,27 @@ trait Gettable
         //     return $this->$toCall();
         // }
 
+        // Default returning changes being performed, not raw.
+        $changedExists = (property_exists($this, 'changed') && isset($this->changed[$name]));
+        if ($changedExists && !is_null($this->changed[$name])) {
+            return $this->changed[$name];
+
+        }
+
         // For all of our ApiResources, we capture the raw return of the API call
-        // in a property called "raw", strangely enough. Check to see if what
-        // we are looking for is hiding in there and return early, if so.
-        if (property_exists($this, 'raw') && is_array($this->raw) && array_key_exists($name, $this->raw)) {
+        // in a property called "raw", strangely enough. Check there.
+        $rawExists = (property_exists($this, 'raw') && is_array($this->raw));
+        if ($rawExists && array_key_exists($name, $this->raw)) {
             if (is_array($this->raw[$name])) {
+                dump($this->raw[$name]);
                 return (object) $this->raw[$name];
             }
             return $this->raw[$name];
 
         }
 
-        // Some of the properties are the result of an API call. We don't want to
-        // be too chatty with the API lest we hit the throttle limit; therefore
-        // we will check to see if we've already set an instance property.
-        if (property_exists($this, 'changed') && isset($this->changed[$name]) && !is_null($this->changed[$name])) {
-            return $this->changed[$name];
-
-        }
-
+        // TODO: Revisit this logic. Not sure all the checks are necessary.
+        // 
         // Exists with the same name as the one being evaluated. If it does, call
         // the method, set the instance variable, and then return the results.
         if (method_exists($this, $name)) {
@@ -61,9 +63,6 @@ trait Gettable
                 return $this->changed[$name];
 
             }
-// dd(get_class($this) .'::'. $name);
-            // $call = get_class($this) .'::'. $name;
-            // return call_user_func([$call]);
             return $this->$name();
         }
 
@@ -75,9 +74,17 @@ trait Gettable
 
         }
 
+        // Last ditch effort. Give it over to the class itself.
         if (property_exists($this, $name)) {
             return $this->{$name};
         }
+
+        $trace = debug_backtrace();
+        trigger_error(
+            'Undefined property via __get(): ' . $name .
+            ' in ' . __CLASS__ .
+            ' on line ' . __LINE__,
+            E_USER_NOTICE);        
         return null; 
     }
 }

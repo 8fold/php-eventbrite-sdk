@@ -11,10 +11,10 @@ class Category extends ApiResource implements ApiResourceInterface, ApiResourceI
 {
     public function name()
     {
-        if (isset($this->name_localized)) {
+        if (is_string($this->name_localized)) {
             return $this->name_localized;
 
-        } elseif (isset($this->name)) {
+        } elseif (is_string($this->name)) {
             return $this->name;
 
         }
@@ -23,10 +23,10 @@ class Category extends ApiResource implements ApiResourceInterface, ApiResourceI
 
     public function shortName()
     {
-        if (isset($this->short_name_localized)) {
+        if (is_string($this->short_name_localized)) {
             return $this->short_name_localized;
 
-        } elseif (isset($this->short_name)) {
+        } elseif (is_string($this->short_name)) {
             return $this->short_name;
 
         } else {

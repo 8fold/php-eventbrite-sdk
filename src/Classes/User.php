@@ -10,7 +10,7 @@ use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
 use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
 use Eightfold\Eventbrite\Interfaces\ApiResourcePostable;
 
-class Individual extends ApiResource implements ApiResourceInterface
+class User extends ApiResource implements ApiResourceInterface
 {
     
     private $events = null;

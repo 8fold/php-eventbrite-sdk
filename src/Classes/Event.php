@@ -13,6 +13,7 @@ use Eightfold\Eventbrite\Eventbrite;
 
 use Eightfold\Eventbrite\Classes\Venue;
 use Eightfold\Eventbrite\Classes\Category;
+use Eightfold\Eventbrite\Classes\CategorySub\Subcategory;
 use Eightfold\Eventbrite\Classes\TicketClass;
 use Eightfold\Eventbrite\Classes\Discount;
 
@@ -66,9 +67,7 @@ class Event extends ApiResource implements ApiResourceInterface, ApiResourceIsBa
         $markdown = $htmlConverter->convert($this->description->html);
         $markdownStripped = str_replace(['<span>', '</span>'], '', $markdown);
         return $markdownStripped;        
-    }    
-
-
+    }
 
     public function ticketClasses($refresh = false)
     {

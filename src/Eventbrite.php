@@ -7,10 +7,15 @@ use Eightfold\Eventbrite\Classes\Abstracts\ApiClient as EventbriteBase;
 
 use Eightfold\Eventbrite\Traits\Gettable;
 
-use Eightfold\Eventbrite\Classes\Organization;
-use Eightfold\Eventbrite\Classes\Individual;
+use Eightfold\Eventbrite\Classes\User;
+use Eightfold\Eventbrite\Classes\UserSubs\Organization;
 use Eightfold\Eventbrite\Classes\Organizer;
 use Eightfold\Eventbrite\Classes\Event;
+use Eightfold\Eventbrite\Classes\System\Timezone;
+use Eightfold\Eventbrite\Classes\System\Region;
+use Eightfold\Eventbrite\Classes\System\Country;
+use Eightfold\Eventbrite\Classes\Reports\Sales;
+use Eightfold\Eventbrite\Classes\Reports\Attendees;
 
 /**
  * Main Eventrbrite entry point.
@@ -75,12 +80,14 @@ class Eventbrite extends EventbriteBase
     public function __construct(string $token, $isOrg = false, $config = [])
     {
         parent::__construct($token, $config);
-        if ($isOrg) {
-            $this->organization = parent::get('users/me', [], Organization::class);    
+        if ($this->canConnect()) {
+            if ($isOrg) {
+                $this->organization = parent::get('users/me', [], Organization::class);    
 
-        } else {
-            $this->individual = parent::get('users/me', [], Individual::class);
+            } else {
+                $this->individual = parent::get('users/me', [], User::class);
 
+            }            
         }
     }
 
@@ -118,5 +125,30 @@ class Eventbrite extends EventbriteBase
             return $this->individual;
         }
         return $this->organization;
+    }
+
+    public function timezones()
+    {
+        return Timezone::all($this);
+    }
+
+    public function countries()
+    {
+        return Country::all($this);
+    }
+
+    public function regions()
+    {
+        return Region::all($this);
+    }
+
+    public function sales()
+    {
+        return Sales::get($this);
+    }
+
+    public function attendees()
+    {
+        return Attendees::get($this);
     }
 }
