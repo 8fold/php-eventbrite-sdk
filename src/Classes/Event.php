@@ -49,7 +49,9 @@ class Event extends ApiResource implements ApiResourceInterface, ApiResourceIsBa
 
     public function ticket_classes($id = '')
     {
-        $endpoint = $this->endpoint .'/ticket_classes/'. $id;
+        $endpoint = (strlen($id) > 0)
+            ? $this->endpoint .'/ticket_classes/'. $id
+            : $this->endpoint .'/ticket_classes';
         return $this->hasMany(TicketClass::class, $endpoint);
     }
 
@@ -65,6 +67,7 @@ class Event extends ApiResource implements ApiResourceInterface, ApiResourceIsBa
         return $this->hasMany(Question::class, $endpoint);
     }
 
+    // TODO: See display_settings
     public function attendees($id = '')
     {
         $endpoint = $this->endpoint .'/attendees/'. $id;

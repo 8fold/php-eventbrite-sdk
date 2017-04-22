@@ -81,7 +81,7 @@ class Eventbrite extends EventbriteBase
     public function __construct(string $token, $isOrg = false, $config = [])
     {
         parent::__construct($token, $config);
-        if ($this->canConnect()) {
+        if (parent::canConnect()) {
             if ($isOrg) {
                 $return = new ApiCallBuilder($this, Organization::class, 'users/me');
                 $this->organization = $return->first();
@@ -94,34 +94,6 @@ class Eventbrite extends EventbriteBase
         }
     }
 
-    /**
-     * Shorthand for getting the events from the individual or ogranization.
-     * 
-     * @return Collection The collection of the Events found for the individual or
-     *                    organization.
-     */
-    public function myEvents()
-    {
-        return $this->user->events;
-    }
-
-    /**
-     * Shorthand for getting the upcoming events from the individual or ogranization.
-     * 
-     * @return Collection The collection of the Events found for the individual or
-     *                    organization.
-     */
-    public function myUpcomingEvents()
-    {
-        return $this->user->upcomingEvents;
-    }    
-
-    /**
-     * The account associated with this Eventbrite API connection.
-     * 
-     * @return Organization|Individual The object associated with the token used to
-     *                                 to instantiate the Eventbrite connection.
-     */
     public function user()
     {
         if (is_null($this->organization)) {

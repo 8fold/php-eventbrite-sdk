@@ -68,7 +68,7 @@ class ApiCallBuilder
     public function get()
     {
         if ($this->hasReturnValue()) {
-            // dd('we have a return value, just use it.');
+            dump('we have a return value, just use it.');
             return $this->_return;
 
         }
@@ -76,22 +76,21 @@ class ApiCallBuilder
         $raw = $this->getRaw();
 
         if (is_string($raw)) {
-            // dd('raw is string, there was an error');
+            dump('raw is string, there was an error');
             $this->_return = $this->_raw;
 
         } elseif (count($raw) == 0) {
-            dump($raw);
-            // dd('raw count is zero');
+            dump('raw count is zero');
             // got nothing make null
             $this->_return = [];
         
         }elseif (count($raw) > 1) {
-            // dd('raw is greater than one return it');
+            dump('raw is greater than one return it');
             // got more than one, return the whole collection
             $this->_return = $this->_raw;
 
         } else {
-            // dd('there is only one in raw');
+            dump('there is only one in raw');
             // gotta be one, return only the one
             $this->_return = $this->_raw[0];
 
@@ -111,9 +110,9 @@ class ApiCallBuilder
 
     public function reset()
     {
-        unset($this->_return);
-        unset($this->_raw);
-        $this->_payload = [];
+        $this->_return = null;
+        $this->_raw = null;
+        $this->_payload = null;
         return $this;
     }
 
@@ -136,7 +135,7 @@ class ApiCallBuilder
             print('using cached payload<br>');
             return $this->_payload;
         }
-        print('calling api<br>');
+        print('calling api: '. $this->_endpoint .'<br>');
         $this->_payload = $this->_client->get($this->_endpoint, $this->_options, $this->_class);
         return $this->_payload;
     }    

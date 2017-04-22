@@ -95,7 +95,6 @@ abstract class ApiClient
 
         if (!empty($token)) {
             $this->token = $token;
-            // Set the authorisation header.
             $this->config['headers']['Authorization'] = 'Bearer ' . $this->token;
             $this->guzzle = new Client($this->config);
 
@@ -112,10 +111,13 @@ abstract class ApiClient
     public function canConnect()
     {
         $endpoint = $this->buildFullEndpoint(self::USER_ENDPOINT);
+        print('can connect end: '. $endpoint .'<br>');
         $response = $this->guzzle->get($endpoint);
         if ($response->getStatusCode() === 200) {
+            print('connected<br>');
             return true;
         }
+        print('not connected<br>');
         return false;
     }    
 
@@ -137,7 +139,7 @@ abstract class ApiClient
         $response = $this->guzzle->get($target);
         print($target .'<br>');
 
-        $class = $this->getClassPath($target, $class);
+        $class = $this->getRealClassPath($target, $class);
         
         // return the appropriate response
         if ($response instanceof ResponseInterface) {
@@ -155,11 +157,6 @@ abstract class ApiClient
         }
     }
 
-    private function getCollection($payload)
-    {
-        return new Collection($payload, $this);
-    }
-
     /**
      * Post a resource with the API.
      *
@@ -173,35 +170,34 @@ abstract class ApiClient
      */
     public function post(string $endpoint, array $updates = [], string $class = null)
     {
-        $endpoint = $this->buildFullEndpoint($endpoint, null);      
-        $body = json_encode($updates);
-        $class = $this->getClassPath($endpoint, $class);
-        $response = $this->guzzle->post($endpoint, [
-                'body' => $body
-            ]);
+        // $endpoint = $this->buildFullEndpoint($endpoint, null);      
+        // $body = json_encode($updates);
+        // $class = $this->getClassPath($endpoint, $class);
+        // $response = $this->guzzle->post($endpoint, [
+        //         'body' => $body
+        //     ]);
 
-        if ($response instanceof ResponseInterface) {
-            $body = $response->getBody()->getContents();
-            $parsed = json_decode($body, true);
-            $class = '\\'. $class;
-            return new $class($parsed, $this);
+        // if ($response instanceof ResponseInterface) {
+        //     $body = $response->getBody()->getContents();
+        //     $parsed = json_decode($body, true);
+        //     $class = '\\'. $class;
+        //     return new $class($parsed, $this);
 
-        } else {
-            throw new \Exception('Could not post resource.');
+        // } else {
+        //     throw new \Exception('Could not post resource.');
 
-        }  
+        // }  
     }
 
     private function buildFullEndpoint($endpoint, $options = [])
     {
-        // base endpoint
-        $endpoint = static::BASE_URI .'/'. $endpoint .'/?token='. $this->token;
+        $options['token'] = $this->token;
+        $base = static::BASE_URI .'/'. $endpoint .'/?';
         
         if (count($options) > 0) {
-            $params = $this->getParameters($options);
-            $endpoint .= '&'. $params;
+            $base .= $this->getParameters($options);
         }
-        return $endpoint;
+        return $base;
     }
 
     /**
@@ -234,7 +230,7 @@ abstract class ApiClient
      * 
      * @return string                The resulting class path
      */
-    private function getClassPath(string $endpoint, string $class = null)
+    private function getRealClassPath(string $endpoint, string $class = null)
     {
         if (is_null($class)) {
             // we were not told which class to instantiate,
