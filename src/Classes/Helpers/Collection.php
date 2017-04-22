@@ -19,26 +19,39 @@ class Collection extends ArrayObject
     public $size = 0;
     public $count = 0;
 
-    public function __construct($payload, $eventbrite) {
-        $payloadKeys = array_keys($payload);
-        foreach ($payloadKeys as $key) {
-            if ($key == 'pagination') {
-                $this->total = $payload['pagination']['object_count'];
-                $this->page  = $payload['pagination']['page_number'];
-                $this->size  = $payload['pagination']['page_size'];
-                $this->count = $payload['pagination']['page_count'];                
+    public function __construct($payload, $client, $class) {
+        // $payloadKeys = array_keys($payload);
+        if (is_array($payload) && array_key_exists('pagination', $payload)) {
+            dump('true collection');
+            $keys = array_keys($payload);
+            foreach ($keys as $key) {
+                if ($key == 'pagination') {
+                    $this->total = $payload['pagination']['object_count'];
+                    $this->page  = $payload['pagination']['page_number'];
+                    $this->size  = $payload['pagination']['page_size'];
+                    $this->count = $payload['pagination']['page_count'];                
 
-            } else {
-                if (array_key_exists($key, $this->classMap)) {
-                    $array = [];
-                    $class = $this->classMap[$key];
-                    foreach ($payload[$key] as $resourcePayload) {
-                        $array[] = new $class($resourcePayload, $eventbrite);
+                } else {
+                    if (array_key_exists($key, $this->classMap)) {
+                        $array = [];
+                        $class = $this->classMap[$key];
+                        foreach ($payload[$key] as $resourcePayload) {
+                            $array[] = new $class($resourcePayload, $client);
 
+                        }
+                        parent::__construct($array);
                     }
-                    parent::__construct($array);
                 }
             }
+
+        } elseif (is_string($payload)) {
+            return $payload;
+
+        } else {
+            dump('making a single');
+            $single = new $class($payload, $client);
+            parent::__construct([$single]);
+
         }
     }
 

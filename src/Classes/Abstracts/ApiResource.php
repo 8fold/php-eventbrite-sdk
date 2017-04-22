@@ -4,6 +4,8 @@ namespace Eightfold\Eventbrite\Classes\Abstracts;
 
 use Eightfold\Eventbrite\Eventbrite;
 
+use Eightfold\Eventbrite\Classes\Abstracts\ApiCallBuilder;
+
 use Eightfold\Eventbrite\Traits\Gettable;
 use Eightfold\Eventbrite\Traits\Settable;
 
@@ -13,14 +15,13 @@ abstract class ApiResource
         Settable;
 
     /**
-     * Used for querying the Eventbrite api related to events.
+     * Used for querying the api.
      * @var null
      */
-    public $eventbrite = null;
+    public $client = null;
 
     /**
-     * The raw payload provided at instantiation. 
-     * 
+     * The raw payload provided at instantiation.
      * @var null
      */
     protected $raw = null;
@@ -36,35 +37,91 @@ abstract class ApiResource
     protected $changed = null;
 
     /**
-     * GET the resource from the API using the passed Eventbrite instance
-     * 
-     * @param  string      $id         The Eventbrite ID for the resource 
-     * @param  unknown     $eventbrite Usually an Eventbrite object to use when
-     *                                 connecting; however, not type-hinted to allow
-     *                                 overriding.
-     * 
-     * @return ApiResource             A new instance of the class
+     * GET a single record from Eventbrite
+     *
+     * @param  $apiClientOrApiResource We need a client. Either pass in a client or
+     *                                 an ApiResource subclass, as it will have a
+     *                                 client available to us.
+     * @param  string $id              The object id to append to the based endpoint.
+     * @param  array  $options         Used for building parameters on the endpoint.
+     *                                            
+     * @return ApiResource subclass
      */
-    static public function find($eventbrite, string $id)
+    static public function find($apiClientOrApiResource, string $id, $options = [])
     {
+        $client = self::getClient($apiClientOrApiResource);
         $class = static::classPath();
         $endpoint = static::baseEndpoint() .'/'. $id;
-
-        // @todo: ClassLoader failing when not including class path explicitly
-        return $eventbrite->get($endpoint, [], $class);
+        return $client->get($endpoint, self::getOptions($options), $class);
     }
 
-    static public function getMany(Eventbrite $eventbrite, string $endpoint = null)
+    /**
+     * GET multiple records of the same type from Eventbrite
+     *
+     * @see `find()` - With `id` being replaced with `endpoint`.
+     *
+     * @param  string $endpoint The endpoint to call. As we do not have a targeted
+     *                          object.
+     *                                            
+     * @return Collection of ApiResource subclasses
+     */
+    static public function getMany($apiClientOrApiResource, string $class, string $endpoint = null, $options = [])
     {
+        $client = self::getClient($apiClientOrApiResource);
         $class = static::classPath();
         if (is_null($endpoint)) {
             $endpoint = static::baseEndpoint();
-
         }
-
-        // @todo: ClassLoader failing when not including class path explicitly
-        return $eventbrite->get($endpoint, [], $class);
+        $options = self::getOptions($options);
+        // print_r($options);
+        return $client->get($endpoint, $options, $class);
     }
+
+    /**
+     * Get client to use with calls
+     *
+     * The `object` should either be an ApiClient, a subclass of ApiClient, an
+     * ApiResource, or a subclass of ApiResource. Then we either return the original
+     * or the client of the original object, respectively.
+     * 
+     * @param  $apiClientOrApiResource See above.
+     * 
+     * @return ApiClient               Whether ApiClient or ApiResource, retrun 
+     *                                 ApiClient.
+     */
+    static private function getClient($apiClientOrApiResource)
+    {
+        if (is_a($apiClientOrApiResource, ApiClient::class)) {
+            return $apiClientOrApiResource;
+        }
+        print('needed to get client of instance');
+        return $apiClientOrApiResource->client;
+    }
+
+    // static private function getOptions(array $options = [])
+    // {
+    //     $expand = null;
+
+    //     // alwyas use the default expansion - unless others are passed in.
+    //     if (isset($options['expand']) && is_array($options['expand'])) {
+    //         $expand = self::getExpansions($options['expand']);
+    //         unset($options['expand']);
+
+    //     }
+    //     return array_merge($options, self::getExpansions());
+    // }
+
+    // static private function getExpansions($expansions = [])
+    // {
+    //     if (count($expansions) > 0 ) {
+    //         return ['expand' => implode(',', $expansions)];
+
+    //     } elseif (count(static::expandedByDefault()) > 0) {
+    //         return ['expand' => implode(',', static::expandedByDefault())];
+
+    //     }
+    //     return $expansions;
+    // }   
 
     /**
      * Keep the raw payload from Eventbrite as a private variable.
@@ -72,13 +129,65 @@ abstract class ApiResource
      * @param array      $payload    The decoded payload from Eventbrite
      * @param Eventbrite $eventbrite The ApiClient and creds to associate with instance
      */
-    public function __construct(array $payload, Eventbrite $eventbrite)
+    public function __construct(array $payload, $client)
     {
-        $this->eventbrite = $eventbrite;
+        $this->client = $client;
         $setup = (isset($payload['body']))
             ? $payload['body']
             : $payload;
         $this->raw = $setup;
+    }
+
+    protected function hasOne(string $class, string $endpoint, array $options = [])
+    {
+        $baseCaller = debug_backtrace()[1]['function'];
+        $caller = '_'. $baseCaller;
+        if (isset($this->{$caller}) && !is_null($this->{$caller})) {
+            return $this->{$caller};
+            
+        }
+
+        $payload = [];
+        if (isset($this->raw[$baseCaller]) && !is_null($this->raw[$baseCaller])) {
+            $payload = $this->raw[$baseCaller];
+
+        }
+
+        $this->{$caller} = new ApiCallBuilder($this->client, $class, $endpoint, $this->getOptions($class, $options), $payload);
+        return $this->{$caller};
+    }
+
+    protected function hasMany(string $class, string $endpoint, array $options = [])
+    {
+        $baseCaller = debug_backtrace()[1]['function'];
+        $caller = '_'. $baseCaller;
+        if (isset($this->{$caller}) && !is_null($this->{$caller})) {
+            return $this->{$caller};
+            
+        }
+
+        $payload = [];
+        if (isset($this->raw[$baseCaller]) && !is_null($this->raw[$baseCaller])) {
+            $payload = $this->raw[$baseCaller];
+
+        }
+
+        $this->{$caller} = new ApiCallBuilder($this->client, $class, $endpoint, $this->getOptions($class, $options), $payload);
+        return $this->{$caller};
+    }
+
+    private function getOptions($class, $options = [], $expansions = [])
+    {
+        if (count($class::expandedByDefault())) {
+            $expansions = ['expand' => implode(',', $class::expandedByDefault())];    
+        }
+        $opt = array_merge($options, $expansions);
+        return $opt;
+    }
+
+    public function resetChanges()
+    {
+        $this->changed = null;
     }
 
     /**
@@ -136,7 +245,7 @@ abstract class ApiResource
             }
             $endpoint = $this->endpoint();
             $class = static::classPath();
-            $updated = $this->eventbrite->post($endpoint, $updates, $class);
+            $updated = $this->client->post($endpoint, $updates, $class);
             $this->raw = $updated->raw;
             $this->changed = null;
             unset($updated);

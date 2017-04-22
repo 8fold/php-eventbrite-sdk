@@ -2,7 +2,7 @@
 
 namespace Eightfold\Eventbrite\Classes;
 
-use Eightfold\Eventbrite\Classes\ApiResource;
+use Eightfold\Eventbrite\Classes\Abstracts\ApiResource;
 
 use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
 use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
@@ -38,6 +38,11 @@ class Category extends ApiResource implements ApiResourceInterface, ApiResourceI
     /**************/
     /* Interfaces */
     /**************/
+
+    static public function expandedByDefault()
+    {
+        return [];
+    }
 
     static public function baseEndpoint()
     {

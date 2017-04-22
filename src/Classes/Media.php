@@ -2,7 +2,7 @@
 
 namespace Eightfold\Eventbrite\Classes;
 
-use Eightfold\Eventbrite\Classes\ApiResource;
+use Eightfold\Eventbrite\Classes\Abstracts\ApiResource;
 
 use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
 use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;

@@ -10,6 +10,12 @@ class DisplaySetting extends EventSub implements EventSubInterface
     /**************/
     /* Interfaces */
     /**************/
+
+    static public function expandedByDefault()
+    {
+        return [];
+    }
+
     static public function routeName()
     {
         return 'display_settings';
@@ -33,26 +39,16 @@ class DisplaySetting extends EventSub implements EventSubInterface
     static public function parametersToPost()
     {
         return [
-            'name',
-            'description',
-            'quantity_total',
-            'cost',
-            'donation',
-            'free',
-            'include_fee',
-            'split_fee',
-            'hide_description',
-            'sales_channels',
-            'sales_start',
-            'sales_end',
-            'sales_start_after',
-            'minimum_quantity',
-            'maximum_quantity',
-            'auto_hide',
-            'auto_hide_before',
-            'auto_hide_after',
-            'hidden',
-            'order_confirmation_message'
+            'show_start_date',
+            'show_end_date',
+            'show_start_end_time',
+            'show_timezone', 
+            'show_map',
+            'show_remaining',
+            'show_organizer_facebook',
+            'show_organizer_twitter',
+            'show_facebook_friends_going',
+            'terminology'
         ];
     }
 

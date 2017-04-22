@@ -2,22 +2,20 @@
 
 namespace Eightfold\Eventbrite\Classes\EventSubs;
 
-use Eightfold\Eventbrite\Classes\ApiResource;
+use Eightfold\Eventbrite\Classes\Abstracts\EventSub;
+use Eightfold\Eventbrite\Interfaces\EventSubInterface;
 
-class Question extends ApiResource
+use Eightfold\Eventbrite\Classes\Event;
+
+class Team extends EventSub implements EventSubInterface
 {
-    static public function routeName()
-    {
-        return 'ticket_classes';
-    }
-
-    /**************/
-    /* Interfaces */
-    /**************/
-
     static public function expandedByDefault()
     {
         return [];
+    }
+    static public function routeName()
+    {
+        return 'access_codes';
     }
 
     static public function classPath()
@@ -27,18 +25,17 @@ class Question extends ApiResource
 
     public function endpoint()
     {
-        return $this->event()->endpoint .'/ticket_classes/'. $this->id;
+        return $this->event()->endpoint .'/access_codes/'. $this->id;
     }
 
     static public function parameterPrefix()
     {
-        return 'ticket_class';
+        return 'access_code';
     }
 
     static public function parametersToPost()
     {
-        return [
-        ];
+        return [];
     }
 
     static public function parametersToConvertToDotNotation()

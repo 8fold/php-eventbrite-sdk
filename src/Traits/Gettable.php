@@ -29,25 +29,7 @@ trait Gettable
         if ($name == 'changed' && $noChangedProperty) {
             return null;
         }
-
-        // Default returning changes being performed, not raw.
-        if ($noChangedProperty && isset($this->changed[$name]) && !is_null($this->changed[$name])) {
-            return $this->changed[$name];
-
-        }
-
-        // For all of our ApiResources, we capture the raw return of the API call
-        // in a property called "raw", strangely enough. Check there.
-        $rawExists = (property_exists($this, 'raw') && is_array($this->raw));
-        if ($rawExists && array_key_exists($name, $this->raw)) {
-            if (is_array($this->raw[$name])) {
-                dump($this->raw[$name]);
-                return (object) $this->raw[$name];
-            }
-            return $this->raw[$name];
-
-        }
-
+        
         // TODO: Revisit this logic. Not sure all the checks are necessary.
         // 
         // Exists with the same name as the one being evaluated. If it does, call
@@ -64,6 +46,26 @@ trait Gettable
 
             }
             return $this->$name();
+        }        
+
+        // Default returning changes being performed, not raw.
+        if ($noChangedProperty && isset($this->changed[$name]) && !is_null($this->changed[$name])) {
+            return $this->changed[$name];
+
+        }
+
+        // For all of our ApiResources, we capture the raw return of the API call
+        // in a property called "raw", strangely enough. Check there.
+        $rawExists = (property_exists($this, 'raw') && is_array($this->raw));
+        if ($rawExists && array_key_exists($name, $this->raw)) {
+// dd(array_key_exists($name, $this->raw));
+            if (is_array($this->raw[$name])) {
+dump('object: '. $name);                
+                return (object) $this->raw[$name];
+            }
+dump('value: '. $name);
+            return $this->raw[$name];
+
         }
 
         // Shouldn't be necessary, but it might be the case that someone has

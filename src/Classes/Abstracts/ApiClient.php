@@ -57,7 +57,7 @@ abstract class ApiClient
     /**
      * @var GuzzleHttp\Client
      */
-    private $client;
+    private $guzzle;
 
     /**
      * Create a new ApiCclient
@@ -97,7 +97,7 @@ abstract class ApiClient
             $this->token = $token;
             // Set the authorisation header.
             $this->config['headers']['Authorization'] = 'Bearer ' . $this->token;
-            $this->client = new Client($this->config);
+            $this->guzzle = new Client($this->config);
 
         } else {
             throw new \Exception('An OAuth token is required to connect to the Eventbrite API.');
@@ -112,7 +112,7 @@ abstract class ApiClient
     public function canConnect()
     {
         $endpoint = $this->buildFullEndpoint(self::USER_ENDPOINT);
-        $response = $this->client->get($endpoint);
+        $response = $this->guzzle->get($endpoint);
         if ($response->getStatusCode() === 200) {
             return true;
         }
@@ -132,26 +132,22 @@ abstract class ApiClient
      */
     public function get(string $endpoint, array $options = [], string $class = null)
     {
-        // build the endpoint
-        $target = $this->buildFullEndpoint($endpoint, $options);
-        // var_dump($target);
-
-        // get the class to return
-        $class = $this->getClassPath($target, $class);
-        // var_dump($class);
-        
         // @todo: Convert to try-catch
-        // make the call
-        $response = $this->client->get($target);
+        $target = $this->buildFullEndpoint($endpoint, $options);
+        $response = $this->guzzle->get($target);
+        print($target .'<br>');
+
+        $class = $this->getClassPath($target, $class);
+        
         // return the appropriate response
         if ($response instanceof ResponseInterface) {
             $body = $response->getBody()->getContents();
             $parsed = json_decode($body, true);
-            if (array_key_exists('pagination', $parsed)) {
-                return $this->getCollection($parsed);
+            if (isset($parsed['error_description'])) {
+                return $parsed['error_description'];
             }
-            $class = '\\'. $class;
-            return new $class($parsed, $this);
+            return $parsed;
+            return new Collection($parsed, $this, $class);
 
         } else {
             throw new \Exception('Could not get resource.');
@@ -180,7 +176,7 @@ abstract class ApiClient
         $endpoint = $this->buildFullEndpoint($endpoint, null);      
         $body = json_encode($updates);
         $class = $this->getClassPath($endpoint, $class);
-        $response = $this->client->post($endpoint, [
+        $response = $this->guzzle->post($endpoint, [
                 'body' => $body
             ]);
 

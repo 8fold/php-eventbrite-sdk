@@ -11,16 +11,22 @@ trait ClassMappable
      * @var dictionary
      */
     private $classMap = [
-        'users'  => 'Eightfold\Eventbrite\Classes\Individual',
-        'events' => 'Eightfold\Eventbrite\Classes\Event',
-        'categories' => 'Eightfold\Eventbrite\Classes\Category',
-        'subcategories' => 'Eightfold\Eventbrite\Classes\Subcategory',
-        'ticket_classes' => 'Eightfold\Eventbrite\Classes\TicketClass',
-        'discounts' => 'Eightfold\Eventbrite\Classes\Discount',
-        'display_settings' => 'Eightfold\Eventbrite\Classes\DisplaySetting',
-        'timezones' => 'Eightfold\Eventbrite\Classes\System\Timezone',
-        'regions' => 'Eightfold\Eventbrite\Classes\System\Region',
-        'countries' => 'Eightfold\Eventbrite\Classes\System\Country',
-        'sales' => 'Eightfold\Eventbrite\Classes\Reports\Sale'
+        'users'              => 'Eightfold\Eventbrite\Classes\User',
+        'events'             => 'Eightfold\Eventbrite\Classes\Event',
+        'orders'             => 'Eightfold\Eventbrite\Classes\Order',
+        'owned_event_orders' => 'Eightfold\Eventbrite\Classes\Order',
+        'categories'         => 'Eightfold\Eventbrite\Classes\Category',
+        'venues'             => 'Eightfold\Eventbrite\Classes\Venue',
+        'subcategories'      => 'Eightfold\Eventbrite\Classes\Subcategory',
+        'ticket_classes'     => 'Eightfold\Eventbrite\Classes\EventSubs\TicketClass',
+        'attendees'          => 'Eightfold\Eventbrite\Classes\EventSubs\Attendee',
+        'discounts'          => 'Eightfold\Eventbrite\Classes\EventSubs\Discount',
+        'display_settings'   => 'Eightfold\Eventbrite\Classes\EventSubs\DisplaySetting',
+        'access_codes'       => 'Eightfold\Eventbrite\Classes\EventSubs\AccessCode',
+        'timezones'          => 'Eightfold\Eventbrite\Classes\System\Timezone',
+        'regions'            => 'Eightfold\Eventbrite\Classes\System\Region',
+        'countries'          => 'Eightfold\Eventbrite\Classes\System\Country',
+        'sales'              => 'Eightfold\Eventbrite\Classes\Reports\Sale',
+        'questions'          => 'Eightfold\Eventbrite\Classes\EventSubs\Question'
     ];
 }

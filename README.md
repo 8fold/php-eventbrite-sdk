@@ -16,7 +16,7 @@ This library is designed to mirror the Eventbrite API documentation when it come
 // to get all the organizers
 GET /users/:id/organizers/
 
-// to get all the events owned by the entity related to the auth token
+// to get all the events owned by the user
 GET /users/:id/owned_events
 ```
 
@@ -29,7 +29,7 @@ $eb = Eventbrite::setAuthToken(YOUR_AUTH_TOKEN, true);
 // to get all the organizers
 $eb->user->organizers
 
-// to get all the events owned by the entity related to the auth token
+// to get all the events owned by the user
 $eb->user->events;
 ```
 
@@ -131,6 +131,24 @@ $event = Event::find(Eventbrite, :id);
 $displaySettings = $event->display_settings;
 ```
 
+### Access codes
+
+GET /events/:id/access_codes/
+
+```php
+$event = Event::find(Eventbrite, :id);
+$accessCodes = $event->access_codes;
+```
+
+### Attendees
+
+GET /events/:id/attendees/
+
+```php
+$event = Event::find(Eventbrite, :id);
+$attendees = $event->attendees;
+```
+
 ## Event todo
 
 GET /events/search/
@@ -153,8 +171,6 @@ GET /events/:id/questions/
 
 GET /events/:id/questions/:id/
 
-GET /events/:id/attendees/
-
 GET /events/:id/attendees/:attendee_id/
 
 GET /events/:id/orders/
@@ -172,8 +188,6 @@ GET /events/:id/public_discounts/:discount_id/
 POST /events/:id/public_discounts/:discount_id/
 
 DELETE /events/:id/public_discounts/:discount_id/
-
-GET /events/:id/access_codes/
 
 POST /events/:id/access_codes/
 

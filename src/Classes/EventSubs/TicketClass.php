@@ -35,6 +35,12 @@ class TicketClass extends EventSub implements ApiResourceInterface, ApiResourceP
     /**************/
     /* Interfaces */
     /**************/
+
+    static public function expandedByDefault()
+    {
+        return ['event'];
+    }
+
     static public function routeName()
     {
         return 'ticket_classes';

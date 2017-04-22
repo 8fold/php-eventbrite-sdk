@@ -2,7 +2,7 @@
 
 namespace Eightfold\Eventbrite\Classes;
 
-use Eightfold\Eventbrite\Classes\ApiResource;
+use Eightfold\Eventbrite\Classes\Abstracts\ApiResource;
 
 use Eightfold\Eventbrite\Classes\Eventbrite;
 
@@ -25,6 +25,11 @@ class Venue extends ApiResource implements ApiResourceInterface, ApiResourceIsBa
     /**************/
     /* Interfaces */
     /**************/
+
+    static public function expandedByDefault()
+    {
+        return [];
+    }
 
     static public function baseEndpoint()
     {

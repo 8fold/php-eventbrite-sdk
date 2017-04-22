@@ -2,7 +2,7 @@
 
 namespace Eightfold\Eventbrite\Classes;
 
-use Eightfold\Eventbrite\Classes\ApiResource;
+use Eightfold\Eventbrite\Classes\Abstracts\ApiResource;
 
 use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
 use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
@@ -13,6 +13,11 @@ class Organizer extends ApiResource implements ApiResourceInterface, ApiResource
     /**************/
     /* Interfaces */
     /**************/
+
+    static public function expandedByDefault()
+    {
+        return [];
+    }
 
     static public function baseEndpoint()
     {

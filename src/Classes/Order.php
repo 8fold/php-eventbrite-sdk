@@ -4,10 +4,13 @@ namespace Eightfold\Eventbrite\Classes;
 
 use Eightfold\Eventbrite\Classes\Abstracts\ApiResource;
 
-use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
-use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
+// use Eightfold\Eventbrite\Classes\Event;
 
-class Format extends ApiResource implements ApiResourceInterface, ApiResourceIsBase
+use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
+// use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
+// use Eightfold\Eventbrite\Interfaces\ApiResourcePostable;
+
+class Order extends ApiResource implements ApiResourceInterface
 {
     /**************/
     /* Interfaces */
@@ -15,12 +18,12 @@ class Format extends ApiResource implements ApiResourceInterface, ApiResourceIsB
 
     static public function expandedByDefault()
     {
-        return [];
-    }    
+        return ['event', 'attendees', 'refund_requests'];
+    }
 
     static public function baseEndpoint()
     {
-        return 'formats';
+        return 'orders';
     }
 
     static public function classPath()
@@ -30,6 +33,6 @@ class Format extends ApiResource implements ApiResourceInterface, ApiResourceIsB
 
     public function endpoint()
     {
-        return static::baseEndpoint() .'/'. $this->id;
-    }
+        return self::baseEndpoint() .'/'. $this->id;
+    }    
 }

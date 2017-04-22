@@ -2,9 +2,12 @@
 
 namespace Eightfold\Eventbrite\Classes;
 
-use Eightfold\Eventbrite\Classes\ApiResource;
+use Eightfold\Eventbrite\Classes\Abstracts\ApiResource;
 
 use Eightfold\Eventbrite\Classes\Event;
+use Eightfold\Eventbrite\Classes\Order;
+use Eightfold\Eventbrite\Classes\UserSubs\Attendee;
+use Eightfold\Eventbrite\Classes\UserSubs\ContactList;
 
 use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
 use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
@@ -17,40 +20,74 @@ class User extends ApiResource implements ApiResourceInterface
 
     private $upcomingEvents = null;
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'users/me/orders');
+    }
+
+    // TODO: contact Eventbrite, does not appear to be working
+    // public function organizers()
+    // {
+    //     return $this->hasMany(Organizer::class, 'users/'. $this->id .'/oganizers');
+    // }
+
+    public function owned_events()
+    {
+        // TODO: Not returning in proper order. Endpoint is correct and works properly
+        // when pasted into browser address bar. Does not work when using Postman nor
+        // making the call from within the library:
+        // https://www.eventbriteapi.com/v3/users/me/owned_events/
+        // ?token=V75CULK7QRW5JDJ7TLQO&order_by=start_desc
+        return $this->hasMany(Event::class, 'users/me/owned_events', [
+            'order_by' => 'start_desc'
+        ]);
+    }
+
     public function events()
     {
-        if (is_null($this->events)) {
-            $endpoint = $this->ownedEventsEndpoint;
-            $options = [
-                'order_by' => 'start_desc'
-            ];
-            $this->events = $this->eventbrite->get($endpoint, $options, Event::class);
-        }
-        return $this->events;
+        return $this->hasMany(Event::class, 'users/me/events', [
+            'order_by' => 'start_desc'
+        ]);
     }
 
-    public function upcomingEvents()
+    public function venues()
     {
-        if (is_null($this->upcomingEvents)) {
-            $endpoint = $this->ownedEventsEndpoint;
-            $options = [
-                'order_by' => 'start_desc', 
-                'status' => 'live'
-            ];
-
-            $this->upcomingEvents = $this->eventbrite->get($endpoint, $options, Event::class);                    
-        }
-        return $this->upcomingEvents;
+        return $this->hasMany(Venue::class, 'users/me/venues');
     }
 
-    protected function ownedEventsEndpoint()
+    public function owned_event_attendees()
     {
-        return $this->endpoint .'/owned_events';
+        return $this->hasMany(Attendee::class, 'users/me/owned_event_attendees');
     }
+
+    public function owned_event_orders()
+    {
+        return $this->hasMany(Order::class, 'users/me/owned_event_orders');
+    }
+
+    public function contact_lists($id = '')
+    {
+        return $this->hasMany(ContactList::class, 'users/me/contact_lists/'. $id);
+    }
+
+    
+    // TODO: Does not see to be working - see owned_events
+    // public function upcomingEvents()
+    // {
+    //     return $this->hasMany(Event::class, 'users/me/owned_events', [
+    //         'order_by' => 'start_desc', 
+    //         'status' => 'live'
+    //     ]);
+    // }
 
     /**************/
     /* Interfaces */
     /**************/
+
+    static public function expandedByDefault()
+    {
+        return [];
+    }
 
     static public function classPath()
     {

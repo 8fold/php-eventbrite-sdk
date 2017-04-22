@@ -4,6 +4,7 @@
 namespace Eightfold\Eventbrite;
 
 use Eightfold\Eventbrite\Classes\Abstracts\ApiClient as EventbriteBase;
+use Eightfold\Eventbrite\Classes\Abstracts\ApiCallBuilder;
 
 use Eightfold\Eventbrite\Traits\Gettable;
 
@@ -82,10 +83,12 @@ class Eventbrite extends EventbriteBase
         parent::__construct($token, $config);
         if ($this->canConnect()) {
             if ($isOrg) {
-                $this->organization = parent::get('users/me', [], Organization::class);    
+                $return = new ApiCallBuilder($this, Organization::class, 'users/me');
+                $this->organization = $return->first();
 
             } else {
-                $this->individual = parent::get('users/me', [], User::class);
+                $return = new ApiCallBuilder($this, User::class, 'users/me');
+                $this->individual = $return->first();
 
             }            
         }
