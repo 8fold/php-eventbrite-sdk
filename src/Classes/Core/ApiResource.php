@@ -1,10 +1,10 @@
 <?php
 
-namespace Eightfold\Eventbrite\Classes\Abstracts;
+namespace Eightfold\Eventbrite\Classes\Core;
 
 use Eightfold\Eventbrite\Eventbrite;
 
-use Eightfold\Eventbrite\Classes\Abstracts\ApiCallBuilder;
+use Eightfold\Eventbrite\Classes\Core\ApiCallBuilder;
 
 use Eightfold\Eventbrite\Traits\Gettable;
 use Eightfold\Eventbrite\Traits\Settable;
@@ -36,16 +36,16 @@ abstract class ApiResource
      */
     protected $changed = null;
 
-    static public function find($client, string $class, string $endpoint, $options = [], $payload = [])
+    static public function find($client, string $class, string $endpoint, $options = [], $payload = [], $isCollection = false)
     {
         $opt = static::getOptions($class, $options);
-        $new = new ApiCallBuilder($client, $class, $endpoint, $opt, $payload);
-        return $new->get();
+        $new = new ApiCallBuilder($client, $class, $endpoint, $opt, $payload, $isCollection);
+        return $new;
     }
 
     static private function getOptions($class, $options = [], $expansions = [])
     {
-        if (count($class::expandedByDefault())) {
+        if (method_exists(get_called_class(), 'expandedByDefault') && count($class::expandedByDefault()) > 0) {
             $expansions = ['expand' => implode(',', $class::expandedByDefault())];    
         }
         $opt = array_merge($options, $expansions);
@@ -101,7 +101,7 @@ abstract class ApiResource
 
         }
 
-        $this->{$caller} = new ApiCallBuilder($this->client, $class, $endpoint, static::getOptions($class, $options), $payload);
+        $this->{$caller} = new ApiCallBuilder($this->client, $class, $endpoint, static::getOptions($class, $options), $payload, true);
         return $this->{$caller};
     }
 

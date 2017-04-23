@@ -2,12 +2,9 @@
 
 namespace Eightfold\Eventbrite\Classes;
 
-use Eightfold\Eventbrite\Classes\Abstracts\ApiResource;
+use Eightfold\Eventbrite\Classes\Core\ApiResource;
 
-use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
-use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
-
-class Category extends ApiResource implements ApiResourceInterface, ApiResourceIsBase
+class Category extends ApiResource
 {
     public function name()
     {
@@ -33,29 +30,5 @@ class Category extends ApiResource implements ApiResourceInterface, ApiResourceI
             return $this->name;
 
         }
-    }
-
-    /**************/
-    /* Interfaces */
-    /**************/
-
-    static public function expandedByDefault()
-    {
-        return [];
-    }
-
-    static public function baseEndpoint()
-    {
-        return 'categories';
-    }
-
-    static public function classPath()
-    {
-        return __CLASS__;
-    }
-
-    public function endpoint()
-    {
-        return static::baseEndpoint() .'/'. $this->id;
     }    
 }

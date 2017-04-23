@@ -3,20 +3,31 @@
 // inspired by jamiehollern/eventbrite
 namespace Eightfold\Eventbrite;
 
-use Eightfold\Eventbrite\Classes\Abstracts\ApiClient as EventbriteBase;
-use Eightfold\Eventbrite\Classes\Abstracts\ApiCallBuilder;
+use Eightfold\Eventbrite\Classes\Core\ApiClient as EventbriteBase;
+use Eightfold\Eventbrite\Classes\Core\ApiCallBuilder;
+use Eightfold\Eventbrite\Classes\Core\ApiAliasLoader;
 
 use Eightfold\Eventbrite\Traits\Gettable;
 
 use Eightfold\Eventbrite\Classes\User;
-use Eightfold\Eventbrite\Classes\UserSubs\Organization;
 use Eightfold\Eventbrite\Classes\Organizer;
 use Eightfold\Eventbrite\Classes\Event;
-use Eightfold\Eventbrite\Classes\System\Timezone;
-use Eightfold\Eventbrite\Classes\System\Region;
-use Eightfold\Eventbrite\Classes\System\Country;
-use Eightfold\Eventbrite\Classes\Reports\Sales;
-use Eightfold\Eventbrite\Classes\Reports\Attendees;
+use Eightfold\Eventbrite\Classes\Category;
+use Eightfold\Eventbrite\Classes\Report;
+
+use Eightfold\Eventbrite\Classes\SubObjects\Organization;
+use Eightfold\Eventbrite\Classes\SubObjects\Attendee;
+use Eightfold\Eventbrite\Classes\SubObjects\Sale;
+use Eightfold\Eventbrite\Classes\SubObjects\Country;
+use Eightfold\Eventbrite\Classes\SubObjects\Region;
+use Eightfold\Eventbrite\Classes\SubObjects\Subcategory;
+use Eightfold\Eventbrite\Classes\SubObjects\Timezone;
+// use Eightfold\Eventbrite\Classes\UserSubs\Organization;
+
+
+
+
+
 
 /**
  * Main Eventrbrite entry point.
@@ -83,8 +94,10 @@ class Eventbrite extends EventbriteBase
         parent::__construct($token, $config);
         if (parent::canConnect()) {
             if ($isOrg) {
+                // dd(new Organization([], $this));
                 $return = new ApiCallBuilder($this, Organization::class, 'users/me');
                 $this->organization = $return->first();
+                
 
             } else {
                 $return = new ApiCallBuilder($this, User::class, 'users/me');
@@ -102,28 +115,50 @@ class Eventbrite extends EventbriteBase
         return $this->organization;
     }
 
-    public function timezones()
+    // TODO: Not sure how useful this is.
+    public function reportAttendees()
     {
-        return Timezone::all($this);
+        return Attendee::find($this, Attendee::class, 'reports/attendees', [
+            'event_status' => 'all'
+        ]);
+    }
+
+    // TODO: Does not work with current Colleciton object.
+    public function reportSales()
+    {
+        return Sale::find($this, Sale::class, 'reports/sales', [
+            'event_status' => 'all'
+        ]);
     }
 
     public function countries()
     {
-        return Country::all($this);
+        return Country::find($this, Country::class, 'system/countries');
     }
 
     public function regions()
     {
-        return Region::all($this);
+        return Region::find($this, Region::class, 'system/regions');
     }
 
-    public function sales()
+    public function timezones()
     {
-        return Sales::get($this);
+        return Timezone::find($this, Timezone::class, 'system/timezones');
     }
 
-    public function attendees()
+    public function categories($id = '')
     {
-        return Attendees::get($this);
+        $endpoint = (strlen($id) > 0)
+            ? 'categories/'. $id
+            : 'categories';
+        return Category::find($this, Category::class, $endpoint);
+    }
+
+    public function subcategories($id = '')
+    {
+        $endpoint = (strlen($id) > 0)
+            ? 'subcategories/'. $id
+            : 'subcategories';
+        return Subcategory::find($this, Subcategory::class, $endpoint);
     }
 }

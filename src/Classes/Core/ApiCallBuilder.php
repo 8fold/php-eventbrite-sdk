@@ -1,8 +1,8 @@
 <?php
 
-namespace Eightfold\Eventbrite\Classes\Abstracts;
+namespace Eightfold\Eventbrite\Classes\Core;
 
-use Eightfold\Eventbrite\Classes\Helpers\Collection;
+use Eightfold\Eventbrite\Classes\Core\Collection;
 
 class ApiCallBuilder
 {
@@ -54,15 +54,14 @@ class ApiCallBuilder
      */
     private $_return;
 
-    public function __construct($client, string $class, string $endpoint, array $options = [], $payload = [])
+    public function __construct($client, string $class, string $endpoint, array $options = [], $payload = [], $isCollection = false)
     {
-        print('builder: '. $endpoint .'<br>');
-        print(json_encode($options) .'<br>');
         $this->_client = $client;
         $this->_class = $class;
         $this->_endpoint = $endpoint;
         $this->_options = $options;
         $this->_payload = $payload;
+        $this->_isCollection = $isCollection;
     }
 
     public function get()
@@ -84,7 +83,7 @@ class ApiCallBuilder
             // got nothing make null
             $this->_return = [];
         
-        }elseif (count($raw) > 1) {
+        }elseif ($this->_isCollection || count($raw) > 1) {
             dump('raw is greater than one return it');
             // got more than one, return the whole collection
             $this->_return = $this->_raw;

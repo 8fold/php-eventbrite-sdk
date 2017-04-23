@@ -1,6 +1,6 @@
 <?php
 
-namespace Eightfold\Eventbrite\Classes\Helpers;
+namespace Eightfold\Eventbrite\Classes\Core;
 
 use ArrayObject;
 
@@ -50,6 +50,7 @@ class Collection extends ArrayObject
         } else {
             dump('making a single');
             $single = new $class($payload, $client);
+            dump($single);
             parent::__construct([$single]);
 
         }

@@ -2,7 +2,7 @@
 
 namespace Eightfold\Eventbrite\Classes;
 
-use Eightfold\Eventbrite\Classes\Abstracts\ApiResource;
+use Eightfold\Eventbrite\Classes\Core\ApiResource;
 
 use Eightfold\Eventbrite\Classes\Event;
 use Eightfold\Eventbrite\Classes\Order;
@@ -13,7 +13,7 @@ use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
 use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
 use Eightfold\Eventbrite\Interfaces\ApiResourcePostable;
 
-class User extends ApiResource implements ApiResourceInterface
+class User extends ApiResource
 {
     
     private $events = null;
@@ -68,34 +68,5 @@ class User extends ApiResource implements ApiResourceInterface
     public function contact_lists($id = '')
     {
         return $this->hasMany(ContactList::class, 'users/me/contact_lists/'. $id);
-    }
-
-    
-    // TODO: Does not see to be working - see owned_events
-    // public function upcomingEvents()
-    // {
-    //     return $this->hasMany(Event::class, 'users/me/owned_events', [
-    //         'order_by' => 'start_desc', 
-    //         'status' => 'live'
-    //     ]);
-    // }
-
-    /**************/
-    /* Interfaces */
-    /**************/
-
-    static public function expandedByDefault()
-    {
-        return [];
-    }
-
-    static public function classPath()
-    {
-        return __CLASS__;
-    }
-
-    public function endpoint()
-    {
-        return 'users/me';
-    }    
+    }  
 }

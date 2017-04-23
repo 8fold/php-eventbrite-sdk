@@ -1,6 +1,6 @@
 <?php
 
-namespace Eightfold\Eventbrite\Classes\Abstracts;
+namespace Eightfold\Eventbrite\Classes\Core;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
