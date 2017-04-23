@@ -145,7 +145,6 @@ abstract class ApiClient
                 return $parsed['error_description'];
             }
             return $parsed;
-            return new Collection($parsed, $this, $class);
 
         } else {
             throw new \Exception('Could not get resource.');

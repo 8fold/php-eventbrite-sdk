@@ -29,8 +29,8 @@ use Eightfold\Eventbrite\Transformations\DateTransformations;
 
 class Event extends ApiResource
 {
-    use DateTransformations,
-        Relateable;
+    // TODO: Verify still using
+    use DateTransformations;
 
     public function display_settings()
     {
