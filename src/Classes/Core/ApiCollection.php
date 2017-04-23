@@ -4,12 +4,8 @@ namespace Eightfold\Eventbrite\Classes\Core;
 
 use ArrayObject;
 
-use Eightfold\Eventbrite\Traits\ClassMappable;
-
 class ApiCollection extends ArrayObject
 {
-    use ClassMappable;
-
     public function __construct(array $payload, $client, string $class, string $keyToInstantiate = null, array $keysToConvertToLocalVars = null
     ) {
         if (!is_null($keysToConvertToLocalVars) && is_array($keysToConvertToLocalVars)) {

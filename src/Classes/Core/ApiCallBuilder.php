@@ -91,8 +91,7 @@ class ApiCallBuilder
         $client, 
         string $class, 
         string $endpoint, 
-        array $options = [], 
-        $isCollection = false, 
+        array $options = [],
         string $keyToInstantiate = null, 
         $keysToConvertToCollectionVars = [])
     {
@@ -121,7 +120,7 @@ class ApiCallBuilder
             // got nothing make null
             $this->_return = [];
         
-        }elseif ($this->_isCollection || count($raw) > 1) {
+        }elseif ($this->hasCollectionClass()) {
             // got more than one, return the whole collection
             $this->_return = $this->_raw;
 
@@ -159,7 +158,7 @@ class ApiCallBuilder
 
         }
         // print($this->_class .'Collection<br>');
-        if (class_exists($this->_class .'Collection')) {
+        if ($this->hasCollectionClass()) {
             // print('using collection class<br>');
             $collectionClass = $this->_class .'Collection';
             $this->_raw = new $collectionClass($payload, $this->_client);            
@@ -179,7 +178,12 @@ class ApiCallBuilder
         }
         $this->_payload = $this->_client->get($this->_endpoint, $this->_options, $this->_class);
         return $this->_payload;
-    }    
+    }  
+
+    private function hasCollectionClass()
+    {
+        return (class_exists($this->_class .'Collection'));
+    }  
 
     private function hasReturnValue()
     {

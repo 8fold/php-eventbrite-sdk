@@ -1,6 +1,6 @@
 <?php
 
-namespace Eightfold\Eventbrite\Classes\EventSubs;
+namespace Eightfold\Eventbrite\Classes\SubObjects;
 
 use Eightfold\Eventbrite\Classes\SubObjects\EventSub;
 

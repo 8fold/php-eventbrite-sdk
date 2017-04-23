@@ -67,7 +67,7 @@ abstract class ApiResource
         $this->raw = $setup;
     }
 
-    protected function hasOne(string $class, string $endpoint, array $options = [])
+    protected function hasOne(string $class, string $endpoint, array $options = [], string $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
     {
         $baseCaller = debug_backtrace()[1]['function'];
         $caller = '_'. $baseCaller;
