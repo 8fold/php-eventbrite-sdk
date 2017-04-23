@@ -6,37 +6,28 @@ use Eightfold\Eventbrite\Classes\Core\ApiResource;
 
 use Exception;
 
+use Eightfold\Eventbrite\Classes\Order;
+use Eightfold\Eventbrite\Classes\Organizer;
+use Eightfold\Eventbrite\Classes\Venue;
+use Eightfold\Eventbrite\Classes\Category;
+use Eightfold\Eventbrite\Classes\Format;
+
+use Eightfold\Eventbrite\Classes\SubObjects\DisplaySetting;
+use Eightfold\Eventbrite\Classes\SubObjects\TicketClass;
+use Eightfold\Eventbrite\Classes\SubObjects\Question;
+use Eightfold\Eventbrite\Classes\SubObjects\Attendee;
+use Eightfold\Eventbrite\Classes\SubObjects\Discount;
+use Eightfold\Eventbrite\Classes\SubObjects\AccessCode;
+use Eightfold\Eventbrite\Classes\SubObjects\Transfer;
+use Eightfold\Eventbrite\Classes\SubObjects\Team;
+use Eightfold\Eventbrite\Classes\SubObjects\Subcategory;
+
 use GrahamCampbell\Markdown\Facades\Markdown;
 use League\HTMLToMarkdown\HtmlConverter;
 
-use Eightfold\Eventbrite\Eventbrite;
-
-use Eightfold\Eventbrite\Classes\Organizer;
-use Eightfold\Eventbrite\Classes\Venue;
-use Eightfold\Eventbrite\Classes\Format;
-use Eightfold\Eventbrite\Classes\Category;
-use Eightfold\Eventbrite\Classes\Order;
-
-use Eightfold\Eventbrite\Classes\CategorySub\Subcategory;
-
-use Eightfold\Eventbrite\Classes\EventSubs\TicketClass;
-use Eightfold\Eventbrite\Classes\EventSubs\Discount;
-use Eightfold\Eventbrite\Classes\EventSubs\DisplaySetting;
-use Eightfold\Eventbrite\Classes\EventSubs\AccessCode;
-use Eightfold\Eventbrite\Classes\EventSubs\Question;
-use Eightfold\Eventbrite\Classes\EventSubs\Transfer;
-use Eightfold\Eventbrite\Classes\EventSubs\Team;
-
-use Eightfold\Eventbrite\Classes\UserSubs\Attendee;
-
-use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
-use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
-use Eightfold\Eventbrite\Interfaces\ApiResourcePostable;
-
 use Eightfold\Eventbrite\Transformations\DateTransformations;
-use Eightfold\Eventbrite\Traits\Relateable;
 
-class Event extends ApiResource implements ApiResourceInterface, ApiResourceIsBase, ApiResourcePostable
+class Event extends ApiResource
 {
     use DateTransformations,
         Relateable;
