@@ -1,33 +1,23 @@
 <?php
 
-// inspired by jamiehollern/eventbrite
 namespace Eightfold\Eventbrite;
 
 use Eightfold\Eventbrite\Classes\Core\ApiClient as EventbriteBase;
 use Eightfold\Eventbrite\Classes\Core\ApiCallBuilder;
-use Eightfold\Eventbrite\Classes\Core\ApiAliasLoader;
 
 use Eightfold\Eventbrite\Traits\Gettable;
 
 use Eightfold\Eventbrite\Classes\User;
-use Eightfold\Eventbrite\Classes\Organizer;
-use Eightfold\Eventbrite\Classes\Event;
 use Eightfold\Eventbrite\Classes\Category;
-use Eightfold\Eventbrite\Classes\Report;
+use Eightfold\Eventbrite\Classes\Organizer;
 
 use Eightfold\Eventbrite\Classes\SubObjects\Organization;
+use Eightfold\Eventbrite\Classes\SubObjects\Subcategory;
 use Eightfold\Eventbrite\Classes\SubObjects\Attendee;
 use Eightfold\Eventbrite\Classes\SubObjects\Sale;
 use Eightfold\Eventbrite\Classes\SubObjects\Country;
 use Eightfold\Eventbrite\Classes\SubObjects\Region;
-use Eightfold\Eventbrite\Classes\SubObjects\Subcategory;
 use Eightfold\Eventbrite\Classes\SubObjects\Timezone;
-// use Eightfold\Eventbrite\Classes\UserSubs\Organization;
-
-
-
-
-
 
 /**
  * Main Eventrbrite entry point.
@@ -94,10 +84,8 @@ class Eventbrite extends EventbriteBase
         parent::__construct($token, $config);
         if (parent::canConnect()) {
             if ($isOrg) {
-                // dd(new Organization([], $this));
                 $return = new ApiCallBuilder($this, Organization::class, 'users/me');
                 $this->organization = $return->first();
-                
 
             } else {
                 $return = new ApiCallBuilder($this, User::class, 'users/me');

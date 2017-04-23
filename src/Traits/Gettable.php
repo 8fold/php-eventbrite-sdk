@@ -58,12 +58,9 @@ trait Gettable
         // in a property called "raw", strangely enough. Check there.
         $rawExists = (property_exists($this, 'raw') && is_array($this->raw));
         if ($rawExists && array_key_exists($name, $this->raw)) {
-// dd(array_key_exists($name, $this->raw));
             if (is_array($this->raw[$name])) {
-dump('object: '. $name);                
                 return (object) $this->raw[$name];
             }
-dump('value: '. $name);
             return $this->raw[$name];
 
         }

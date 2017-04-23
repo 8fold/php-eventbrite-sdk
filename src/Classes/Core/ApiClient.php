@@ -111,13 +111,10 @@ abstract class ApiClient
     public function canConnect()
     {
         $endpoint = $this->buildFullEndpoint(self::USER_ENDPOINT);
-        print('can connect end: '. $endpoint .'<br>');
         $response = $this->guzzle->get($endpoint);
         if ($response->getStatusCode() === 200) {
-            print('connected<br>');
             return true;
         }
-        print('not connected<br>');
         return false;
     }    
 
@@ -137,7 +134,6 @@ abstract class ApiClient
         // @todo: Convert to try-catch
         $target = $this->buildFullEndpoint($endpoint, $options);
         $response = $this->guzzle->get($target);
-        print($target .'<br>');
 
         $class = $this->getRealClassPath($target, $class);
         

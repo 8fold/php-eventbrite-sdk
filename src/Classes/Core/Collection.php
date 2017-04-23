@@ -20,9 +20,7 @@ class Collection extends ArrayObject
     public $count = 0;
 
     public function __construct($payload, $client, $class) {
-        // $payloadKeys = array_keys($payload);
         if (is_array($payload) && array_key_exists('pagination', $payload)) {
-            dump('true collection');
             $keys = array_keys($payload);
             foreach ($keys as $key) {
                 if ($key == 'pagination') {
@@ -48,9 +46,7 @@ class Collection extends ArrayObject
             return $payload;
 
         } else {
-            dump('making a single');
             $single = new $class($payload, $client);
-            dump($single);
             parent::__construct([$single]);
 
         }
