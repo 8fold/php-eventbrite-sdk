@@ -5,6 +5,8 @@ namespace Eightfold\Eventbrite\Traits;
 trait ClassMappable
 {
     /**
+     * @deprecated
+     * 
      * Maps API endpoints with classes
      *
      * 

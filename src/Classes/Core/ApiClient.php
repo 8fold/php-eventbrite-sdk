@@ -145,7 +145,6 @@ abstract class ApiClient
                 return $parsed['error_description'];
             }
             return $parsed;
-            return new Collection($parsed, $this, $class);
 
         } else {
             throw new \Exception('Could not get resource.');
@@ -229,6 +228,8 @@ abstract class ApiClient
     private function getRealClassPath(string $endpoint, string $class = null)
     {
         if (is_null($class)) {
+            print('apiClient->getRealClassPath - '. $endpoint .' is null');
+            die('<br>deprecate the need for this<br>');
             // we were not told which class to instantiate,
             // use the endpoint to decide.
             $endpointParts = explode('/', $endpoint);    

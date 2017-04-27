@@ -1,8 +1,8 @@
 <?php
 
-namespace Eightfold\Eventbrite\Classes\SubOjects;
+namespace Eightfold\Eventbrite\Classes\SubObjects;
 
-use Eightfold\Eventbrite\Classes\SubOjects\EventSub;
+use Eightfold\Eventbrite\Classes\SubObjects\EventSub;
 
 class AccessCode extends EventSub
 {}

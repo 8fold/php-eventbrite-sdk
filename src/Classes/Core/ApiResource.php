@@ -36,16 +36,17 @@ abstract class ApiResource
      */
     protected $changed = null;
 
-    static public function find($client, string $class, string $endpoint, $options = [], $payload = [], $isCollection = false)
+    static public function find($client, string $class, string $endpoint, array $options = [], string $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
     {
         $opt = static::getOptions($class, $options);
-        $new = new ApiCallBuilder($client, $class, $endpoint, $opt, $payload, $isCollection);
+        $new = new ApiCallBuilder($client, $class, $endpoint, $opt, $keyToInstantiate, $keysToConvertToCollectionVars);
         return $new;
     }
 
     static private function getOptions($class, $options = [], $expansions = [])
     {
-        if (method_exists(get_called_class(), 'expandedByDefault') && count($class::expandedByDefault()) > 0) {
+        $methodExists = method_exists($class, 'expandedByDefault');
+        if ($methodExists && count($class::expandedByDefault()) > 0) {
             $expansions = ['expand' => implode(',', $class::expandedByDefault())];    
         }
         $opt = array_merge($options, $expansions);
@@ -67,7 +68,7 @@ abstract class ApiResource
         $this->raw = $setup;
     }
 
-    protected function hasOne(string $class, string $endpoint, array $options = [])
+    protected function hasOne(string $class, string $endpoint, array $options = [], string $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
     {
         $baseCaller = debug_backtrace()[1]['function'];
         $caller = '_'. $baseCaller;
@@ -82,11 +83,15 @@ abstract class ApiResource
 
         }
 
-        $this->{$caller} = new ApiCallBuilder($this->client, $class, $endpoint, static::getOptions($class, $options), $payload);
+        $this->{$caller} = new ApiCallBuilder(
+            $this->client, 
+            $class, 
+            $endpoint, 
+            static::getOptions($class, $options));
         return $this->{$caller};
     }
 
-    protected function hasMany(string $class, string $endpoint, array $options = [])
+    protected function hasMany(string $class, string $endpoint, array $options = [], string $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
     {
         $baseCaller = debug_backtrace()[1]['function'];
         $caller = '_'. $baseCaller;
@@ -101,7 +106,13 @@ abstract class ApiResource
 
         }
 
-        $this->{$caller} = new ApiCallBuilder($this->client, $class, $endpoint, static::getOptions($class, $options), $payload, true);
+        $this->{$caller} = new ApiCallBuilder(
+            $this->client, 
+            $class, 
+            $endpoint, 
+            static::getOptions($class, $options), 
+            $keyToInstantiate, 
+            $keysToConvertToCollectionVars);
         return $this->{$caller};
     }
 
