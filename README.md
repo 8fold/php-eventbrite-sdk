@@ -1,14 +1,14 @@
 # Eventbrite SDK for PHP by 8fold
 
-The Eventbrite SDK strives to be a simple and complete wrapper for interfacing with the Eventbrite API. Design considerations:
+The Eventbrite SDK by 8fold strives to be a simple and complete wrapper for interfacing with the version 3 of the Eventbrite API. 
+
+Note: Eventbrite has an official SDK of the same name.
+
+Design considerations:
 
 - **Convention over configuration:** When patterns present themselves, promote them to higher level objects and methods to allow you to avoid having to fill in a lot of method parameters in order to get up and running with the library.
 - **Only call when you have to:** The API has a throttle (a maximum number of calls that can be performed within a specific period of time); therefore, the library minimizes the number of calls made by way of caching values locally. It will be more to you, the developer, to state whether you want to call the API again or not.
 - 
-
-
-
-
 
 ## Composer install
 

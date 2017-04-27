@@ -7,9 +7,11 @@ use Eightfold\Eventbrite\Classes\Core\ApiCallBuilder;
 
 use Eightfold\Eventbrite\Traits\Gettable;
 
+use Eightfold\Eventbrite\Classes\Event;
 use Eightfold\Eventbrite\Classes\User;
 use Eightfold\Eventbrite\Classes\Category;
 use Eightfold\Eventbrite\Classes\Organizer;
+use Eightfold\Eventbrite\Classes\Format;
 
 use Eightfold\Eventbrite\Classes\SubObjects\Organization;
 use Eightfold\Eventbrite\Classes\SubObjects\Subcategory;
@@ -95,6 +97,11 @@ class Eventbrite extends EventbriteBase
         }
     }
 
+    public function event($id = '')
+    {
+        return Event::find($this, Event::class, 'events/'. $id);
+    }
+
     public function user()
     {
         if (is_null($this->organization)) {
@@ -148,5 +155,13 @@ class Eventbrite extends EventbriteBase
             ? 'subcategories/'. $id
             : 'subcategories';
         return Subcategory::find($this, Subcategory::class, $endpoint);
+    }
+
+    public function formats($id = '')
+    {
+        $endpoint = (strlen($id) > 0)
+            ? 'formats/'. $id
+            : 'formats';
+        return Format::find($this, Format::class, $endpoint);
     }
 }

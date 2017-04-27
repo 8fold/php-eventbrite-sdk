@@ -87,19 +87,12 @@ class ApiCallBuilder
      * @param array       $keysToConvertToCollectionVars Array of payload keys to 
      *                                                   convert to instance variables.
      */
-    public function __construct(
-        $client, 
-        string $class, 
-        string $endpoint, 
-        array $options = [],
-        string $keyToInstantiate = null, 
-        $keysToConvertToCollectionVars = [])
+    public function __construct($client, string $class, string $endpoint, array $options = [], string $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
     {
         $this->_client = $client;
         $this->_class = $class;
         $this->_endpoint = $endpoint;
         $this->_options = $options;
-        $this->_isCollection = $isCollection;
         $this->_keyToInstantiate = $keyToInstantiate;
         $this->_keysToConvertToCollectionVars = $keysToConvertToCollectionVars;
     }
@@ -140,6 +133,27 @@ class ApiCallBuilder
             return $result[0];
         }
         return $result;
+    }
+
+    public function where(string $field, string $contains)
+    {
+        // We don't have anything yet, make the call.
+        if (is_null($this->_raw)) {
+            $this->get();
+        }
+
+        if (is_a($this->_return, ApiCollection::class)) {
+            foreach($this->_return as $item) {
+                // TODO: Not sure what to do if can't convert to any array.
+                $var = (array) $item->{$field};
+                foreach($var as $check) {
+                    if ($check === $contains) {
+                        return $this;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     public function reset()

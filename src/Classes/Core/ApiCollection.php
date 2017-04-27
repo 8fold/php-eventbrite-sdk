@@ -4,6 +4,7 @@ namespace Eightfold\Eventbrite\Classes\Core;
 
 use ArrayObject;
 
+// TODO: Rename to ApiResourceCollection
 class ApiCollection extends ArrayObject
 {
     public function __construct(array $payload, $client, string $class, string $keyToInstantiate = null, array $keysToConvertToLocalVars = null

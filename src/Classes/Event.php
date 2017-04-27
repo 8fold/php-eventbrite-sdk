@@ -11,6 +11,7 @@ use Eightfold\Eventbrite\Classes\Organizer;
 use Eightfold\Eventbrite\Classes\Venue;
 use Eightfold\Eventbrite\Classes\Category;
 use Eightfold\Eventbrite\Classes\Format;
+use Eightfold\Eventbrite\Classes\Media;
 
 use Eightfold\Eventbrite\Classes\SubObjects\DisplaySetting;
 use Eightfold\Eventbrite\Classes\SubObjects\TicketClass;
@@ -46,15 +47,18 @@ class Event extends ApiResource
         return $this->hasMany(TicketClass::class, $endpoint);
     }
 
+    // TODO: Revisit - might need to be its own class
     public function canned_questions()
     {
         $endpoint = $this->endpoint .'/canned_questions';
         return $this->hasMany(Question::class, $endpoint);
     }
 
-    public function questions()
+    public function questions($id = '')
     {
-        $endpoint = $this->endpoint .'/questions';
+        $endpoint = (strlen($id) > 0)
+            ? $this->endpoint .'/questions/'. $id
+            : $this->endpoint .'/questions';
         return $this->hasMany(Question::class, $endpoint);
     }
 
@@ -131,15 +135,22 @@ class Event extends ApiResource
         return $this->hasOne(Format::class, $endpoint);
     }
 
-    public function name()
+    public function logo()
     {
-        return $this->name->text;
-    }  
-
-    public function nameHtml()
-    {
-        return $this->name->html;
+        $endpoint = 'media/'. $this->logo_id;
+        return $this->hasOne(Media::class, $endpoint);     
     }
+
+
+    // public function name()
+    // {
+    //     return $this->raw->name->text;
+    // }  
+
+    // public function nameHtml()
+    // {
+    //     return $this->raw->name->html;
+    // }
 
     protected function setName($name)
     {
@@ -170,6 +181,7 @@ class Event extends ApiResource
         return $markdownStripped;        
     }
 
+
     public function lowCostDisplay()
     {
         return $this->lowestType->costDisplay();
@@ -190,6 +202,10 @@ class Event extends ApiResource
         return $this->highCost() - $this->lowCost();
     }
 
+    /**************/
+    /* Interfaces */
+    /**************/
+
     static public function expandedByDefault()
     {
         return [
@@ -202,10 +218,6 @@ class Event extends ApiResource
             'bookmark_info'
         ];
     }
-
-    /**************/
-    /* Interfaces */
-    /**************/
 
     static public function baseEndpoint()
     {
