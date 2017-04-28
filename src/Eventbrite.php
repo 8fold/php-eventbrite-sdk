@@ -63,7 +63,7 @@ class Eventbrite extends EventbriteBase
      *
      * @return Eventbrite
      */
-    static public function startEventbrite(string $token, $config = [], $isOrg = false)
+    static public function startEventbrite($token, $config = [], $isOrg = false)
     {
         return new Eventbrite($token, $config, $isOrg);
     }
@@ -81,7 +81,7 @@ class Eventbrite extends EventbriteBase
      * @param bool   $isOrg  Whether the user to be associated with instance is an
      *                       an organization or a human
      */
-    public function __construct(string $token, $config = [], $isOrg = false)
+    public function __construct($token, $config = [], $isOrg = false)
     {
         parent::__construct($token, $config);
         if (parent::canConnect()) {
