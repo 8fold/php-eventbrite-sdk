@@ -129,7 +129,7 @@ abstract class ApiClient
      *
      * @return ApiResource           An instance of the class path received
      */
-    public function get(string $endpoint, array $options = [], string $class = null)
+    public function get($endpoint, array $options = [], $class = null)
     {
         // @todo: Convert to try-catch
         $target = $this->buildFullEndpoint($endpoint, $options);
@@ -163,7 +163,7 @@ abstract class ApiClient
      *
      * @return ApiResource           An instance of the class path received
      */
-    public function post(string $endpoint, array $updates = [], string $class = null)
+    public function post($endpoint, array $updates = [], $class = null)
     {
         // $endpoint = $this->buildFullEndpoint($endpoint, null);
         // $body = json_encode($updates);
@@ -225,7 +225,7 @@ abstract class ApiClient
      *
      * @return string                The resulting class path
      */
-    private function getRealClassPath(string $endpoint, string $class = null)
+    private function getRealClassPath($endpoint, $class = null)
     {
         if (is_null($class)) {
             print('apiClient->getRealClassPath - '. $endpoint .' is null');

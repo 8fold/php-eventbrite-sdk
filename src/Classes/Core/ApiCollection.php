@@ -7,7 +7,7 @@ use ArrayObject;
 // TODO: Rename to ApiResourceCollection
 class ApiCollection extends ArrayObject
 {
-    public function __construct(array $payload, $client, string $class, string $keyToInstantiate = null, array $keysToConvertToLocalVars = null
+    public function __construct(array $payload, $client, $class, $keyToInstantiate = null, array $keysToConvertToLocalVars = null
     ) {
         if (!is_null($keysToConvertToLocalVars) && is_array($keysToConvertToLocalVars)) {
             foreach($keysToConvertToLocalVars as $convertMe) {

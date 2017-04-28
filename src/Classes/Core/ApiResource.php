@@ -36,7 +36,7 @@ abstract class ApiResource
      */
     protected $changed = null;
 
-    static public function find($client, string $class, string $endpoint, array $options = [], string $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
+    static public function find($client, $class, $endpoint, array $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
     {
         $opt = static::getOptions($class, $options);
         $new = new ApiCallBuilder($client, $class, $endpoint, $opt, $keyToInstantiate, $keysToConvertToCollectionVars);
@@ -68,7 +68,7 @@ abstract class ApiResource
         $this->raw = $setup;
     }
 
-    protected function hasOne(string $class, string $endpoint, array $options = [], string $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
+    protected function hasOne($class, $endpoint, array $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
     {
         $baseCaller = debug_backtrace()[1]['function'];
         $caller = '_'. $baseCaller;
@@ -91,7 +91,7 @@ abstract class ApiResource
         return $this->{$caller};
     }
 
-    protected function hasMany(string $class, string $endpoint, array $options = [], string $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
+    protected function hasMany($class, $endpoint, array $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
     {
         $baseCaller = debug_backtrace()[1]['function'];
         $caller = '_'. $baseCaller;

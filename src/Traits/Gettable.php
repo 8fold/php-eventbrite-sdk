@@ -21,7 +21,7 @@ trait Gettable
      * @return variable        The raw property, the set property, the result of a
      *                         a method call, or an error message.
      */
-    public function __get(string $name)
+    public function __get($name)
     {
         // This is not an ApiResource, but we are checking for changed, which is
         // reserved for that class type. Bail early and save ourselves the processes.
