@@ -67,7 +67,7 @@ abstract class ApiClient
      *
      * @return ApiClient
      */
-    static public function setAuthToken(string $token, $config = [])
+    static public function setAuthToken($token, $config = [])
     {
         return new Eventbrite($token, $config);
     }
