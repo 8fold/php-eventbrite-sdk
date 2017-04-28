@@ -16,7 +16,7 @@ use Eightfold\Eventbrite\Classes\Helpers\Collection;
  * The main connection to the Eventbrite APIs
  *
  * Eventbrite only recognizes GET, POST, and DELETE.
- * 
+ *
  */
 abstract class ApiClient
 {
@@ -31,7 +31,7 @@ abstract class ApiClient
      * @todo Consider deprecating
      */
     const USER_ENDPOINT = 'users/me';
-    
+
     /**
      * False by default allows us to handle errors
      */
@@ -61,7 +61,7 @@ abstract class ApiClient
 
     /**
      * Create a new ApiCclient
-     * 
+     *
      * @param string $token  The OAuth token for requests
      * @param array  $config Array of Guzzle config options
      *
@@ -74,7 +74,7 @@ abstract class ApiClient
 
     /**
      * Create a new ApiCclient
-     * 
+     *
      * @param string $token  The OAuth token for requests
      * @param array  $config Array of Guzzle config options
      *
@@ -116,17 +116,17 @@ abstract class ApiClient
             return true;
         }
         return false;
-    }    
+    }
 
     /**
      * Get a resource from the API.
      *
      * GET calls do not require the token to be part of the endpoint.
-     * 
+     *
      * @param  string      $endpoint The endpoint to hit on the API
      * @param  array       $options  Options to append to call
      * @param  string|null $class    The desired class instance to be returned
-     * 
+     *
      * @return ApiResource           An instance of the class path received
      */
     public function get(string $endpoint, array $options = [], string $class = null)
@@ -136,7 +136,7 @@ abstract class ApiClient
         $response = $this->guzzle->get($target);
 
         $class = $this->getRealClassPath($target, $class);
-        
+
         // return the appropriate response
         if ($response instanceof ResponseInterface) {
             $body = $response->getBody()->getContents();
@@ -156,16 +156,16 @@ abstract class ApiClient
      * Post a resource with the API.
      *
      * POST calls require the token to be part of the endpoint.
-     * 
+     *
      * @param  string      $endpoint The endpoint to hit on the API
      * @param  array       $options  The updates being made
      * @param  string|null $class    The desired class instance to be returned
-     * 
+     *
      * @return ApiResource           An instance of the class path received
      */
     public function post(string $endpoint, array $updates = [], string $class = null)
     {
-        // $endpoint = $this->buildFullEndpoint($endpoint, null);      
+        // $endpoint = $this->buildFullEndpoint($endpoint, null);
         // $body = json_encode($updates);
         // $class = $this->getClassPath($endpoint, $class);
         // $response = $this->guzzle->post($endpoint, [
@@ -181,14 +181,14 @@ abstract class ApiClient
         // } else {
         //     throw new \Exception('Could not post resource.');
 
-        // }  
+        // }
     }
 
     private function buildFullEndpoint($endpoint, $options = [])
     {
         $options['token'] = $this->token;
         $base = static::BASE_URI .'/'. $endpoint .'/?';
-        
+
         if (count($options) > 0) {
             $base .= $this->getParameters($options);
         }
@@ -197,7 +197,7 @@ abstract class ApiClient
 
     /**
      * @todo Test to make sure this works.
-     * 
+     *
      * @param  array  $options [description]
      * @return [type]          [description]
      */
@@ -219,10 +219,10 @@ abstract class ApiClient
 
     /**
      * Determine what class to instantiate upon return
-     * 
+     *
      * @param  string      $endpoint The endpoint to use should `$class` be null
      * @param  string|null $class    The desired class instance to be returned
-     * 
+     *
      * @return string                The resulting class path
      */
     private function getRealClassPath(string $endpoint, string $class = null)
@@ -232,7 +232,7 @@ abstract class ApiClient
             die('<br>deprecate the need for this<br>');
             // we were not told which class to instantiate,
             // use the endpoint to decide.
-            $endpointParts = explode('/', $endpoint);    
+            $endpointParts = explode('/', $endpoint);
             $first = array_shift($endpointParts);
             $last = array_pop($endpointParts);
             $class = null;
