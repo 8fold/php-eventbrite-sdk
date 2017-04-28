@@ -32,7 +32,7 @@ use Eightfold\Eventbrite\Classes\SubObjects\Timezone;
  * view both of these accounts types as the same thing. This library, however, doea
  * not. Therefore, you can tell the instance whether it should be treated as an
  * individual (human) or an organization (legal entity).
- * 
+ *
  */
 class Eventbrite extends EventbriteBase
 {
@@ -42,31 +42,31 @@ class Eventbrite extends EventbriteBase
      * Each Eventbrite client is associated with a user. The default is a human;
      * however, it is possible you want it to be an organization (the main account),
      * this distinguishes between those two things.
-     * 
+     *
      * @var Eightfold\Classes\Organization
      */
     private $organization = null;
 
     /**
      * See `$organization`. This is a human instance of the Eventbrite API client.
-     * 
+     *
      * @var Eightfold\Classes\Individual
      */
     private $individual = null;
 
     /**
      * Creates an Eventbrite instance for a specific user.
-     * 
+     *
      * @param string $token  Oauth token for application or individual
      * @param bool   $isOrg  Whether to treat the user associated as a human or not.
      * @param array  $config Configuration parameters for parent class.
      *
      * @return Eventbrite
      */
-    static public function setAuthToken(string $token, $isOrg = false, $config = [])
+    static public function setAuthToken(string $token, $config = [], $isOrg = false)
     {
-        return new Eventbrite($token, $isOrg, $config);
-    }  
+        return new Eventbrite($token,$config, $isOrg);
+    }
 
     /**
      * Intantiate Eventbrite instance.
@@ -75,13 +75,13 @@ class Eventbrite extends EventbriteBase
      *
      * Organizations are the only user type that can establish an application;
      * therefore, the organization is all we care about with this instance.
-     * 
+     *
      * @param string $token  Oauth token for application or individual
      * @param array  $config Configuration parameters for parent class.
      * @param bool   $isOrg  Whether the user to be associated with instance is an
      *                       an organization or a human
      */
-    public function __construct(string $token, $isOrg = false, $config = [])
+    public function __construct(string $token, $config = [], $isOrg = false)
     {
         parent::__construct($token, $config);
         if (parent::canConnect()) {
@@ -93,7 +93,7 @@ class Eventbrite extends EventbriteBase
                 $return = new ApiCallBuilder($this, User::class, 'users/me');
                 $this->individual = $return->first();
 
-            }            
+            }
         }
     }
 
