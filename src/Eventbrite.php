@@ -65,7 +65,7 @@ class Eventbrite extends EventbriteBase
      */
     static public function setAuthToken(string $token, $config = [], $isOrg = false)
     {
-        return new Eventbrite($token,$config, $isOrg);
+        return new Eventbrite($token, $config, $isOrg);
     }
 
     /**
