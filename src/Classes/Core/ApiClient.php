@@ -69,7 +69,7 @@ abstract class ApiClient
      */
     static public function setAuthToken($token, $config = [])
     {
-        return new Eventbrite($token, $config);
+        return new ApiClient($token, $config);
     }
 
     /**
