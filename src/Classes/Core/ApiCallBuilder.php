@@ -129,7 +129,7 @@ class ApiCallBuilder
     public function first()
     {
         $result = $this->get();
-        if (count($result) > 1) {
+        if (is_subclass_of($result, ApiCollection::class) && isset($result[0])) {
             return $result[0];
         }
         return $result;
