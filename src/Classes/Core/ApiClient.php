@@ -67,10 +67,10 @@ abstract class ApiClient
      *
      * @return ApiClient
      */
-    static public function setAuthToken($token, $config = [])
-    {
-        return new ApiClient($token, $config);
-    }
+    // static public function setAuthToken($token, $config = [])
+    // {
+    //     return new ApiClient($token, $config);
+    // }
 
     /**
      * Create a new ApiCclient
