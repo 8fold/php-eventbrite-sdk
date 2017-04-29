@@ -26,10 +26,11 @@ class User extends ApiResource
     }
 
     // TODO: contact Eventbrite, does not appear to be working
-    // public function organizers()
-    // {
-    //     return $this->hasMany(Organizer::class, 'users/'. $this->id .'/oganizers');
-    // }
+    // TODO: passing in $id does not work as expected use organizers->where() instead
+    public function organizers($id = '')
+    {
+        return $this->hasMany(Organizer::class, 'users/me/organizers/'. $id);
+    }
 
     public function owned_events()
     {
@@ -43,10 +44,6 @@ class User extends ApiResource
             'users/me/owned_events', 
             [
                 'order_by' => 'start_desc'
-            ],
-            'events',
-            [
-                'pagination'
             ]
         );
     }

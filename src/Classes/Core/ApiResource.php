@@ -68,7 +68,7 @@ abstract class ApiResource
         $this->raw = $setup;
     }
 
-    protected function hasOne($class, $endpoint, array $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
+    protected function hasOne($class, $endpoint, $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
     {
         $baseCaller = debug_backtrace()[1]['function'];
         $caller = '_'. $baseCaller;
@@ -91,7 +91,7 @@ abstract class ApiResource
         return $this->{$caller};
     }
 
-    protected function hasMany($class, $endpoint, array $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
+    protected function hasMany($class, $endpoint, $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
     {
         $baseCaller = debug_backtrace()[1]['function'];
         $caller = '_'. $baseCaller;
@@ -110,9 +110,7 @@ abstract class ApiResource
             $this->client, 
             $class, 
             $endpoint, 
-            static::getOptions($class, $options), 
-            $keyToInstantiate, 
-            $keysToConvertToCollectionVars);
+            static::getOptions($class, $options));
         return $this->{$caller};
     }
 
