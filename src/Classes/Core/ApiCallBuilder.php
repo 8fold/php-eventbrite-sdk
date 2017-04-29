@@ -87,7 +87,7 @@ class ApiCallBuilder
      * @param array       $keysToConvertToCollectionVars Array of payload keys to 
      *                                                   convert to instance variables.
      */
-    public function __construct($client, $class, $endpoint, array $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
+    public function __construct($client, $class, $endpoint, $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
     {
         $this->_client = $client;
         $this->_class = $class;
@@ -141,16 +141,18 @@ class ApiCallBuilder
         if (is_null($this->_raw)) {
             $this->get();
         }
-
         if (is_a($this->_return, ApiCollection::class)) {
+            $index = 0;
             foreach($this->_return as $item) {
                 // TODO: Not sure what to do if can't convert to any array.
                 $var = (array) $item->{$field};
                 foreach($var as $check) {
                     if ($check === $contains) {
-                        return $this;
+                        return $this->_return[$index];
+                        
                     }
                 }
+                $index++;
             }
         }
         return null;

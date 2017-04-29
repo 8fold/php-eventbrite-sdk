@@ -133,6 +133,7 @@ abstract class ApiClient
     {
         // @todo: Convert to try-catch
         $target = $this->buildFullEndpoint($endpoint, $options);
+        // var_dump($target);
         $response = $this->guzzle->get($target);
 
         $class = $this->getRealClassPath($target, $class);
