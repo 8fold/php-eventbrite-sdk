@@ -4,5 +4,5 @@ namespace Eightfold\Eventbrite\Classes;
 
 use Eightfold\Eventbrite\Classes\Core\ApiResource;
 
-class Organizer extends ApiResource
+class Format extends ApiResource
 {}

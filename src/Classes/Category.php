@@ -2,36 +2,33 @@
 
 namespace Eightfold\Eventbrite\Classes;
 
-use Eightfold\Eventbrite\Classes\ApiResource;
+use Eightfold\Eventbrite\Classes\Core\ApiResource;
 
 class Category extends ApiResource
 {
-    const endpointEntry = 'categories/';
-    const classPath = __CLASS__;    
+    // public function name()
+    // {
+    //     if (is_string($this->raw->name_localized)) {
+    //         return $this->raw->name_localized;
 
-    public function name()
-    {
-        if (isset($this->name_localized)) {
-            return $this->name_localized;
+    //     } elseif (isset($this->raw->name) && is_string($this->raw->name)) {
+    //         return $this->raw->name;
 
-        } elseif (isset($this->name)) {
-            return $this->name;
+    //     }
+    //     return null;
+    // }
 
-        }
-        return null;
-    }
+    // public function short_name()
+    // {
+    //     if (isset($this->raw->short_name_localized) && is_string($this->raw->short_name_localized)) {
+    //         return $this->raw->short_name_localized;
 
-    public function shortName()
-    {
-        if (isset($this->short_name_localized)) {
-            return $this->short_name_localized;
+    //     } elseif (isset($this->raw->short_name) && is_string($this->raw->short_name)) {
+    //         return $this->raw->short_name;
 
-        } elseif (isset($this->short_name)) {
-            return $this->short_name;
+    //     } else {
+    //         return $this->name;
 
-        } else {
-            return $this->name;
-
-        }
-    }
+    //     }
+    // }
 }
