@@ -6,9 +6,12 @@ use Eightfold\Eventbrite\Classes\Core\ApiCollection;
 
 use Eightfold\Eventbrite\Classes\SubObjects\Subcategory;
 
+/**
+ * @package Collections
+ */
 class SubcategoryCollection extends ApiCollection
 {
-    public function __construct(array $payload, $client) 
+    public function __construct(array $payload, $client)
     {
         $class = Subcategory::class;
         $keyToInstantiate = 'subcategories';

@@ -8,7 +8,10 @@ use Eightfold\Eventbrite\Classes\Event;
 
 use Eightfold\Eventbrite\Interfaces\ExpandableInterface;
 
-class EventSub extends ApiResource implements ExpandableInterface
+/**
+ * @package ApiResource alias
+ */
+abstract class EventSub extends ApiResource implements ExpandableInterface
 {
     static public function expandedByDefault()
     {

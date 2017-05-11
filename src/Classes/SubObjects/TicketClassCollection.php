@@ -6,9 +6,12 @@ use Eightfold\Eventbrite\Classes\Core\ApiCollection;
 
 use Eightfold\Eventbrite\Classes\SubObjects\TicketClass;
 
+/**
+ * @package Collections
+ */
 class TicketClassCollection extends ApiCollection
 {
-    public function __construct(array $payload, $client) 
+    public function __construct(array $payload, $client)
     {
         $class = TicketClass::class;
         $keyToInstantiate = 'ticket_classes';

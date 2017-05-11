@@ -33,6 +33,7 @@ use Eightfold\Eventbrite\Classes\SubObjects\Timezone;
  * not. Therefore, you can tell the instance whether it should be treated as an
  * individual (human) or an organization (legal entity).
  *
+ * @package Initializer
  */
 class Eventbrite extends EventbriteBase
 {
@@ -57,11 +58,11 @@ class Eventbrite extends EventbriteBase
     /**
      * Creates an Eventbrite instance for a specific user.
      *
-     * @param string $token  Oauth token for application or individual
-     * @param bool   $isOrg  Whether to treat the user associated as a human or not.
+     * @param string $token  Oauth token for application or individual.
      * @param array  $config Configuration parameters for parent class.
+     * @param bool   $isOrg  Whether to treat the user associated as a human or not.
      *
-     * @return Eventbrite
+     * @return Eventbrite Instance with user for token.
      */
     static public function startEventbrite($token, $config = [], $isOrg = false)
     {
@@ -80,6 +81,8 @@ class Eventbrite extends EventbriteBase
      * @param array  $config Configuration parameters for parent class.
      * @param bool   $isOrg  Whether the user to be associated with instance is an
      *                       an organization or a human
+     *
+     * @return  Eventbrite Eventbrite instance.
      */
     public function __construct($token, $config = [], $isOrg = false)
     {

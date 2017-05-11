@@ -4,7 +4,14 @@ namespace Eightfold\Eventbrite\Classes\Core;
 
 use Eightfold\Eventbrite\Classes\Core\ApiCollection;
 
-class ApiCallBuilder
+/**
+ * Allows for making and caching API calls
+ *
+ * @category Core
+ *
+ * @package Core
+ */
+abstract class ApiCallBuilder
 {
     /**
      * The ApiClient to use when calling
@@ -68,14 +75,14 @@ class ApiCallBuilder
 
     /**
      * Instantiate a call builder
-     * 
+     *
      * @param ApiClient   $client                        The ApiClient subclass to use
      *                                                   when performing calls.
      * @param string      $class                         The namespace of the class to
      *                                                   instantiate.
-     * @param string      $endpoint                      The endpiont to use when 
+     * @param string      $endpoint                      The endpiont to use when
      *                                                   calling the API.
-     * @param array       $options                       Associative array of 
+     * @param array       $options                       Associative array of
      *                                                   parameters to append to the
      *                                                   endpoint.
      * @param boolean     $isCollection                  When to always return an
@@ -84,7 +91,7 @@ class ApiCallBuilder
      * @param string|null $keyToInstantiate              The key of the payload to
      *                                                   convert to instances of the
      *                                                   class.
-     * @param array       $keysToConvertToCollectionVars Array of payload keys to 
+     * @param array       $keysToConvertToCollectionVars Array of payload keys to
      *                                                   convert to instance variables.
      */
     public function __construct($client, $class, $endpoint, $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
@@ -112,7 +119,7 @@ class ApiCallBuilder
         } elseif (count($raw) == 0) {
             // got nothing make null
             $this->_return = [];
-        
+
         }elseif ($this->hasCollectionClass()) {
             // got more than one, return the whole collection
             $this->_return = $this->_raw;
@@ -149,7 +156,7 @@ class ApiCallBuilder
                 foreach($var as $check) {
                     if ($check === $contains) {
                         return $this->_return[$index];
-                        
+
                     }
                 }
                 $index++;
@@ -177,11 +184,11 @@ class ApiCallBuilder
         if ($this->hasCollectionClass()) {
             // print('using collection class<br>');
             $collectionClass = $this->_class .'Collection';
-            $this->_raw = new $collectionClass($payload, $this->_client);            
+            $this->_raw = new $collectionClass($payload, $this->_client);
 
         } else {
             // print('using generic api collection<br>');
-            $this->_raw = new ApiCollection($payload, $this->_client, $this->_class, $this->_keyToInstantiate, $this->_keysToConvertToCollectionVars);            
+            $this->_raw = new ApiCollection($payload, $this->_client, $this->_class, $this->_keyToInstantiate, $this->_keysToConvertToCollectionVars);
         }
 
         return $this->_raw;
@@ -194,12 +201,12 @@ class ApiCallBuilder
         }
         $this->_payload = $this->_client->get($this->_endpoint, $this->_options, $this->_class);
         return $this->_payload;
-    }  
+    }
 
     private function hasCollectionClass()
     {
         return (class_exists($this->_class .'Collection'));
-    }  
+    }
 
     private function hasReturnValue()
     {

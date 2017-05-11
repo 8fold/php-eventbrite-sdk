@@ -17,6 +17,9 @@ use Eightfold\Eventbrite\Classes\Helpers\Collection;
  *
  * Eventbrite only recognizes GET, POST, and DELETE.
  *
+ * @category Core
+ *
+ * @package Core
  */
 abstract class ApiClient
 {
@@ -24,12 +27,17 @@ abstract class ApiClient
 
     /**
      * Which version of the API to use
+     *
+     * Something to make a long description.
+     *
+     * @see Something else.
+     *
+     * @deprecated This is a deprecation message.
+     *
+     * Something with \ backslash.
      */
     const BASE_URI = 'https://www.eventbriteapi.com/v3';
 
-    /**
-     * @todo Consider deprecating
-     */
     const USER_ENDPOINT = 'users/me';
 
     /**
@@ -60,25 +68,14 @@ abstract class ApiClient
     private $guzzle;
 
     /**
-     * Create a new ApiCclient
+     * Instantiate client with token and Guzzle configuration.
      *
-     * @param string $token  The OAuth token for requests
-     * @param array  $config Array of Guzzle config options
+     * @param [type] $token  [description]
+     * @param array  $config [description]
      *
-     * @return ApiClient
-     */
-    // static public function setAuthToken($token, $config = [])
-    // {
-    //     return new ApiClient($token, $config);
-    // }
-
-    /**
-     * Create a new ApiCclient
+     * @throws Exception Missing OAuth token for calls.
      *
-     * @param string $token  The OAuth token for requests
-     * @param array  $config Array of Guzzle config options
-     *
-     * @throws \Excpetion
+     * @return Eightfold\Eventbrite\Classes\Core\ApiClient
      */
     public function __construct($token, $config = [])
     {
@@ -106,6 +103,11 @@ abstract class ApiClient
 
     /**
      * [canConnect description]
+     *
+     * @deprecated 1.0.0 Hello world!
+     *
+     * @see  SomeOtherClass Some other description.
+     *
      * @return [type] [description]
      */
     public function canConnect()

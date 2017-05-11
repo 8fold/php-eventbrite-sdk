@@ -13,9 +13,12 @@ use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
 use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
 use Eightfold\Eventbrite\Interfaces\ApiResourcePostable;
 
+/**
+ * @package First order resource
+ */
 class User extends ApiResource
 {
-    
+
     private $events = null;
 
     private $upcomingEvents = null;
@@ -40,8 +43,8 @@ class User extends ApiResource
         // https://www.eventbriteapi.com/v3/users/me/owned_events/
         // ?token=V75CULK7QRW5JDJ7TLQO&order_by=start_desc
         return $this->hasMany(
-            Event::class, 
-            'users/me/owned_events', 
+            Event::class,
+            'users/me/owned_events',
             [
                 'order_by' => 'start_desc'
             ]
@@ -52,7 +55,7 @@ class User extends ApiResource
     {
         return $this->hasMany(Event::class, 'users/me/events', [
             'order_by' => 'start_desc'
-        ], 
+        ],
         'events',
         ['pagination']);
     }
@@ -75,5 +78,5 @@ class User extends ApiResource
     public function contact_lists($id = '')
     {
         return $this->hasMany(ContactList::class, 'users/me/contact_lists/'. $id);
-    }  
+    }
 }

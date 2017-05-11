@@ -5,10 +5,39 @@ namespace Eightfold\Eventbrite\Classes\Core;
 use ArrayObject;
 
 // TODO: Rename to ApiResourceCollection
-class ApiCollection extends ArrayObject
+/**
+ * Hold multiple ApiResources
+ *
+ * @category Core
+ *
+ * @package Core
+ */
+abstract class ApiCollection extends ArrayObject
 {
-    public function __construct(array $payload, $client, $class, $keyToInstantiate = null, $keysToConvertToLocalVars = []
-    ) {
+    /**
+     * Instantiate ApiCollection using given payload.
+     *
+     * For a collection of resources returned from the API, there is usually a key
+     * that has as its value the array of individual objects return from the API.
+     *
+     * Therefore, we want to tell the ApiCollection, where within the JSON return the
+     * collection of objects resides.
+     *
+     * Sometimes we also receive data outside the array of whatever objects we have a
+     * collection of (attendees for this example). If you would like the values of
+     * those members stored in the instance, pass an array of the keys (member names)
+     * when you instantiate an ApiCollection. They will be made public properties on
+     * the instance.
+     *
+     * @param array     $payload                  The JSON decoded return from an API
+     *                                            call.
+     * @param ApiClient $client                   The API connection to use.
+     * @param string    $class                    The class name to instantiate when
+     *                                            building the collection.
+     * @param string    $keyToInstantiate         See description.
+     * @param array     $keysToConvertToLocalVars See description.
+     */
+    public function __construct(array $payload, $client, $class, $keyToInstantiate = null, $keysToConvertToLocalVars = []) {
         if (!is_null($keysToConvertToLocalVars) && is_array($keysToConvertToLocalVars)) {
             foreach($keysToConvertToLocalVars as $convertMe) {
                 if (isset($payload[$convertMe])) {
@@ -27,7 +56,7 @@ class ApiCollection extends ArrayObject
 
         } else {
             $single = new $class($payload, $client);
-            parent::__construct([$single]);            
+            parent::__construct([$single]);
         }
     }
 
