@@ -19,7 +19,6 @@ use Eightfold\Eventbrite\Classes\Helpers\Collection;
  *
  * @category Core
  *
- * @package Core
  */
 abstract class ApiClient
 {

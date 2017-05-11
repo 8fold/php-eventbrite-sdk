@@ -10,7 +10,7 @@ use ArrayObject;
  *
  * @category Core
  *
- * @package Core
+ * @todo  Consider making a factory for collections.
  */
 abstract class ApiCollection extends ArrayObject
 {

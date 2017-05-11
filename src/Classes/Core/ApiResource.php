@@ -14,7 +14,7 @@ use Eightfold\Eventbrite\Traits\Settable;
  *
  * @category Core
  *
- * @package Core
+ * @todo Consider making a factory for this in core.
  */
 abstract class ApiResource
 {

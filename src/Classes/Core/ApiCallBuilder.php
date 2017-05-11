@@ -5,71 +5,84 @@ namespace Eightfold\Eventbrite\Classes\Core;
 use Eightfold\Eventbrite\Classes\Core\ApiCollection;
 
 /**
- * Allows for making and caching API calls
+ * Call API and caches results.
  *
  * @category Core
  *
- * @package Core
  */
 abstract class ApiCallBuilder
 {
     /**
      * The ApiClient to use when calling
-     * @var null
+     * @var Eightfold\Eventbrite\Classes\Core\ApiClient The ApiClient connect to use 
+     *                                                  when making calls.
      */
     private $_client = null;
 
     /**
-     * The class path for the endpoint
-     * @var string
-     */
-    private $_class = '';
-
-    /**
-     * The endpoint to use when making calls
+     * The endpoint to use when making calls.
+     * 
      * @var string
      */
     private $_endpoint = '';
 
     /**
-     * Any options and expansions to use when making calls
+     * The API SDK class to instantiate and return.
+     * 
+     * @var string
+     */
+    private $_class = '';
+
+
+    /**
+     * Any API endpoints options and expansions to use when making calls.
+     * 
      * @var array
      */
     private $_options = [];
 
     /**
-     * Whethed to always return Collection
-     * @var boolean
+     * Whether to always return ApiCollection.
+     * 
+     * @var boolean False assumes return is single resource.
      */
     private $_isCollection = false;
 
     /**
-     * The key within the payload to convert to instance of ApiResource. Null results
+     * The key within the payload to convert to an ApiResource instance. `null` results
      * in trying to instantiate the class with the entire payload.
-     * @var string
+     * 
+     * @var string The key within the returned payload to instantiate.
      */
     private $_keyToInstantiate = null;
 
     /**
-     * Array of payload keys to convert to local variables within the ApiCollection
-     * @var array
+     * Array of payload keys to convert to local properties within an ApiCollection.
+     * 
+     * @var array Returned payload keys to convert to properties within an 
+     *            ApiCollection.
      */
     private $_keysToConvertToCollectionVars = [];
+
     /**
-     * * The payload returned by the ApiClient
-     * @var array
+     * The raw payload returned by the ApiClient.
+     * 
+     * @var array 
      */
     private $_payload = [];
 
     /**
-     * @deprecated ??
-     * @var Collection
+     * @deprecated I am not sure this is still needed.
+     * 
+     * @var string The raw return payload from the ApiClient.
+     * 
      */
     private $_raw;
 
     /**
-     * What to return when asked
-     * @var [type]
+     * What should be returned when asked.
+     * 
+     * @var Eightfold\Eventbrite\Classes\Core\ApiCollection|Eightfold\Eventbrite\Classes\Core\ApiResource
      */
     private $_return;
 
@@ -93,6 +106,8 @@ abstract class ApiCallBuilder
      *                                                   class.
      * @param array       $keysToConvertToCollectionVars Array of payload keys to
      *                                                   convert to instance variables.
+     *
+     * @category Initializer
      */
     public function __construct($client, $class, $endpoint, $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
     {
@@ -133,6 +148,11 @@ abstract class ApiCallBuilder
         return $this->_return;
     }
 
+    /**
+     * Return the first result within a collection, or the ApiResource itself.
+     * 
+     * @return Eightfold\Eventbrite\Classes\Core\ApiCollection|Eightfold\Eventbrite\Classes\Core\ApiResource
+     */
     public function first()
     {
         $result = $this->get();
@@ -142,6 +162,16 @@ abstract class ApiCallBuilder
         return $result;
     }
 
+    /**
+     * Return single ApiResource based on field containing the given value.
+     * 
+     * @param  string     $field    Name of the field to check.
+     * @param  string|int $contains What to run `==` comparison against.
+     * 
+     * @return Eightfold\Eventbrite\Classes\Core\ApiResource|null
+     *                              The ApiResource or ApiCollection that passes the
+     *                              check. If not match is found, return null.
+     */
     public function where($field, $contains)
     {
         // We don't have anything yet, make the call.
@@ -151,7 +181,7 @@ abstract class ApiCallBuilder
         if (is_a($this->_return, ApiCollection::class)) {
             $index = 0;
             foreach($this->_return as $item) {
-                // TODO: Not sure what to do if can't convert to any array.
+                // TODO: Not sure what to do if can't convert to an array.
                 $var = (array) $item->{$field};
                 foreach($var as $check) {
                     if ($check === $contains) {
@@ -165,6 +195,12 @@ abstract class ApiCallBuilder
         return null;
     }
 
+    /**
+     * Clear cache of previous call.
+     * 
+     * @return self Returns currents instance allow chaining: 
+     *              `$this->get()->reset()->get()`
+     */
     public function reset()
     {
         $this->_return = null;
