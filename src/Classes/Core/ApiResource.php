@@ -78,11 +78,11 @@ abstract class ApiResource
      * @param array      $payload    The decoded payload from Eventbrite
      * @param Eventbrite $client     The ApiClient and creds to associate with instance
      */
-    public function __construct(array $payload, $client)
+    public function __construct($client, $payload)
     {
         $this->client = $client;
-        $setup = (isset($payload['body']))
-            ? $payload['body']
+        $setup = (isset($payload->body))
+            ? $payload->body
             : $payload;
         $this->raw = $setup;
     }

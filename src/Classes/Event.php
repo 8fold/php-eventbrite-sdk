@@ -159,6 +159,7 @@ class Event extends ApiResource
 
     // public function name()
     // {
+    //     die('here');
     //     return $this->raw->name->text;
     // }
 
