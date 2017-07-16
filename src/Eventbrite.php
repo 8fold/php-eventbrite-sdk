@@ -98,20 +98,19 @@ class Eventbrite extends EventbriteBase
     }
 
     /**
-     * /users/me - Returns the currently authenticated user for the Eventrbrite 
+     * /users/me - Returns the currently authenticated user for the Eventrbrite
      *             isntance.
-     * 
+     *
      * @return \Eightfold\Eventbrite\User|\Eightfold\Eventbrite\SubObjects\Organization The user associated with the auth token.
      */
     public function me()
     {
         if ($this->isOrg && is_null($this->organization)) {
-            $org = parent::get('users/me', []);
-            $this->organization = new Organization($this, $org);
+            $this->organization = new Organization($this, 'me');
 
         } elseif (!$this->isOrg && is_null($this->individual)) {
-            $ind = parent::get('users/me', []);            
-            $this->individual = new User($this, $ind);
+            $this->individual = new User($this, 'me');
+
         }
 
         return ($this->isOrg)
@@ -120,11 +119,23 @@ class Eventbrite extends EventbriteBase
     }
 
     /**
-     * /events/:id - Returns an event for the specified event. Many of Eventbrite’s 
-     *               API use cases revolve around pulling details of a specific event 
-     *               within an Eventbrite account. Does not support fetching a 
+     * Convenience method fro `me()` to generate sentence-like call structures.
+     *
+     * ex. $eventbrite->my->owned_events
+     *
+     * @return [type] [description]
+     */
+    public function my()
+    {
+        return $this->me();
+    }
+
+    /**
+     * /events/:id - Returns an event for the specified event. Many of Eventbrite’s
+     *               API use cases revolve around pulling details of a specific event
+     *               within an Eventbrite account. Does not support fetching a
      *               repeating event series parent (see GET /series/:id/).
-     *               
+     *
      * @param  string $id [description]
      * @return \Eightfold\Eventbrite\Classes\Event [description]
      */

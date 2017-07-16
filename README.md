@@ -1,6 +1,6 @@
 # Eventbrite SDK for PHP by 8fold
 
-***Warning:** I am redoing the architecture for this library. I believe the abstraction has gone so far as to make the library unknownable by many developers, which can happen (too abstract and not concrete enough to pick up quickly). Some of the clever decisions Might be worthwhile and will be kept, but I think making things a bit more concrete and straightforward is also worthwhile. If you have some recommendations or contributions, please feel free. Also working on creating unit tests, because, quite frankly, I stepped away to develop some other things for 8fold and, when I came back, I had no idea how the library works. :) Never a good sign.*
+***Warning:** I am redoing the architecture for this library. I believe the abstraction has gone so far as to make the library unknownable by many developers, which can happen (too abstract and not concrete enough to pick up quickly). Some of the clever decisions might be worthwhile and will be kept, but I think making things a bit more concrete and straightforward is also worthwhile. If you have some recommendations or contributions, please feel free. Also working on creating unit tests, because, quite frankly, I stepped away to develop some other things for 8fold and, when I came back, I had no idea how the library works. :) Never a good sign.*
 
 The Eventbrite SDK by 8fold strives to be a simple and complete wrapper for interfacing with the version 3 of the Eventbrite API. 
 
@@ -214,3 +214,11 @@ GET /events/:id/teams/
 GET /events/:id/teams/:id/
 
 GET /events/:id/teams/:id/attendees/
+
+## Performance considerations
+
+Call once (caching). Call only when necessary (lazy-loading).
+
+The Eventbrite SDK from 8fold is designed to only call the API when necessary and cache the results whenever possible.
+
+This is good, and bad, because it means performance gains to the end user and the potential of becoming out of sync. However, given the server-side nature, and the hope that you are not doing anything too intense (delivering a page to an end-user), the possibility should be minimal.

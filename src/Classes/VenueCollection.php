@@ -4,15 +4,15 @@ namespace Eightfold\Eventbrite\Classes;
 
 use Eightfold\Eventbrite\Classes\Core\ApiCollection;
 
-use Eightfold\Eventbrite\Classes\Organizer;
+use Eightfold\Eventbrite\Classes\Venue;
 
 /**
  * @package Collections
  */
-class OrganizerCollection extends ApiCollection
+class VenueCollection extends ApiCollection
 {
     public function __construct($client, $endpoint)
     {
-        parent::__construct($client, $endpoint, 'organizers', Organizer::class);
+        parent::__construct($client, $endpoint, 'venues', Venue::class);
     }
 }

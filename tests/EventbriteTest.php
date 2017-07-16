@@ -12,21 +12,6 @@ use Eightfold\Eventbrite\Classes\SubObjects\Organization;
 
 class EventbriteTest extends BaseTest
 {
-    protected function eventbrite($isOrg = false)
-    {
-        return new Eventbrite($this->oauthToken, [], $isOrg);        
-    }
-
-    protected function organization()
-    {
-        return $this->eventbrite(true)->me;
-    }
-
-    protected function event()
-    {
-        return $this->eventbrite(true)->event($this->eventId);
-    }
-
     public function testEventbriteInitialization()
     {
         $eventbriteStatic = Eventbrite::connect($this->oauthToken);
@@ -68,7 +53,7 @@ class EventbriteTest extends BaseTest
 
     public function testEventbriteEventIsEvent()
     {
-        $events = $this->eventbrite(true)->me->owned_events;
+        $events = $this->eventbrite(true)->my->owned_events;
         $this->assertTrue(count($events) == 8, count($events));
 
         $event = $events[0];

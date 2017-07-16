@@ -11,11 +11,8 @@ use Eightfold\Eventbrite\Classes\SubObjects\Attendee;
  */
 class AttendeeCollection extends ApiCollection
 {
-    public function __construct(array $payload, $client)
+    public function __construct($client, $endpoint, $options = [])
     {
-        $class = Attendee::class;
-        $keyToInstantiate = 'attendees';
-        $keysToConvertToLocalVars = ['pagination'];
-        parent::__construct($payload, $client, $class, $keyToInstantiate, $keysToConvertToLocalVars);
+        parent::__construct($client, $endpoint, 'attendees', Attendee::class, $options);
     }
 }

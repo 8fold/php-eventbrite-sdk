@@ -11,11 +11,37 @@ use Eightfold\Eventbrite\Classes\Order;
  */
 class OrderCollection extends ApiCollection
 {
-    public function __construct(array $payload, $client)
+    // private $client;
+
+    // private $endpoint;
+
+    // private $options;
+
+    // private $pagination;
+
+    // private $raw;
+
+    public function __construct($client, $endpoint, $options)
     {
-        $class = Order::class;
-        $keyToInstantiate = 'orders';
-        $keysToConvertToLocalVars = ['pagination'];
-        parent::__construct($payload, $client, $class, $keyToInstantiate, $keysToConvertToLocalVars);
+        parent::__construct($client, $endpoint, 'orders', Order::class, $options);
+        // $this->client = $client;
+
+        // $this->endpoint = $endpoint;
+
+        // $this->options = $options;
+
+        // $payload = $this->client->get($endpoint, $options);
+        // if (isset($payload['pagination'])) {
+        //     $this->pagination = $payload['pagination'];
+        //     unset($payload['pagination']);
+
+        // }
+
+        // $array = [];
+        // foreach ($payload['orders'] as $order) {
+        //     $array[] = new Order($this->client, $order);
+
+        // }
+        // parent::__construct($array);
     }
 }

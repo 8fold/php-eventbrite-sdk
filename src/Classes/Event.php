@@ -156,18 +156,6 @@ class Event extends ApiResource
         return $this->hasOne(Media::class, $endpoint);
     }
 
-
-    // public function name()
-    // {
-    //     die('here');
-    //     return $this->raw->name->text;
-    // }
-
-    // public function nameHtml()
-    // {
-    //     return $this->raw->name->html;
-    // }
-
     protected function setName($name)
     {
         $name = Markdown::convertToHtml($name);

@@ -60,6 +60,39 @@ abstract class ApiCollection extends ArrayObject
     //     }
     // }
 
+    private $client;
+
+    private $endpoint;
+
+    private $pagination;
+
+    private $raw;
+
+    public function __construct($client, $endpoint, $payloadKey, $className, $options = [])
+    {
+        // Cache the client.
+        $this->client = $client;
+
+        // Cache the endpoint.
+        $this->endpoint = $endpoint;
+
+        // Get the payload.
+        $payload = $this->client->get($endpoint);
+        if (isset($payload['pagination'])) {
+            // Remove pagination from payload.
+            $this->pagination = $payload['pagination'];
+            unset($payload['pagination']);
+
+        }
+
+        $array = [];
+        foreach ($payload[$payloadKey] as $entry) {
+            $array[] = new $className($this->client, $entry);
+
+        }
+        parent::__construct($array);
+    }
+
     public function rewind() {
         // var_dump(__METHOD__);
         $this->position = 0;
