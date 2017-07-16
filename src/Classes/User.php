@@ -10,6 +10,9 @@ use Eightfold\Eventbrite\Classes\EventCollection;
 use Eightfold\Eventbrite\Classes\Order;
 use Eightfold\Eventbrite\Classes\OrderCollection;
 
+use Eightfold\Eventbrite\Classes\Organizer;
+use Eightfold\Eventbrite\Classes\OrganizerCollection;
+
 use Eightfold\Eventbrite\Classes\Venue;
 use Eightfold\Eventbrite\Classes\VenueCollection;
 
@@ -119,7 +122,7 @@ class User extends ApiResource
     }
 
     /**
-     * /users/me/events - Returns a paginated response of events, under the key
+     * GET /users/me/events - Returns a paginated response of events, under the key
      *                    events, of all events the user has access to
      *
      * @return [type] [description]
@@ -146,6 +149,7 @@ class User extends ApiResource
         if (count($this->venues) == 0) {
             $endpoint = 'users/'. $this->id .'/venues';
             $this->venues = new VenueCollection($this->client, $endpoint);
+
         }
         return $this->venues;
     }
@@ -184,6 +188,7 @@ class User extends ApiResource
         if (!isset($this->owned_event_orders[$serialized])) {
             $endpoint = 'users/'. $this->id .'/owned_event_orders';
             $this->owned_event_orders[$serialized] = new OrderCollection($this->client, $endpoint, $options);
+
         }
         return $this->owned_event_orders[$serialized];
     }

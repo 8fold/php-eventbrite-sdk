@@ -21,38 +21,10 @@ abstract class ApiResource
     use Gettable,
         Settable;
 
-    /**
-     * Used for querying the api.
-     *
-     * This is a longer description.
-     *
-     * With a new paragraph.
-     *
-     * @deprecated 0.1.1 Something
-     *
-     * With a different paragraph.
-     *
-     * @version 0.1.1
-     *
-     * @var null
-     */
     private $client = null;
 
-    /**
-     * The raw payload provided at instantiation.
-     *
-     * @var null
-     */
     protected $raw = null;
 
-    /**
-     * The updates made to the instance.
-     *
-     * If there is an update to that field stored here, this is the value that will
-     * return. You can still explicitly request the raw value.
-     *
-     * @var null
-     */
     protected $changed = null;
 
     static public function find($client, $class, $endpoint, array $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
@@ -87,49 +59,47 @@ abstract class ApiResource
         $this->raw = $setup;
     }
 
-    protected function hasOne($class, $endpoint, $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
+    protected function hasOne($class, $endpoint, $options = [])
     {
+        // We are preparing to generate the local instance variable.
+        // Get the function name that called this method.
+        // Prefix the function name with and underscore.
         $baseCaller = debug_backtrace()[1]['function'];
         $caller = '_'. $baseCaller;
-        if (isset($this->{$caller}) && !is_null($this->{$caller})) {
-            return $this->{$caller};
+
+        // Check to see if the instance already has the property and
+        // that it is not null.
+        if (!isset($this->{$caller}) || is_null($this->{$caller})) {
+            // Instantiate a new API caller.
+            $this->{$caller} = new ApiCallBuilder(
+                $this->client,
+                $class,
+                $endpoint,
+                static::getOptions($class, $options));
 
         }
-
-        $payload = [];
-        if (isset($this->raw[$baseCaller]) && !is_null($this->raw[$baseCaller])) {
-            $payload = $this->raw[$baseCaller];
-
-        }
-
-        $this->{$caller} = new ApiCallBuilder(
-            $this->client,
-            $class,
-            $endpoint,
-            static::getOptions($class, $options));
         return $this->{$caller};
     }
 
-    protected function hasMany($class, $endpoint, $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
+    protected function hasMany($class, $endpoint, $options = [])
     {
+        // We are preparing to generate the local instance variable.
+        // Get the function name that called this method.
+        // Prefix the function name with and underscore.
         $baseCaller = debug_backtrace()[1]['function'];
         $caller = '_'. $baseCaller;
-        if (isset($this->{$caller}) && !is_null($this->{$caller})) {
-            return $this->{$caller};
+
+        // Check to see if the instance already has the property and
+        // that it is not null.
+        if (!isset($this->{$caller}) || is_null($this->{$caller})) {
+            // Instantiate a new API caller.
+            $this->{$caller} = new ApiCallBuilder(
+                $this->client,
+                $class,
+                $endpoint,
+                static::getOptions($class, $options));
 
         }
-
-        $payload = [];
-        if (isset($this->raw[$baseCaller]) && !is_null($this->raw[$baseCaller])) {
-            $payload = $this->raw[$baseCaller];
-
-        }
-
-        $this->{$caller} = new ApiCallBuilder(
-            $this->client,
-            $class,
-            $endpoint,
-            static::getOptions($class, $options));
         return $this->{$caller};
     }
 

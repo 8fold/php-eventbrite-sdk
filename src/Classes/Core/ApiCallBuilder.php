@@ -14,21 +14,21 @@ class ApiCallBuilder
 {
     /**
      * The ApiClient to use when calling
-     * @var Eightfold\Eventbrite\Classes\Core\ApiClient The ApiClient connect to use 
+     * @var Eightfold\Eventbrite\Classes\Core\ApiClient The ApiClient connect to use
      *                                                  when making calls.
      */
     private $_client = null;
 
     /**
      * The endpoint to use when making calls.
-     * 
+     *
      * @var string
      */
     private $_endpoint = '';
 
     /**
      * The API SDK class to instantiate and return.
-     * 
+     *
      * @var string
      */
     private $_class = '';
@@ -36,14 +36,14 @@ class ApiCallBuilder
 
     /**
      * Any API endpoints options and expansions to use when making calls.
-     * 
+     *
      * @var array
      */
     private $_options = [];
 
     /**
      * Whether to always return ApiCollection.
-     * 
+     *
      * @var boolean False assumes return is single resource.
      */
     private $_isCollection = false;
@@ -51,37 +51,37 @@ class ApiCallBuilder
     /**
      * The key within the payload to convert to an ApiResource instance. `null` results
      * in trying to instantiate the class with the entire payload.
-     * 
+     *
      * @var string The key within the returned payload to instantiate.
      */
     private $_keyToInstantiate = null;
 
     /**
      * Array of payload keys to convert to local properties within an ApiCollection.
-     * 
-     * @var array Returned payload keys to convert to properties within an 
+     *
+     * @var array Returned payload keys to convert to properties within an
      *            ApiCollection.
      */
     private $_keysToConvertToCollectionVars = [];
 
     /**
      * The raw payload returned by the ApiClient.
-     * 
-     * @var array 
+     *
+     * @var array
      */
     private $_payload = [];
 
     /**
      * @deprecated I am not sure this is still needed.
-     * 
+     *
      * @var string The raw return payload from the ApiClient.
-     * 
+     *
      */
     private $_raw;
 
     /**
      * What should be returned when asked.
-     * 
+     *
      * @var Eightfold\Eventbrite\Classes\Core\ApiCollection|Eightfold\Eventbrite\Classes\Core\ApiResource
      */
     private $_return;
@@ -109,14 +109,14 @@ class ApiCallBuilder
      *
      * @category Initializer
      */
-    public function __construct($client, $class, $endpoint, $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
+    public function __construct($client, $class, $endpoint, $options = [])
     {
         $this->_client = $client;
         $this->_class = $class;
         $this->_endpoint = $endpoint;
         $this->_options = $options;
-        $this->_keyToInstantiate = $keyToInstantiate;
-        $this->_keysToConvertToCollectionVars = $keysToConvertToCollectionVars;
+        // $this->_keyToInstantiate = $keyToInstantiate;
+        // $this->_keysToConvertToCollectionVars = $keysToConvertToCollectionVars;
     }
 
     public function get()
@@ -150,7 +150,7 @@ class ApiCallBuilder
 
     /**
      * Return the first result within a collection, or the ApiResource itself.
-     * 
+     *
      * @return Eightfold\Eventbrite\Classes\Core\ApiCollection|Eightfold\Eventbrite\Classes\Core\ApiResource
      */
     public function first()
@@ -164,10 +164,10 @@ class ApiCallBuilder
 
     /**
      * Return single ApiResource based on field containing the given value.
-     * 
+     *
      * @param  string     $field    Name of the field to check.
      * @param  string|int $contains What to run `==` comparison against.
-     * 
+     *
      * @return Eightfold\Eventbrite\Classes\Core\ApiResource|null
      *                              The ApiResource or ApiCollection that passes the
      *                              check. If not match is found, return null.
@@ -197,8 +197,8 @@ class ApiCallBuilder
 
     /**
      * Clear cache of previous call.
-     * 
-     * @return self Returns currents instance allow chaining: 
+     *
+     * @return self Returns currents instance allow chaining:
      *              `$this->get()->reset()->get()`
      */
     public function reset()
@@ -220,11 +220,11 @@ class ApiCallBuilder
         if ($this->hasCollectionClass()) {
             // print('using collection class<br>');
             $collectionClass = $this->_class .'Collection';
-            $this->_raw = new $collectionClass($payload, $this->_client);
+            $this->_raw = new $collectionClass($this->_client, $payload);
 
         } else {
             // print('using generic api collection<br>');
-            $this->_raw = new ApiCollection($payload, $this->_client, $this->_class, $this->_keyToInstantiate, $this->_keysToConvertToCollectionVars);
+            $this->_raw = new ApiCollection($this->_client, $payload, $this->_class);
         }
 
         return $this->_raw;
@@ -235,7 +235,7 @@ class ApiCallBuilder
         if ($this->hasPayload()) {
             return $this->_payload;
         }
-        $this->_payload = $this->_client->get($this->_endpoint, $this->_options, $this->_class);
+        $this->_payload = $this->_client->get($this->_endpoint, $this->_options);
         return $this->_payload;
     }
 
