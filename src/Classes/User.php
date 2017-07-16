@@ -5,6 +5,8 @@ namespace Eightfold\Eventbrite\Classes;
 use Eightfold\Eventbrite\Classes\Core\ApiResource;
 
 use Eightfold\Eventbrite\Classes\Event;
+use Eightfold\Eventbrite\Classes\EventCollection;
+
 use Eightfold\Eventbrite\Classes\Order;
 use Eightfold\Eventbrite\Classes\UserSubs\Attendee;
 use Eightfold\Eventbrite\Classes\UserSubs\ContactList;
@@ -23,41 +25,60 @@ class User extends ApiResource
 
     private $upcomingEvents = null;
 
+    /**
+     * /users/me/orders - Returns a paginated response of orders, under the key 
+     *                    orders, of all orders the user has placed (i.e. where the 
+     *                    user was the person buying the tickets).
+     *                    
+     * @return [type] [description]
+     */
     public function orders()
     {
-        return $this->hasMany(Order::class, 'users/me/orders');
+        var_dump($this->client->get('users/me/orders'));
+        // return $this->hasMany(Order::class, 'users/me/orders');
     }
 
-    // TODO: contact Eventbrite, does not appear to be working
-    // TODO: passing in $id does not work as expected use organizers->where() instead
-    public function organizers($id = '')
+    /**
+     * /users/me/organizers - Returns a paginated response of organizer objects that 
+     *                        are owned by the user.
+     * 
+     * @return [type] [description]
+     */
+    public function organizers()
     {
-        return $this->hasMany(Organizer::class, 'users/me/organizers/'. $id);
+        // TODO: contact Eventbrite, does not appear to be working
+        // TODO: passing in $id does not work as expected use organizers->where() instead        
+        var_dump($this->client->get('users/me/organizers'));
+        // return $this->hasMany(Organizer::class, 'users/me/organizers/'. $id);
     }
 
-    public function owned_events()
+    /**
+     * /users/me/owned_events - Returns a paginated response of events, under the key 
+     *                          events, of all events the user owns (i.e. events they 
+     *                          are organising)
+     *                          
+     * @return [type] [description]
+     */
+    public function owned_events($options = ['order_by' => 'start_desc'])
     {
         // TODO: Not returning in proper order. Endpoint is correct and works properly
         // when pasted into browser address bar. Does not work when using Postman nor
-        // making the call from within the library:
-        // https://www.eventbriteapi.com/v3/users/me/owned_events/
-        // ?token=V75CULK7QRW5JDJ7TLQO&order_by=start_desc
-        return $this->hasMany(
-            Event::class,
-            'users/me/owned_events',
-            [
-                'order_by' => 'start_desc'
-            ]
-        );
+        // making the call from within the library        
+        $payload = $this->client->get('users/me/owned_events', $options);
+        return new EventCollection($this->client, $payload);
+        return $collection;
     }
 
-    public function events()
+    /**
+     * /users/me/events - Returns a paginated response of events, under the key 
+     *                    events, of all events the user has access to
+     *                    
+     * @return [type] [description]
+     */
+    public function events($options = ['order_by' => 'start_desc'])
     {
-        return $this->hasMany(Event::class, 'users/me/events', [
-            'order_by' => 'start_desc'
-        ],
-        'events',
-        ['pagination']);
+        $payload = $this->client->get('users/me/events', $options);
+        return new EventCollection($this->client, $payload);
     }
 
     public function venues()

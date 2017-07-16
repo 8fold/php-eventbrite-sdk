@@ -37,28 +37,28 @@ abstract class ApiCollection extends ArrayObject
      * @param string    $keyToInstantiate         See description.
      * @param array     $keysToConvertToLocalVars See description.
      */
-    public function __construct(array $payload, $client, $class, $keyToInstantiate = null, $keysToConvertToLocalVars = []) {
-        if (!is_null($keysToConvertToLocalVars) && is_array($keysToConvertToLocalVars)) {
-            foreach($keysToConvertToLocalVars as $convertMe) {
-                if (isset($payload[$convertMe])) {
-                    $this->{$convertMe} = $payload[$convertMe];
-                    unset($payload[$convertMe]);
-                }
-            }
-        }
+    // public function __construct($client, $payload, $class, $keyToInstantiate = null, $keysToConvertToLocalVars = []) {
+    //     if (!is_null($keysToConvertToLocalVars) && is_array($keysToConvertToLocalVars)) {
+    //         foreach($keysToConvertToLocalVars as $convertMe) {
+    //             if (isset($payload->$convertMe)) {
+    //                 $this->{$convertMe} = $payload->$convertMe;
+    //                 unset($payload->$convertMe);
+    //             }
+    //         }
+    //     }
 
-        if (!is_null($keyToInstantiate) && isset($payload[$keyToInstantiate])) {
-            $array = [];
-            foreach($payload[$keyToInstantiate] as $resourcePayload) {
-                $array[] = new $class($resourcePayload, $client);
-            }
-            parent::__construct($array);
+    //     if (!is_null($keyToInstantiate) && isset($payload->$keyToInstantiate)) {
+    //         $array = [];
+    //         foreach($payload->$keyToInstantiate as $resourcePayload) {
+    //             $array[] = new $class($resourcePayload, $client);
+    //         }
+    //         parent::__construct($array);
 
-        } else {
-            $single = new $class($payload, $client);
-            parent::__construct([$single]);
-        }
-    }
+    //     } else {
+    //         $single = new $class($client, $payload);
+    //         parent::__construct([$single]);
+    //     }
+    // }
 
     public function rewind() {
         // var_dump(__METHOD__);

@@ -10,7 +10,7 @@ use Eightfold\Eventbrite\Classes\Core\ApiCollection;
  * @category Core
  *
  */
-abstract class ApiCallBuilder
+class ApiCallBuilder
 {
     /**
      * The ApiClient to use when calling
