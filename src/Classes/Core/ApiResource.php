@@ -85,6 +85,27 @@ abstract class ApiResource
         return $this->me;
     }
 
+    /**
+     * Returns instance of class, usually an ApiResource or ApiCollection.
+     *
+     * @param  string $serialize    A string to has as a prefix for caching the
+     *                              `$propertyName` value.
+     * @param  string $propertyName The property name to cache the object in.
+     * @param  string $class        The full class name to instantiate.
+     *
+     * @return [type]               [description]
+     */
+    protected function property($serialize, $propertyName, $class, $options = [])
+    {
+        $serialized = md5($serialize);
+        if (!isset($this->{$propertyName}[$serialized])) {
+            $endpoint = $this->endpoint .'/'. $propertyName;
+            $this->{$propertyName}[$serialized] = new $class($this->client, $endpoint, $options);
+
+        }
+        return $this->{$propertyName}[$serialized];
+    }
+
     protected function hasOne($class, $endpoint, $options = [])
     {
         // We are preparing to generate the local instance variable.

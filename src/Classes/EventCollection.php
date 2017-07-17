@@ -11,7 +11,6 @@ use Eightfold\Eventbrite\Classes\Event;
  */
 class EventCollection extends ApiCollection
 {
-
     /**
      * [__construct description]
      *

@@ -9,7 +9,6 @@ use Eightfold\Eventbrite\Classes\SubObjects\EventSub;
  */
 class DisplaySetting extends EventSub
 {
-
     public function __construct($client, $endpoint)
     {
         $this->client = $client;

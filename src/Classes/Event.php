@@ -17,7 +17,11 @@ use Eightfold\Eventbrite\Classes\SubObjects\DisplaySetting;
 use Eightfold\Eventbrite\Classes\SubObjects\DisplaySettingCollection;
 
 use Eightfold\Eventbrite\Classes\SubObjects\TicketClass;
+use Eightfold\Eventbrite\Classes\SubObjects\TicketClassCollection;
+
 use Eightfold\Eventbrite\Classes\SubObjects\Question;
+use Eightfold\Eventbrite\Classes\SubObjects\QuestionCollection;
+
 use Eightfold\Eventbrite\Classes\SubObjects\Attendee;
 use Eightfold\Eventbrite\Classes\SubObjects\Discount;
 use Eightfold\Eventbrite\Classes\SubObjects\AccessCode;
@@ -153,14 +157,14 @@ class Event extends ApiResource
      */
     public function display_settings()
     {
-        $serialized = md5($this->id);
-        if (!isset($this->display_settings[$serialized])) {
-            $endpoint = $this->endpoint .'/display_settings';
-            $this->display_settings[$serialized] = new DisplaySetting($this->client, $endpoint);
+        return $this->property($this->id, 'display_settings', DisplaySetting::class);
+        // $serialized = md5($this->id);
+        // if (!isset($this->display_settings[$serialized])) {
+        //     $endpoint = $this->endpoint .'/display_settings';
+        //     $this->display_settings[$serialized] = new DisplaySetting($this->client, $endpoint);
 
-        }
-        return $this->display_settings[$serialized];
-        // return $this->hasOne(DisplaySetting::class, $endpoint);
+        // }
+        // return $this->display_settings[$serialized];
     }
 
     /**
@@ -173,17 +177,60 @@ class Event extends ApiResource
      */
     public function ticket_classes($id = '')
     {
-        $endpoint = (strlen($id) > 0)
-            ? $this->endpoint .'/ticket_classes/'. $id
-            : $this->endpoint .'/ticket_classes';
-        return $this->hasMany(TicketClass::class, $endpoint);
+        return $this->property($this->id . $id, 'ticket_classes', TicketClassCollection::class);
+        // $serialized = md5($this->id . $id);
+        // if (!isset($this->ticket_classes[$serialized])) {
+        //     $endpoint = $this->endpoint .'/ticket_classes';
+        //     $this->ticket_classes[$serialized] = new TicketClassCollection($this->client, $endpoint);
+
+        // }
+        // return $this->ticket_classes[$serialized];
+    }
+
+    /**
+     * GET /events/:id/ticket_classes/:ticket_class_id/ - Gets and returns a single
+     *                                                    ticket_class by ID, as the
+     *                                                    key ticket_class.
+     *
+     * @param  string $id [description]
+     * @return [type]     [description]
+     *
+     * @todo Not working - not sure why. Unit test does not do anything strange to
+     *       get the id it uses to pass.
+     */
+    public function ticket_class($id = '')
+    {
+        $ticket_classes = $this->ticket_classes();
+        foreach ($ticket_classes as $ticket_class) {
+            if ($ticket_class->id == $id) {
+                return $ticket_class;
+
+            }
+        }
+        return null;
     }
 
     // TODO: Revisit - might need to be its own class
+
+    /**
+     * GET /events/:id/canned_questions/ - This endpoint returns canned questions of a
+     *                                     single event (examples: first name, last
+     *                                     name, company, prefix, etc.). This endpoint
+     *                                     will return question.
+     *
+     * @return [type] [description]
+     */
     public function canned_questions()
     {
-        $endpoint = $this->endpoint .'/canned_questions';
-        return $this->hasMany(Question::class, $endpoint);
+        $serialized = md5($this->id . $id);
+        if (!isset($this->canned_questions[$serialized])) {
+            $endpoint = $this->endpoint .'/ticket_classes';
+            $this->canned_questions[$serialized] = new QuestionCollection($this->client, $endpoint);
+
+        }
+        return $this->canned_questions[$serialized];
+        // $endpoint = $this->endpoint .'/canned_questions';
+        // return $this->hasMany(Question::class, $endpoint);
     }
 
     public function questions($id = '')

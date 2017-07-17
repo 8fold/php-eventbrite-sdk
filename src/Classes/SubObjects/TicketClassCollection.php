@@ -11,11 +11,14 @@ use Eightfold\Eventbrite\Classes\SubObjects\TicketClass;
  */
 class TicketClassCollection extends ApiCollection
 {
-    public function __construct(array $payload, $client)
+    /**
+     * [__construct description]
+     *
+     * @param [type] $client  [description]
+     * @param [type] $payload [description]
+     */
+    public function __construct($client, $endpoint)
     {
-        $class = TicketClass::class;
-        $keyToInstantiate = 'ticket_classes';
-        $keysToConvertToLocalVars = ['pagination'];
-        parent::__construct($payload, $client, $class, $keyToInstantiate, $keysToConvertToLocalVars);
+        parent::__construct($client, $endpoint, 'ticket_classes', TicketClass::class);
     }
 }
