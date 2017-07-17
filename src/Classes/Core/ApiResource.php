@@ -33,6 +33,17 @@ abstract class ApiResource
 
     protected $changed = null;
 
+    /**
+     * @deprecated
+     *
+     * @param  [type] $client                        [description]
+     * @param  [type] $class                         [description]
+     * @param  [type] $endpoint                      [description]
+     * @param  array  $options                       [description]
+     * @param  [type] $keyToInstantiate              [description]
+     * @param  array  $keysToConvertToCollectionVars [description]
+     * @return [type]                                [description]
+     */
     static public function find($client, $class, $endpoint, array $options = [], $keyToInstantiate = null, $keysToConvertToCollectionVars = [])
     {
         $opt = static::getOptions($class, $options);
@@ -40,6 +51,14 @@ abstract class ApiResource
         return $new;
     }
 
+    /**
+     * @deprecated
+     *
+     * @param  [type] $class      [description]
+     * @param  array  $options    [description]
+     * @param  array  $expansions [description]
+     * @return [type]             [description]
+     */
     static private function getOptions($class, $options = [], $expansions = [])
     {
         $methodExists = method_exists($class, 'expandedByDefault');
@@ -115,6 +134,14 @@ abstract class ApiResource
         return $this->{$propertyName}[$serialized];
     }
 
+    /**
+     * @deprecated
+     *
+     * @param  [type]  $class    [description]
+     * @param  [type]  $endpoint [description]
+     * @param  array   $options  [description]
+     * @return boolean           [description]
+     */
     protected function hasOne($class, $endpoint, $options = [])
     {
         // We are preparing to generate the local instance variable.
@@ -137,6 +164,14 @@ abstract class ApiResource
         return $this->{$caller};
     }
 
+    /**
+     * @deprecated
+     *
+     * @param  [type]  $class    [description]
+     * @param  [type]  $endpoint [description]
+     * @param  array   $options  [description]
+     * @return boolean           [description]
+     */
     protected function hasMany($class, $endpoint, $options = [])
     {
         // We are preparing to generate the local instance variable.

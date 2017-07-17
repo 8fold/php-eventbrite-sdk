@@ -4,45 +4,15 @@ namespace Eightfold\Eventbrite\Classes;
 
 use Eightfold\Eventbrite\Classes\Core\ApiResource;
 
-use Exception;
-
-use Eightfold\Eventbrite\Classes\Order;
-use Eightfold\Eventbrite\Classes\Organizer;
-use Eightfold\Eventbrite\Classes\Venue;
-use Eightfold\Eventbrite\Classes\Category;
-use Eightfold\Eventbrite\Classes\Format;
-use Eightfold\Eventbrite\Classes\Media;
-
 use Eightfold\Eventbrite\Classes\SubObjects\DisplaySetting;
-use Eightfold\Eventbrite\Classes\SubObjects\DisplaySettingCollection;
-
-use Eightfold\Eventbrite\Classes\SubObjects\TicketClass;
 use Eightfold\Eventbrite\Classes\SubObjects\TicketClassCollection;
-
-use Eightfold\Eventbrite\Classes\SubObjects\Question;
 use Eightfold\Eventbrite\Classes\SubObjects\QuestionCollection;
-
-use Eightfold\Eventbrite\Classes\SubObjects\Attendee;
 use Eightfold\Eventbrite\Classes\SubObjects\AttendeeCollection;
-
-use Eightfold\Eventbrite\Classes\SubObjects\Discount;
+use Eightfold\Eventbrite\Classes\SubObjects\OrderCollection;
 use Eightfold\Eventbrite\Classes\SubObjects\DiscountCollection;
-
-use Eightfold\Eventbrite\Classes\SubObjects\AccessCode;
 use Eightfold\Eventbrite\Classes\SubObjects\AccessCodeCollection;
-
-use Eightfold\Eventbrite\Classes\SubObjects\Transfer;
 use Eightfold\Eventbrite\Classes\SubObjects\TransferCollection;
-
-use Eightfold\Eventbrite\Classes\SubObjects\Team;
 use Eightfold\Eventbrite\Classes\SubObjects\TeamCollection;
-
-use Eightfold\Eventbrite\Classes\SubObjects\Subcategory;
-
-use GrahamCampbell\Markdown\Facades\Markdown;
-use League\HTMLToMarkdown\HtmlConverter;
-
-use Eightfold\Eventbrite\Transformations\DateTransformations;
 
 /**
  * An event stored in Eventbrite.
@@ -168,13 +138,6 @@ class Event extends ApiResource
     public function display_settings()
     {
         return $this->property($this->id, 'display_settings', DisplaySetting::class);
-        // $serialized = md5($this->id);
-        // if (!isset($this->display_settings[$serialized])) {
-        //     $endpoint = $this->endpoint .'/display_settings';
-        //     $this->display_settings[$serialized] = new DisplaySetting($this->client, $endpoint);
-
-        // }
-        // return $this->display_settings[$serialized];
     }
 
     /**
@@ -188,13 +151,6 @@ class Event extends ApiResource
     public function ticket_classes($id = '')
     {
         return $this->property($this->id . $id, 'ticket_classes', TicketClassCollection::class);
-        // $serialized = md5($this->id . $id);
-        // if (!isset($this->ticket_classes[$serialized])) {
-        //     $endpoint = $this->endpoint .'/ticket_classes';
-        //     $this->ticket_classes[$serialized] = new TicketClassCollection($this->client, $endpoint);
-
-        // }
-        // return $this->ticket_classes[$serialized];
     }
 
     /**
@@ -233,15 +189,6 @@ class Event extends ApiResource
     public function canned_questions()
     {
         return $this->property($this->id, 'canned_questions', QuestionCollection::class);
-        // $serialized = md5($this->id . $id);
-        // if (!isset($this->canned_questions[$serialized])) {
-        //     $endpoint = $this->endpoint .'/ticket_classes';
-        //     $this->canned_questions[$serialized] = new QuestionCollection($this->client, $endpoint);
-
-        // }
-        // return $this->canned_questions[$serialized];
-        // $endpoint = $this->endpoint .'/canned_questions';
-        // return $this->hasMany(Question::class, $endpoint);
     }
 
     /**
@@ -260,10 +207,6 @@ class Event extends ApiResource
     public function questions($id = '')
     {
         return $this->property($this->id . serialize($id), 'questions', QuestionCollection::class);
-        // $endpoint = (strlen($id) > 0)
-        //     ? $this->endpoint .'/questions/'. $id
-        //     : $this->endpoint .'/questions';
-        // return $this->hasMany(Question::class, $endpoint);
     }
 
     /**
@@ -290,8 +233,6 @@ class Event extends ApiResource
     public function attendees($id = '')
     {
         return $this->property($this->id . serialize($id), 'attendees', AttendeeCollection::class);
-        // $endpoint = $this->endpoint .'/attendees/'. $id;
-        // return $this->hasMany(Attendee::class, $endpoint);
     }
 
     /**
@@ -317,8 +258,6 @@ class Event extends ApiResource
     public function orders($options = [])
     {
         return $this->property($this->id . serialize($options), 'orders', OrderCollection::class);
-        // $endpoint = $this->endpoint .'/orders';
-        // return $this->hasMany(Order::class, $endpoint);
     }
 
     /**
@@ -334,8 +273,6 @@ class Event extends ApiResource
     public function discounts($id = '')
     {
         return $this->property($this->id . $id, 'discounts', DiscountCollection::class);
-        // $endpoint = $this->endpoint .'/discounts/'. $id;
-        // return $this->hasMany(Discount::class, $endpoint);
     }
 
     /**
@@ -370,8 +307,6 @@ class Event extends ApiResource
     public function public_discounts($id = '')
     {
         return $this->property($this->id . $id, 'public_discounts', DiscountCollection::class);
-        // $endpoint = $this->endpoint .'/public_discounts/'. $id;
-        // return $this->hasMany(Discount::class, $endpoint);
     }
 
     /**
@@ -399,8 +334,6 @@ class Event extends ApiResource
     public function access_codes($id = '')
     {
         return $this->property($this->id . $id, 'access_codes', AccessCodeCollection::class);
-        // $endpoint = $this->endpoint .'/access_codes/'. $id;
-        // return $this->hasMany(AccessCode::class, $endpoint);
     }
 
     /**
@@ -425,8 +358,6 @@ class Event extends ApiResource
     public function transfers($options = [])
     {
         return $this->property($this->id . serialize($options), 'transfers', TransferCollection::class, $options);
-        // $endpoint = $this->endpoint .'/transfers';
-        // return $this->hasMany(Transfer::class, $endpoint);
     }
 
     /**
@@ -438,8 +369,6 @@ class Event extends ApiResource
     public function teams($id = '')
     {
         return $this->property($this->id . $id, 'teams', TeamCollection::class);
-        // $endpoint = $this->endpoint .'/teams/'. $id;
-        // return $this->hasMany(Team::class, $endpoint);
     }
 
     /**
@@ -456,7 +385,7 @@ class Event extends ApiResource
     }
 
     /***********************/
-    /* End basis endpoints */
+    /* End basic endpoints */
     /***********************/
     public function organizer()
     {

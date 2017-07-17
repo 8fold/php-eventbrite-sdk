@@ -21,12 +21,4 @@ class TransferCollection extends ApiCollection
     {
         parent::__construct($client, $endpoint, 'transfers', Transfer::class);
     }
-
-    // public function __construct(array $payload, $client)
-    // {
-    //     $class = Transfer::class;
-    //     $keyToInstantiate = 'transfers';
-    //     $keysToConvertToLocalVars = ['pagination'];
-    //     parent::__construct($payload, $client, $class, $keyToInstantiate, $keysToConvertToLocalVars);
-    // }
 }

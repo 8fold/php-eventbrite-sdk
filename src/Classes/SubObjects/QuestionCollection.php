@@ -21,12 +21,4 @@ class QuestionCollection extends ApiCollection
     {
         parent::__construct($client, $endpoint, 'questions', Question::class);
     }
-
-    // public function __construct(array $payload, $client)
-    // {
-    //     $class = Question::class;
-    //     $keyToInstantiate = 'questions';
-    //     $keysToConvertToLocalVars = ['pagination'];
-    //     parent::__construct($payload, $client, $class, $keyToInstantiate, $keysToConvertToLocalVars);
-    // }
 }

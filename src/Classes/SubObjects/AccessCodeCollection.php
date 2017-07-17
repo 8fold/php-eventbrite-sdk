@@ -21,12 +21,4 @@ class AccessCodeCollection extends ApiCollection
     {
         parent::__construct($client, $endpoint, 'access_codes', AccessCode::class);
     }
-
-    // public function __construct(array $payload, $client)
-    // {
-    //     $class = AccessCode::class;
-    //     $keyToInstantiate = 'access_codes';
-    //     $keysToConvertToLocalVars = ['pagination'];
-    //     parent::__construct($payload, $client, $class, $keyToInstantiate, $keysToConvertToLocalVars);
-    // }
 }
