@@ -4,27 +4,11 @@ namespace Eightfold\Eventbrite\Classes;
 
 use Eightfold\Eventbrite\Classes\Core\ApiResource;
 
-use Eightfold\Eventbrite\Classes\Event;
 use Eightfold\Eventbrite\Classes\EventCollection;
-
-use Eightfold\Eventbrite\Classes\Order;
-use Eightfold\Eventbrite\Classes\OrderCollection;
-
-use Eightfold\Eventbrite\Classes\Organizer;
 use Eightfold\Eventbrite\Classes\OrganizerCollection;
-
-use Eightfold\Eventbrite\Classes\Venue;
 use Eightfold\Eventbrite\Classes\VenueCollection;
-
-use Eightfold\Eventbrite\Classes\SubObjects\Attendee;
 use Eightfold\Eventbrite\Classes\SubObjects\AttendeeCollection;
-
-use Eightfold\Eventbrite\Classes\SubObjects\ContactList;
 use Eightfold\Eventbrite\Classes\SubObjects\ContactListCollection;
-
-use Eightfold\Eventbrite\Interfaces\ApiResourceInterface;
-use Eightfold\Eventbrite\Interfaces\ApiResourceIsBase;
-use Eightfold\Eventbrite\Interfaces\ApiResourcePostable;
 
 /**
  * @package First order resource
@@ -76,13 +60,6 @@ class User extends ApiResource
     public function orders($options = [])
     {
         return $this->property($this->id . serialize($options), 'orders', OrderCollection::class, $options);
-        // $serialized = md5($this->id . serialize($options));
-        // if (!isset($this->orders[$serialized])) {
-        //     $endpoint = $this->endpoint .'/orders';
-        //     $this->orders[$serialized] = new OrderCollection($this->client, $endpoint, $options);
-
-        // }
-        // return $this->orders[$serialized];
     }
 
     /**
@@ -94,13 +71,6 @@ class User extends ApiResource
     public function organizers()
     {
         return $this->property($this->id, 'organizers', OrganizerCollection::class);
-        // $serialized = md5($this->id);
-        // if (!isset($this->organizers[$serialized])) {
-        //     $endpoint = $this->endpoint .'/organizers';
-        //     $this->organizers[$serialized] = new OrganizerCollection($this->client, $endpoint);
-
-        // }
-        // return $this->organizers[$serialized];
     }
 
     /**
@@ -113,13 +83,6 @@ class User extends ApiResource
     public function owned_events($options = ['order_by' => 'start_desc'])
     {
         return $this->property($this->id . serialize($options), 'owned_events', EventCollection::class, $options);
-        // $serialized = md5($this->id . serialize($options));
-        // if (!isset($this->owned_events[$serialized])) {
-        //     $endpoint = $this->endpoint .'/owned_events';
-        //     $this->owned_events[$serialized] = new EventCollection($this->client, $endpoint, $options);
-
-        // }
-        // return $this->owned_events[$serialized];
     }
 
     /**
@@ -131,13 +94,6 @@ class User extends ApiResource
     public function events($options = ['order_by' => 'start_desc'])
     {
         return $this->property($this->id . serialize($options), 'events', EventCollection::class);
-        // $serialized = md5($this->id . serialize($options));
-        // if (!isset($this->events[$serialized])) {
-        //     $endpoint = $this->endpoint .'/events';
-        //     $this->events[$serialized] = new EventCollection($this->client, $endpoint, $options);
-
-        // }
-        // return $this->events[$serialized];
     }
 
     /**
@@ -149,13 +105,6 @@ class User extends ApiResource
     public function venues()
     {
         return $this->property($this->id, 'venues', VenueCollection::class);
-        // $serialized = md5($this->id);
-        // if (!isset($this->venues[$serialized])) {
-        //     $endpoint = $this->endpoint .'/venues';
-        //     $this->venues[$serialized] = new VenueCollection($this->client, $endpoint);
-
-        // }
-        // return $this->venues[$serialized];
     }
 
     /**
@@ -170,13 +119,6 @@ class User extends ApiResource
     public function owned_event_attendees()
     {
         return $this->property($this->id, 'owned_event_attendees', AttendeeCollection::class);
-        // $serialized = md5($this->id);
-        // if (!isset($this->owned_event_attendees[$serialized])) {
-        //     $endpoint = $this->endpoint .'/owned_event_attendees';
-        //     $this->owned_event_attendees[$serialized] = new AttendeeCollection($this->client, $endpoint);
-
-        // }
-        // return $this->owned_event_attendees[$serialized];
     }
 
     /**
@@ -191,13 +133,6 @@ class User extends ApiResource
     public function owned_event_orders($options = [])
     {
         return $this->property($this->id . serialize($options), 'owned_event_orders', OrderCollection::class);
-        // $serialized = md5($this->id . serialize($options));
-        // if (!isset($this->owned_event_orders[$serialized])) {
-        //     $endpoint = $this->endpoint .'/owned_event_orders';
-        //     $this->owned_event_orders[$serialized] = new OrderCollection($this->client, $endpoint, $options);
-
-        // }
-        // return $this->owned_event_orders[$serialized];
     }
 
     /**
@@ -210,18 +145,6 @@ class User extends ApiResource
     public function contact_lists()
     {
         return $this->property($this->id, 'contact_lists', ContactListCollection::class);
-        // $serialized = md5($this->id);
-        // if (!isset($this->contact_lists[$serialized])) {
-        //     $endpoint = $this->endpoint .'/contact_lists';
-        //     $this->contact_lists[$serialized] = new ContactListCollection($this->client, $endpoint);
-
-        // }
-
-        // if (strlen($id) > 0) {
-        //     return $this->contact_list($id);
-
-        // }
-        // return $this->contact_lists[$serialized];
     }
 
     /**

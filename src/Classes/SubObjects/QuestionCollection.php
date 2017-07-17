@@ -11,11 +11,22 @@ use Eightfold\Eventbrite\Classes\SubObjects\Question;
  */
 class QuestionCollection extends ApiCollection
 {
-    public function __construct(array $payload, $client)
+    /**
+     * [__construct description]
+     *
+     * @param [type] $client  [description]
+     * @param [type] $payload [description]
+     */
+    public function __construct($client, $endpoint)
     {
-        $class = Question::class;
-        $keyToInstantiate = 'questions';
-        $keysToConvertToLocalVars = ['pagination'];
-        parent::__construct($payload, $client, $class, $keyToInstantiate, $keysToConvertToLocalVars);
+        parent::__construct($client, $endpoint, 'questions', Question::class);
     }
+
+    // public function __construct(array $payload, $client)
+    // {
+    //     $class = Question::class;
+    //     $keyToInstantiate = 'questions';
+    //     $keysToConvertToLocalVars = ['pagination'];
+    //     parent::__construct($payload, $client, $class, $keyToInstantiate, $keysToConvertToLocalVars);
+    // }
 }

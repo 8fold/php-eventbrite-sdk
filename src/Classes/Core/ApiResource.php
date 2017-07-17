@@ -97,12 +97,21 @@ abstract class ApiResource
      */
     protected function property($serialize, $propertyName, $class, $options = [])
     {
+        // We create a hash to allow caching of resources with options.
         $serialized = md5($serialize);
+
+        // Hashed value not set in property.
         if (!isset($this->{$propertyName}[$serialized])) {
+            // The compiled endpoint to use with the ApiResource or ApiCollection
+            // instance.
             $endpoint = $this->endpoint .'/'. $propertyName;
+
+            // Instantiate and set the object with the property.
             $this->{$propertyName}[$serialized] = new $class($this->client, $endpoint, $options);
 
         }
+
+        // Return the cached or newly minted value.
         return $this->{$propertyName}[$serialized];
     }
 

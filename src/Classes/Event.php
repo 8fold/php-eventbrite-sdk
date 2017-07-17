@@ -23,10 +23,20 @@ use Eightfold\Eventbrite\Classes\SubObjects\Question;
 use Eightfold\Eventbrite\Classes\SubObjects\QuestionCollection;
 
 use Eightfold\Eventbrite\Classes\SubObjects\Attendee;
+use Eightfold\Eventbrite\Classes\SubObjects\AttendeeCollection;
+
 use Eightfold\Eventbrite\Classes\SubObjects\Discount;
+use Eightfold\Eventbrite\Classes\SubObjects\DiscountCollection;
+
 use Eightfold\Eventbrite\Classes\SubObjects\AccessCode;
+use Eightfold\Eventbrite\Classes\SubObjects\AccessCodeCollection;
+
 use Eightfold\Eventbrite\Classes\SubObjects\Transfer;
+use Eightfold\Eventbrite\Classes\SubObjects\TransferCollection;
+
 use Eightfold\Eventbrite\Classes\SubObjects\Team;
+use Eightfold\Eventbrite\Classes\SubObjects\TeamCollection;
+
 use Eightfold\Eventbrite\Classes\SubObjects\Subcategory;
 
 use GrahamCampbell\Markdown\Facades\Markdown;
@@ -222,68 +232,232 @@ class Event extends ApiResource
      */
     public function canned_questions()
     {
-        $serialized = md5($this->id . $id);
-        if (!isset($this->canned_questions[$serialized])) {
-            $endpoint = $this->endpoint .'/ticket_classes';
-            $this->canned_questions[$serialized] = new QuestionCollection($this->client, $endpoint);
+        return $this->property($this->id, 'canned_questions', QuestionCollection::class);
+        // $serialized = md5($this->id . $id);
+        // if (!isset($this->canned_questions[$serialized])) {
+        //     $endpoint = $this->endpoint .'/ticket_classes';
+        //     $this->canned_questions[$serialized] = new QuestionCollection($this->client, $endpoint);
 
-        }
-        return $this->canned_questions[$serialized];
+        // }
+        // return $this->canned_questions[$serialized];
         // $endpoint = $this->endpoint .'/canned_questions';
         // return $this->hasMany(Question::class, $endpoint);
     }
 
+    /**
+     * GET /events/:id/questions/ - Eventbrite allows event organizers to add custom
+     *                              questions that attendees fill out upon
+     *                              registration. This endpoint can be helpful for
+     *                              determining what custom information is collected
+     *                              and available per event. This endpoint will return
+     *                              question.
+     *
+     * @param  string $id [description]
+     * @return [type]     [description]
+     *
+     * @todo Test returns 0 questions, need to test this and the single quession return
+     */
     public function questions($id = '')
     {
-        $endpoint = (strlen($id) > 0)
-            ? $this->endpoint .'/questions/'. $id
-            : $this->endpoint .'/questions';
-        return $this->hasMany(Question::class, $endpoint);
+        return $this->property($this->id . serialize($id), 'questions', QuestionCollection::class);
+        // $endpoint = (strlen($id) > 0)
+        //     ? $this->endpoint .'/questions/'. $id
+        //     : $this->endpoint .'/questions';
+        // return $this->hasMany(Question::class, $endpoint);
     }
 
-    // TODO: See display_settings
+    /**
+     * GET /events/:id/questions/:id/ - This endpoint will return question for a
+     *                                  specific question id.
+     *
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     *
+     * @todo Implement this functionality and test.
+     */
+    public function question($id)
+    {
+
+    }
+
+    /**
+     * GET /events/:id/attendees/ - Returns a paginated response with a key of
+     *                              attendees, containing a list of attendee.
+     *
+     * @param  string $id [description]
+     * @return [type]     [description]
+     */
     public function attendees($id = '')
     {
-        $endpoint = $this->endpoint .'/attendees/'. $id;
-        return $this->hasMany(Attendee::class, $endpoint);
+        return $this->property($this->id . serialize($id), 'attendees', AttendeeCollection::class);
+        // $endpoint = $this->endpoint .'/attendees/'. $id;
+        // return $this->hasMany(Attendee::class, $endpoint);
     }
 
-    public function orders()
+    /**
+     * GET /events/:id/attendees/:attendee_id/ - Returns a single attendee by ID, as
+     *                                           the key attendee.
+     *
+     * @param  string $id [description]
+     * @return [type]     [description]
+     *
+     * @todo Implement and test
+     */
+    public function attendee($id = '')
     {
-        $endpoint = $this->endpoint .'/orders';
-        return $this->hasMany(Order::class, $endpoint);
+
     }
 
+    /**
+     * GET /events/:id/orders/ - Returns a paginated response with a key of orders,
+     *                           containing a list of order against this event.
+     *
+     * @return [type] [description]
+     */
+    public function orders($options = [])
+    {
+        return $this->property($this->id . serialize($options), 'orders', OrderCollection::class);
+        // $endpoint = $this->endpoint .'/orders';
+        // return $this->hasMany(Order::class, $endpoint);
+    }
+
+    /**
+     * GET /events/:id/discounts/ - Returns a paginated response with a key of
+     *                              discounts, containing a list of discounts
+     *                              available on this
+     *
+     * @param  string $id [description]
+     * @return [type]     [description]
+     *
+     * @todo Improve test - test event does not have any discounts.
+     */
     public function discounts($id = '')
     {
-        $endpoint = $this->endpoint .'/discounts/'. $id;
-        return $this->hasMany(Discount::class, $endpoint);
+        return $this->property($this->id . $id, 'discounts', DiscountCollection::class);
+        // $endpoint = $this->endpoint .'/discounts/'. $id;
+        // return $this->hasMany(Discount::class, $endpoint);
     }
 
+    /**
+     * GET /events/:id/discounts/:discount_id/ - Gets a discount by ID as the key
+     *                                           discount.
+     *
+     * @param  string $id [description]
+     * @return [type]     [description]
+     *
+     * @todo Implement and test
+     */
+    public function discount($id = '')
+    {
+
+    }
+
+    /**
+     * GET /events/:id/public_discounts/ - Returns a paginated response with a key of
+     *                                     discounts, containing a list of public
+     *                                     discounts available on this event. Note
+     *                                     that public discounts and discounts have
+     *                                     exactly the same form and structure;
+     *                                     they’re just namespaced separately, and
+     *                                     public ones (and the public GET endpoints)
+     *                                     are visible to anyone who can see the event.
+     *
+     * @param  string $id [description]
+     * @return [type]     [description]
+     *
+     * @todo Test event does not have any public discounts.
+     */
     public function public_discounts($id = '')
     {
-        $endpoint = $this->endpoint .'/public_discounts/'. $id;
-        return $this->hasMany(Discount::class, $endpoint);
+        return $this->property($this->id . $id, 'public_discounts', DiscountCollection::class);
+        // $endpoint = $this->endpoint .'/public_discounts/'. $id;
+        // return $this->hasMany(Discount::class, $endpoint);
     }
 
+    /**
+     * GET /events/:id/public_discounts/:discount_id/ - Gets a public discount by ID
+     *                                                  as the key discount.
+     *
+     * @param  string $id [description]
+     * @return [type]     [description]
+     */
+    public function public_discount($id = '')
+    {
+
+    }
+
+    /**
+     * GET /events/:id/access_codes/ - Returns a paginated response with a key of
+     *                                 access_codes, containing a list of access_codes
+     *                                 available on this event.
+     *
+     * @param  string $id [description]
+     * @return [type]     [description]
+     *
+     * @todo Test better, current event has none.
+     */
     public function access_codes($id = '')
     {
-        $endpoint = $this->endpoint .'/access_codes/'. $id;
-        return $this->hasMany(AccessCode::class, $endpoint);
+        return $this->property($this->id . $id, 'access_codes', AccessCodeCollection::class);
+        // $endpoint = $this->endpoint .'/access_codes/'. $id;
+        // return $this->hasMany(AccessCode::class, $endpoint);
     }
 
-    public function transfers()
+    /**
+     * GET /events/:id/access_codes/:access_code_id/ - Gets a access_code by ID as the
+     *                                                 key access_code.
+     *
+     * @param  string $id [description]
+     * @return [type]     [description]
+     *
+     * @todo Implement and test, current event has none.
+     */
+    public function access_code($id = '')
     {
-        $endpoint = $this->endpoint .'/transfers';
-        return $this->hasMany(Transfer::class, $endpoint);
+
     }
 
+    /**
+     * GET /events/:id/transfers/ - Returns a list of transfers for the event.
+     *
+     * @return [type] [description]
+     */
+    public function transfers($options = [])
+    {
+        return $this->property($this->id . serialize($options), 'transfers', TransferCollection::class, $options);
+        // $endpoint = $this->endpoint .'/transfers';
+        // return $this->hasMany(Transfer::class, $endpoint);
+    }
+
+    /**
+     * GET /events/:id/teams/ - Returns a list of attendee-team for the event.
+     *
+     * @param  string $id [description]
+     * @return [type]     [description]
+     */
     public function teams($id = '')
     {
-        $endpoint = $this->endpoint .'/teams/'. $id;
-        return $this->hasMany(Team::class, $endpoint);
+        return $this->property($this->id . $id, 'teams', TeamCollection::class);
+        // $endpoint = $this->endpoint .'/teams/'. $id;
+        // return $this->hasMany(Team::class, $endpoint);
     }
 
+    /**
+     * GET /events/:id/teams/:id/ - Returns information for a single attendee-team.
+     *
+     * @param  string $id [description]
+     * @return [type]     [description]
+     *
+     * @todo Test and implement
+     */
+    public function team($id = '')
+    {
+
+    }
+
+    /***********************/
+    /* End basis endpoints */
+    /***********************/
     public function organizer()
     {
         $endpoint = 'organizers/'. $this->organizer_id;

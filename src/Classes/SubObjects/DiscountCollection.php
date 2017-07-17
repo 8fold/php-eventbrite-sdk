@@ -11,11 +11,21 @@ use Eightfold\Eventbrite\Classes\SubObjects\Discount;
  */
 class DiscountCollection extends ApiCollection
 {
-    public function __construct(array $payload, $client)
+    /**
+     * [__construct description]
+     *
+     * @param [type] $client  [description]
+     * @param [type] $payload [description]
+     */
+    public function __construct($client, $endpoint)
     {
-        $class = Discount::class;
-        $keyToInstantiate = 'discounts';
-        $keysToConvertToLocalVars = ['pagination'];
-        parent::__construct($payload, $client, $class, $keyToInstantiate, $keysToConvertToLocalVars);
+        parent::__construct($client, $endpoint, 'discounts', Discount::class);
     }
+    // public function __construct(array $payload, $client)
+    // {
+    //     $class = Discount::class;
+    //     $keyToInstantiate = 'discounts';
+    //     $keysToConvertToLocalVars = ['pagination'];
+    //     parent::__construct($payload, $client, $class, $keyToInstantiate, $keysToConvertToLocalVars);
+    // }
 }
