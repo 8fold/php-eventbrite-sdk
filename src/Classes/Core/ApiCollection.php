@@ -84,6 +84,7 @@ abstract class ApiCollection extends ArrayObject
             unset($payload['pagination']);
 
         }
+        die(var_dump($payload));
 
         $array = [];
         foreach ($payload[$payloadKey] as $entry) {

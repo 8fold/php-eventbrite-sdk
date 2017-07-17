@@ -14,6 +14,8 @@ use Eightfold\Eventbrite\Classes\Format;
 use Eightfold\Eventbrite\Classes\Media;
 
 use Eightfold\Eventbrite\Classes\SubObjects\DisplaySetting;
+use Eightfold\Eventbrite\Classes\SubObjects\DisplaySettingCollection;
+
 use Eightfold\Eventbrite\Classes\SubObjects\TicketClass;
 use Eightfold\Eventbrite\Classes\SubObjects\Question;
 use Eightfold\Eventbrite\Classes\SubObjects\Attendee;
@@ -39,18 +41,133 @@ class Event extends ApiResource
     use DateTransformations;
 
     /**
-     * The display settings for the Event
+     * POST /events/ - Makes a new event, and returns an event for the specified
+     *                 event. Does not support the creation of repeating event series.
      *
-     * @return Eightfold\Eventbrite\Classes\SubObjects\DisplaySetting
+     * @return [type] [description]
+     *
+     * @todo Implement functionality for creating a new event.
      */
-    public function display_settings()
+    static public function withOptions()
     {
-        $endpoint = $this->endpoint .'/display_settings';
-        return $this->hasOne(DisplaySetting::class, $endpoint);
+
+    }
+
+    public function __construct($client, $idOrPayload)
+    {
+        $this->client = $client;
+
+        if (is_string($idOrPayload)) {
+            $this->id = $id;
+
+        } else {
+            $this->id = $idOrPayload['id'];
+            parent::__construct($client, $idOrPayload);
+
+        }
+        $this->endpoint = 'events/'. $this->id;
     }
 
     /**
-     * [ticket_classes description]
+     * POST /events/:id/ - Updates an event. Returns an event for the specified event.
+     *                     Does not support updating a repeating event series parent (
+     *                     see POST /series/:id/).
+     *
+     * @return [type] [description]
+     *
+     * @todo Implement this functionality.
+     *
+     */
+    public function update()
+    {
+
+    }
+
+    /**
+     * POST /events/:id/publish/ - Publishes an event if it has not already been
+     *                             deleted. In order for publish to be permitted, the
+     *                             event must have all necessary information,
+     *                             including a name and description, an organizer, at
+     *                             least one ticket, and valid payment options. This
+     *                             API endpoint will return argument errors for event
+     *                             fields that fail to validate the publish
+     *                             requirements. Returns a boolean indicating success
+     *                             or failure of the publish.
+     *
+     * @return [type] [description]
+     */
+    public function publish()
+    {
+
+    }
+
+    /**
+     * POST /events/:id/unpublish/ - Unpublishes an event. In order for a free event
+     *                               to be unpublished, it must not have any pending
+     *                               or completed orders, even if the event is in the
+     *                               past. In order for a paid event to be
+     *                               unpublished, it must not have any pending or
+     *                               completed orders, unless the event has been
+     *                               completed and paid out. Returns a boolean
+     *                               indicating success or failure of the unpublish.
+     *
+     * @return [type] [description]
+     */
+    public function unpublish()
+    {
+
+    }
+
+    /**
+     * POST /events/:id/cancel/ - Cancels an event if it has not already been deleted.
+     *                            In order for cancel to be permitted, there must be
+     *                            no pending or completed orders. Returns a boolean
+     *                            indicating success or failure of the cancel.
+     *
+     * @return [type] [description]
+     */
+    public function cancel()
+    {
+
+    }
+
+    /**
+     * DELETE /events/:id/ - Deletes an event if the delete is permitted. In order for
+     *                       a delete to be permitted, there must be no pending or
+     *                       completed orders. Returns a boolean indicating success or
+     *                       failure of the delete.
+     *
+     * @return [type] [description]
+     */
+    public function delete()
+    {
+
+    }
+
+    /**
+     * GET /events/:id/display_settings/ - Retrieves the display settings for an event.
+     *
+     * @return \Eightfold\Eventbrite\Classes\SubObjects\DisplaySetting
+     *
+     * @todo Re-implement
+     */
+    public function display_settings()
+    {
+        $serialized = md5($this->id);
+        if (!isset($this->display_settings[$serialized])) {
+            $endpoint = $this->endpoint .'/display_settings';
+            $this->display_settings[$serialized] = new DisplaySetting($this->client, $endpoint);
+
+        }
+        return $this->display_settings[$serialized];
+        // return $this->hasOne(DisplaySetting::class, $endpoint);
+    }
+
+    /**
+     * GET /events/:id/ticket_classes/ - Returns a paginated response with a key of
+     *                                   ticket_classes, containing a list of
+     *                                   ticket_class.
+     *
      * @param  string $id [description]
      * @return [type]     [description]
      */

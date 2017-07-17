@@ -31,10 +31,6 @@ use Eightfold\Eventbrite\Interfaces\ApiResourcePostable;
  */
 class User extends ApiResource
 {
-    private $id = 'me';
-
-    private $me = null;
-
     private $upcomingEvents = null;
 
     private $orders = [];
@@ -53,20 +49,21 @@ class User extends ApiResource
 
     private $contact_lists = null;
 
-    public function __construct($client, $id)
+    public function __construct($client, $idOrPayload = 'me')
     {
         $this->client = $client;
-        $this->id = $id;
-    }
 
-    public function get()
-    {
-        if (is_null($this->me)) {
-            $payload = $this->client->get('users/'. $this->id);
-            parent::__construct($this->client, $payload);
-            $this->me = $this;
+        if (is_string($idOrPayload)) {
+            $this->id = $idOrPayload;
+
+        } else {
+            $this->id = isset($idOrPayload['id'])
+                ? $idOrPayload['id']
+                : $idOrPayload;
+            parent::__construct($client, $idOrPayload);
+
         }
-        return $this->me;
+        $this->endpoint = 'users/'. $this->id;
     }
 
     /**
@@ -80,7 +77,7 @@ class User extends ApiResource
     {
         $serialized = md5($this->id . serialize($options));
         if (!isset($this->orders[$serialized])) {
-            $endpoint = 'users/'. $this->id .'/orders';
+            $endpoint = $this->endpoint .'/orders';
             $this->orders[$serialized] = new OrderCollection($this->client, $endpoint, $options);
 
         }
@@ -96,7 +93,7 @@ class User extends ApiResource
     public function organizers()
     {
         if (count($this->organizers) == 0) {
-            $endpoint = 'users/'. $this->id .'/organizers';
+            $endpoint = $this->endpoint .'/organizers';
             $this->organizers = new OrganizerCollection($this->client, $endpoint);
 
         }
@@ -114,7 +111,7 @@ class User extends ApiResource
     {
         $serialized = md5($this->id . serialize($options));
         if (!isset($this->owned_events[$serialized])) {
-            $endpoint = 'users/'. $this->id .'/owned_events';
+            $endpoint = $this->endpoint .'/owned_events';
             $this->owned_events[$serialized] = new EventCollection($this->client, $endpoint, $options);
 
         }
@@ -131,7 +128,7 @@ class User extends ApiResource
     {
         $serialized = md5($this->id . serialize($options));
         if (!isset($this->events[$serialized])) {
-            $endpoint = 'users/'. $this->id .'/events';
+            $endpoint = $this->endpoint .'/events';
             $this->events[$serialized] = new EventCollection($this->client, $endpoint, $options);
 
         }
@@ -147,7 +144,7 @@ class User extends ApiResource
     public function venues()
     {
         if (count($this->venues) == 0) {
-            $endpoint = 'users/'. $this->id .'/venues';
+            $endpoint = $this->endpoint .'/venues';
             $this->venues = new VenueCollection($this->client, $endpoint);
 
         }
@@ -166,7 +163,7 @@ class User extends ApiResource
     public function owned_event_attendees()
     {
         if (count($this->owned_event_attendees) == 0) {
-            $endpoint = 'users/'. $this->id .'/owned_event_attendees';
+            $endpoint = $this->endpoint .'/owned_event_attendees';
             $this->owned_event_attendees = new AttendeeCollection($this->client, $endpoint);
 
         }
@@ -186,7 +183,7 @@ class User extends ApiResource
     {
         $serialized = md5($this->id . serialize($options));
         if (!isset($this->owned_event_orders[$serialized])) {
-            $endpoint = 'users/'. $this->id .'/owned_event_orders';
+            $endpoint = $this->endpoint .'/owned_event_orders';
             $this->owned_event_orders[$serialized] = new OrderCollection($this->client, $endpoint, $options);
 
         }
@@ -203,7 +200,7 @@ class User extends ApiResource
     public function contact_lists($id = '')
     {
         if (is_null($this->contact_lists)) {
-            $endpoint = 'users/'. $this->id .'/contact_lists';
+            $endpoint = $this->endpoint .'/contact_lists';
             $this->contact_lists = new ContactListCollection($this->client, $endpoint);
 
         }
@@ -231,6 +228,7 @@ class User extends ApiResource
         foreach ($contact_lists as $contact_list) {
             if ($contact_list->id == $id) {
                 return $contact_list;
+
             }
         }
         return null;

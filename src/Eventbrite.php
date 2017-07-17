@@ -11,6 +11,7 @@ use Eightfold\Eventbrite\Classes\User;
 use Eightfold\Eventbrite\Classes\SubObjects\Organization;
 
 use Eightfold\Eventbrite\Classes\Event;
+use Eightfold\Eventbrite\Classes\EventCollection;
 
 // use Eightfold\Eventbrite\Classes\Category;
 // use Eightfold\Eventbrite\Classes\Organizer;
@@ -43,6 +44,7 @@ class Eventbrite extends EventbriteBase
     use Gettable;
 
     private $isOrg = false;
+
     /**
      * Each Eventbrite client is associated with a user. The default is a human;
      * however, it is possible you want it to be an organization (the main account),
@@ -58,6 +60,8 @@ class Eventbrite extends EventbriteBase
      * @var Eightfold\Classes\Individual
      */
     private $individual = null;
+
+    private $events = [];
 
     /**
      * Creates an Eventbrite instance for a specific user.
@@ -131,7 +135,31 @@ class Eventbrite extends EventbriteBase
     }
 
     /**
-     * /events/:id - Returns an event for the specified event. Many of Eventbrite’s
+     * GET /events/search/ - Allows you to retrieve a paginated response of public
+     *                       event objects from across Eventbrite’s directory,
+     *                       regardless of which user owns the event.
+     *
+     * @param  string $id [description]
+     * @return [type]     [description]
+     */
+    public function events($options = [], $id = '')
+    {
+        $serialized = md5(serialize($options));
+        if (isset($this->events[$serialized])) {
+            $endpoint = 'events/search';
+            $this->events[$serialized] = new EventCollection($this, $endpoint);
+
+        }
+
+        if (strlen($id) > 0) {
+            return $this->event($id);
+
+        }
+        return $this->events[$serialized];
+    }
+
+    /**
+     * GET /events/:id - Returns an event for the specified event. Many of Eventbrite’s
      *               API use cases revolve around pulling details of a specific event
      *               within an Eventbrite account. Does not support fetching a
      *               repeating event series parent (see GET /series/:id/).

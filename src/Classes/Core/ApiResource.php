@@ -21,7 +21,13 @@ abstract class ApiResource
     use Gettable,
         Settable;
 
-    private $client = null;
+    protected $client = null;
+
+    protected $id = '';
+
+    protected $endpoint = '';
+
+    protected $me = null;
 
     protected $raw = null;
 
@@ -57,6 +63,26 @@ abstract class ApiResource
             ? $payload->body
             : $payload;
         $this->raw = $setup;
+    }
+
+    private function getMe($payload)
+    {
+        // $this->client = $client;
+        $setup = (isset($payload->body))
+            ? $payload->body
+            : $payload;
+        $this->raw = $setup;
+    }
+
+    public function get()
+    {
+        if (is_null($this->me)) {
+            $payload = $this->client->get($this->endpoint);
+            // Make sure we have instantiated ourselves with a payload.
+            static::__construct($this->client, $payload);
+            $this->me = $this;
+        }
+        return $this->me;
     }
 
     protected function hasOne($class, $endpoint, $options = [])
