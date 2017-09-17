@@ -1,5 +1,5 @@
 {
-    "name": "8fold/eventbrite-sdk-php",
+    "name": "8fold/php-eventbrite-sdk",
     "description": "Something that seems easier and more complete than the official Eventbrite SDK for PHP.",
     "license": "MIT",
     "authors": [
