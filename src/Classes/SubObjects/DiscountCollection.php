@@ -6,9 +6,12 @@ use Eightfold\Eventbrite\Classes\Core\ApiCollection;
 
 use Eightfold\Eventbrite\Classes\SubObjects\Discount;
 
+/**
+ * @package DiscountCollection alias
+ */
 class DiscountCollection extends ApiCollection
 {
-    public function __construct(array $payload, $client) 
+    public function __construct(array $payload, $client)
     {
         $class = Discount::class;
         $keyToInstantiate = 'discounts';

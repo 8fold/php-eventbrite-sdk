@@ -7,19 +7,22 @@ use Eightfold\Eventbrite\Classes\Core\ApiCallBuilder;
 
 use Eightfold\Eventbrite\Traits\Gettable;
 
-use Eightfold\Eventbrite\Classes\Event;
 use Eightfold\Eventbrite\Classes\User;
-use Eightfold\Eventbrite\Classes\Category;
-use Eightfold\Eventbrite\Classes\Organizer;
-use Eightfold\Eventbrite\Classes\Format;
-
 use Eightfold\Eventbrite\Classes\SubObjects\Organization;
-use Eightfold\Eventbrite\Classes\SubObjects\Subcategory;
-use Eightfold\Eventbrite\Classes\SubObjects\Attendee;
-use Eightfold\Eventbrite\Classes\SubObjects\Sale;
-use Eightfold\Eventbrite\Classes\SubObjects\Country;
-use Eightfold\Eventbrite\Classes\SubObjects\Region;
-use Eightfold\Eventbrite\Classes\SubObjects\Timezone;
+
+use Eightfold\Eventbrite\Classes\Event;
+
+// use Eightfold\Eventbrite\Classes\Category;
+// use Eightfold\Eventbrite\Classes\Organizer;
+// use Eightfold\Eventbrite\Classes\Format;
+
+
+// use Eightfold\Eventbrite\Classes\SubObjects\Subcategory;
+// use Eightfold\Eventbrite\Classes\SubObjects\Attendee;
+// use Eightfold\Eventbrite\Classes\SubObjects\Sale;
+// use Eightfold\Eventbrite\Classes\SubObjects\Country;
+// use Eightfold\Eventbrite\Classes\SubObjects\Region;
+// use Eightfold\Eventbrite\Classes\SubObjects\Timezone;
 
 /**
  * Main Eventrbrite entry point.
@@ -33,11 +36,13 @@ use Eightfold\Eventbrite\Classes\SubObjects\Timezone;
  * not. Therefore, you can tell the instance whether it should be treated as an
  * individual (human) or an organization (legal entity).
  *
+ * @package Initializer
  */
 class Eventbrite extends EventbriteBase
 {
     use Gettable;
 
+    private $isOrg = false;
     /**
      * Each Eventbrite client is associated with a user. The default is a human;
      * however, it is possible you want it to be an organization (the main account),
@@ -57,13 +62,13 @@ class Eventbrite extends EventbriteBase
     /**
      * Creates an Eventbrite instance for a specific user.
      *
-     * @param string $token  Oauth token for application or individual
-     * @param bool   $isOrg  Whether to treat the user associated as a human or not.
+     * @param string $token  Oauth token for application or individual.
      * @param array  $config Configuration parameters for parent class.
+     * @param bool   $isOrg  Whether to treat the user associated as a human or not.
      *
-     * @return Eventbrite
+     * @return Eventbrite Instance with user for token.
      */
-    static public function startEventbrite($token, $config = [], $isOrg = false)
+    static public function connect($token, $config = [], $isOrg = false)
     {
         return new Eventbrite($token, $config, $isOrg);
     }
@@ -77,38 +82,58 @@ class Eventbrite extends EventbriteBase
      * therefore, the organization is all we care about with this instance.
      *
      * @param string $token  Oauth token for application or individual
-     * @param array  $config Configuration parameters for parent class.
+     * @param array  $config Configuration parameters for Client (parent class).
      * @param bool   $isOrg  Whether the user to be associated with instance is an
      *                       an organization or a human
+     *
+     * @return  Eventbrite Eventbrite instance.
      */
     public function __construct($token, $config = [], $isOrg = false)
     {
         parent::__construct($token, $config);
-        if (parent::canConnect()) {
-            if ($isOrg) {
-                $return = new ApiCallBuilder($this, Organization::class, 'users/me');
-                $this->organization = $return->first();
-
-            } else {
-                $return = new ApiCallBuilder($this, User::class, 'users/me');
-                $this->individual = $return->first();
-
-            }
+        if (!parent::canConnect()) {
+            die('Cannot connect to Eventbrite.');
         }
+        $this->isOrg = $isOrg;
     }
 
+    /**
+     * /users/me - Returns the currently authenticated user for the Eventrbrite 
+     *             isntance.
+     * 
+     * @return \Eightfold\Eventbrite\User|\Eightfold\Eventbrite\SubObjects\Organization The user associated with the auth token.
+     */
+    public function me()
+    {
+        if ($this->isOrg && is_null($this->organization)) {
+            $org = parent::get('users/me', []);
+            $this->organization = new Organization($this, $org);
+
+        } elseif (!$this->isOrg && is_null($this->individual)) {
+            $ind = parent::get('users/me', []);            
+            $this->individual = new User($this, $ind);
+        }
+
+        return ($this->isOrg)
+            ? $this->organization
+            : $this->individual;
+    }
+
+    /**
+     * /events/:id - Returns an event for the specified event. Many of Eventbrite’s 
+     *               API use cases revolve around pulling details of a specific event 
+     *               within an Eventbrite account. Does not support fetching a 
+     *               repeating event series parent (see GET /series/:id/).
+     *               
+     * @param  string $id [description]
+     * @return \Eightfold\Eventbrite\Classes\Event [description]
+     */
     public function event($id = '')
     {
-        return Event::find($this, Event::class, 'events/'. $id);
+        $payload = $this->get('events/'. $id);
+        return new Event($this, $payload);
     }
 
-    public function user()
-    {
-        if (is_null($this->organization)) {
-            return $this->individual;
-        }
-        return $this->organization;
-    }
 
     // TODO: Not sure how useful this is.
     public function reportAttendees()

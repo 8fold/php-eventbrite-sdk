@@ -28,17 +28,32 @@ use League\HTMLToMarkdown\HtmlConverter;
 
 use Eightfold\Eventbrite\Transformations\DateTransformations;
 
+/**
+ * An event stored in Eventbrite.
+ *
+ * @package First order resource
+ */
 class Event extends ApiResource
 {
     // TODO: Verify still using
     use DateTransformations;
 
+    /**
+     * The display settings for the Event
+     *
+     * @return Eightfold\Eventbrite\Classes\SubObjects\DisplaySetting
+     */
     public function display_settings()
     {
         $endpoint = $this->endpoint .'/display_settings';
         return $this->hasOne(DisplaySetting::class, $endpoint);
-    } 
+    }
 
+    /**
+     * [ticket_classes description]
+     * @param  string $id [description]
+     * @return [type]     [description]
+     */
     public function ticket_classes($id = '')
     {
         $endpoint = (strlen($id) > 0)
@@ -138,14 +153,15 @@ class Event extends ApiResource
     public function logo()
     {
         $endpoint = 'media/'. $this->logo_id;
-        return $this->hasOne(Media::class, $endpoint);     
+        return $this->hasOne(Media::class, $endpoint);
     }
 
 
     // public function name()
     // {
+    //     die('here');
     //     return $this->raw->name->text;
-    // }  
+    // }
 
     // public function nameHtml()
     // {
@@ -178,14 +194,14 @@ class Event extends ApiResource
         $htmlConverter = new HtmlConverter();
         $markdown = $htmlConverter->convert($this->description->html);
         $markdownStripped = str_replace(['<span>', '</span>'], '', $markdown);
-        return $markdownStripped;        
+        return $markdownStripped;
     }
 
 
     public function lowCostDisplay()
     {
         return $this->lowestType->costDisplay();
-    }    
+    }
 
     public function highCostDisplay()
     {
@@ -232,7 +248,7 @@ class Event extends ApiResource
     public function endpoint()
     {
         return static::baseEndpoint() .'/'. $this->id;
-    }      
+    }
 
     static public function parameterPrefix()
     {
@@ -278,6 +294,6 @@ class Event extends ApiResource
             'end_timezone',
             'start_utc',
             'start_timezone'
-        ];        
-    }    
+        ];
+    }
 }

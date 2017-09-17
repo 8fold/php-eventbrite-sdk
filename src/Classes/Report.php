@@ -7,6 +7,9 @@ use Eightfold\Eventbrite\Classes\Core\ApiResource;
 use Eightfold\Eventbrite\Classes\SubObjects\Attendee;
 use Eightfold\Eventbrite\Classes\SubObjects\Sale;
 
+/**
+ * @package First order resource
+ */
 abstract class Report extends ApiResource
 {
     // TODO: Actually implement - not sure if there is demand to though.

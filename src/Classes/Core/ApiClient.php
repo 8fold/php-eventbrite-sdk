@@ -17,6 +17,8 @@ use Eightfold\Eventbrite\Classes\Helpers\Collection;
  *
  * Eventbrite only recognizes GET, POST, and DELETE.
  *
+ * @category Core
+ *
  */
 abstract class ApiClient
 {
@@ -24,12 +26,17 @@ abstract class ApiClient
 
     /**
      * Which version of the API to use
+     *
+     * Something to make a long description.
+     *
+     * @see Something else.
+     *
+     * @deprecated This is a deprecation message.
+     *
+     * Something with \ backslash.
      */
     const BASE_URI = 'https://www.eventbriteapi.com/v3';
 
-    /**
-     * @todo Consider deprecating
-     */
     const USER_ENDPOINT = 'users/me';
 
     /**
@@ -60,25 +67,14 @@ abstract class ApiClient
     private $guzzle;
 
     /**
-     * Create a new ApiCclient
+     * Instantiate client with token and Guzzle configuration.
      *
-     * @param string $token  The OAuth token for requests
-     * @param array  $config Array of Guzzle config options
+     * @param [type] $token  [description]
+     * @param array  $config [description]
      *
-     * @return ApiClient
-     */
-    // static public function setAuthToken($token, $config = [])
-    // {
-    //     return new ApiClient($token, $config);
-    // }
-
-    /**
-     * Create a new ApiCclient
+     * @throws Exception Missing OAuth token for calls.
      *
-     * @param string $token  The OAuth token for requests
-     * @param array  $config Array of Guzzle config options
-     *
-     * @throws \Excpetion
+     * @return Eightfold\Eventbrite\Classes\Core\ApiClient
      */
     public function __construct($token, $config = [])
     {
@@ -106,6 +102,11 @@ abstract class ApiClient
 
     /**
      * [canConnect description]
+     *
+     * @deprecated 1.0.0 Hello world!
+     *
+     * @see  SomeOtherClass Some other description.
+     *
      * @return [type] [description]
      */
     public function canConnect()
@@ -129,14 +130,12 @@ abstract class ApiClient
      *
      * @return ApiResource           An instance of the class path received
      */
-    public function get($endpoint, array $options = [], $class = null)
+    public function get($endpoint, $options = [])
     {
         // @todo: Convert to try-catch
         $target = $this->buildFullEndpoint($endpoint, $options);
-        // var_dump($target);
+        var_dump($target);
         $response = $this->guzzle->get($target);
-
-        $class = $this->getRealClassPath($target, $class);
 
         // return the appropriate response
         if ($response instanceof ResponseInterface) {
@@ -226,25 +225,25 @@ abstract class ApiClient
      *
      * @return string                The resulting class path
      */
-    private function getRealClassPath($endpoint, $class = null)
-    {
-        if (is_null($class)) {
-            print('apiClient->getRealClassPath - '. $endpoint .' is null');
-            die('<br>deprecate the need for this<br>');
-            // we were not told which class to instantiate,
-            // use the endpoint to decide.
-            $endpointParts = explode('/', $endpoint);
-            $first = array_shift($endpointParts);
-            $last = array_pop($endpointParts);
-            $class = null;
-            if (isset($this->classMap[$first])) {
-                $class = $this->classMap[$object];
+    // private function getRealClassPath($endpoint, $class = null)
+    // {
+    //     if (is_null($class)) {
+    //         print('apiClient->getRealClassPath - '. $endpoint .' is null');
+    //         die('<br>deprecate the need for this<br>');
+    //         // we were not told which class to instantiate,
+    //         // use the endpoint to decide.
+    //         $endpointParts = explode('/', $endpoint);
+    //         $first = array_shift($endpointParts);
+    //         $last = array_pop($endpointParts);
+    //         $class = null;
+    //         if (isset($this->classMap[$first])) {
+    //             $class = $this->classMap[$object];
 
-            } elseif (isset($this->classMap[$last])) {
-                $class = $this->classMap[$last];
+    //         } elseif (isset($this->classMap[$last])) {
+    //             $class = $this->classMap[$last];
 
-            }
-        }
-        return $class;
-    }
+    //         }
+    //     }
+    //     return $class;
+    // }
 }

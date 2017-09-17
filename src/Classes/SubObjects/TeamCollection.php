@@ -6,9 +6,12 @@ use Eightfold\Eventbrite\Classes\Core\ApiCollection;
 
 use Eightfold\Eventbrite\Classes\SubObjects\Team;
 
+/**
+ * @package Collections
+ */
 class TeamCollection extends ApiCollection
 {
-    public function __construct(array $payload, $client) 
+    public function __construct(array $payload, $client)
     {
         $class = Team::class;
         $keyToInstantiate = 'teams';

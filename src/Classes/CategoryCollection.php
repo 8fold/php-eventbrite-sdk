@@ -6,6 +6,9 @@ use Eightfold\Eventbrite\Classes\Core\ApiCollection;
 
 use Eightfold\Eventbrite\Classes\Category;
 
+/**
+ * @package Collections
+ */
 class CategoryCollection extends ApiCollection
 {
     /**

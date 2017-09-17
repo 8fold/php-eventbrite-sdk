@@ -6,9 +6,12 @@ use Eightfold\Eventbrite\Classes\Core\ApiCollection;
 
 use Eightfold\Eventbrite\Classes\SubObjects\Transfer;
 
+/**
+ * @package Collections
+ */
 class TransferCollection extends ApiCollection
 {
-    public function __construct(array $payload, $client) 
+    public function __construct(array $payload, $client)
     {
         $class = Transfer::class;
         $keyToInstantiate = 'transfers';
