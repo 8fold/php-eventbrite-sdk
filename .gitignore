@@ -1,7 +1,7 @@
+/vendor
+composer.phar
+composer.lock
 .DS_Store
+.idea
 
-# Ignore external modules
-vendor
-/node_modules
-
-HasTokens.php
+tests/output/
